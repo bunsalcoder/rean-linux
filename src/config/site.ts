@@ -1,5 +1,6 @@
 export const siteConfig = {
   name: "Rean Linux",
+  tagline: "Learn Linux from zero to hero.",
   description:
     "Learn Linux from zero to hero through practical tutorials, guides, commands, projects, and real-world examples.",
   locale: "en",

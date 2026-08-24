@@ -11,11 +11,13 @@ import "./globals.css";
 
 const geistSans = Geist({
   subsets: ["latin"],
+  display: "swap",
   variable: "--font-sans",
 });
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
+  display: "swap",
   variable: "--font-mono",
 });
 
@@ -52,7 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeProvider>
           <a
             href="#main-content"
-            className="bg-background text-foreground focus-visible:ring-ring sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:rounded-md focus:px-4 focus:py-2 focus-visible:ring-2 focus-visible:outline-none"
+            className="bg-background text-foreground ring-ring sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:rounded-md focus:px-4 focus:py-2 focus:ring-2 focus:outline-none"
           >
             Skip to main content
           </a>
