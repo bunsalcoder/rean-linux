@@ -1,7 +1,8 @@
-import Link from "next/link";
-
 import { PageContainer } from "@/components/layout/page-container";
 import { PageHeader } from "@/components/layout/page-header";
+import { CodeBlock } from "@/components/ui/code-block";
+import { Terminal } from "@/components/ui/terminal";
+import { TextLink } from "@/components/ui/text-link";
 import { siteConfig } from "@/config/site";
 
 export default function HomePage() {
@@ -13,21 +14,24 @@ export default function HomePage() {
       />
       <p className="mt-6 leading-relaxed">
         The learning platform is being set up. Start at{" "}
-        <Link
-          href="/learn"
-          className="text-foreground focus-visible:ring-ring font-medium underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:outline-none"
-        >
-          Learn
-        </Link>{" "}
-        when you are ready to browse upcoming topics, or read{" "}
-        <Link
-          href="/about"
-          className="text-foreground focus-visible:ring-ring font-medium underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:outline-none"
-        >
-          About
-        </Link>{" "}
-        for the project direction.
+        <TextLink href="/learn">Learn</TextLink> when you are ready to browse
+        upcoming topics, or read <TextLink href="/about">About</TextLink> for
+        the project direction.
       </p>
+      <div className="mt-10 space-y-6">
+        <Terminal
+          title="terminal"
+          language="bash"
+          lines={[
+            { command: "sudo apt update" },
+            { command: "sudo apt upgrade" },
+          ]}
+        />
+        <CodeBlock
+          language="bash"
+          code={"ls -la /var/log\ncat /etc/os-release"}
+        />
+      </div>
     </PageContainer>
   );
 }
