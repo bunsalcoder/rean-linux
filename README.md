@@ -30,12 +30,23 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Available Scripts
 
 - `npm run dev` — start the development server
-- `npm run build` — create a production build
-- `npm run start` — serve the production build
+- `npm run build` — create a static export in `out/`
 - `npm run lint` — run ESLint
 - `npm run typecheck` — run the TypeScript compiler
 - `npm run format` — format files with Prettier
 - `npm run format:check` — check formatting without writing changes
+
+Preview a production export locally with `npx serve out`.
+
+## Deploy
+
+The site is a static Next.js export. GitHub Actions deploys `out/` to GitHub Pages on every push to `main`.
+
+1. In the repository settings, open **Pages**.
+2. Set **Source** to **GitHub Actions**.
+3. Merge to `main`. The deploy workflow publishes the site to `https://bunsalcoder.github.io/rean-linux/`.
+
+Pull requests and pushes to `main` or `develop` also run lint, typecheck, format, and build checks.
 
 ## Project Structure
 
