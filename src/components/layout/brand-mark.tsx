@@ -8,15 +8,12 @@ type BrandMarkProps = {
 
 export function BrandMark({ className, showName = true }: BrandMarkProps) {
   return (
-    <span className={cn("flex items-center gap-2", className)}>
-      <span
-        aria-hidden="true"
-        className="bg-primary/10 text-primary flex size-7 items-center justify-center rounded-md font-mono text-sm font-semibold"
-      >
-        $
-      </span>
+    <span className={cn("text-[1.15rem] font-bold tracking-tight", className)}>
       {showName ? (
-        <span className="font-semibold tracking-tight">{siteConfig.name}</span>
+        <>
+          <span className="text-black dark:text-white">rean</span>
+          <span className="text-primary">-linux</span>
+        </>
       ) : (
         <span className="sr-only">{siteConfig.name}</span>
       )}
