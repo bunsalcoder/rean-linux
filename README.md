@@ -32,7 +32,7 @@ Open [http://localhost:3000](http://localhost:3000).
 - `npm run dev` — start the development server
 - `npm run build` — create a static export in `out/`
 - `npm run lint` — run ESLint
-- `npm run typecheck` — run the TypeScript compiler
+- `npm run typecheck` — generate Next.js route types, then run the TypeScript compiler
 - `npm run format` — format files with Prettier
 - `npm run format:check` — check formatting without writing changes
 
