@@ -37,6 +37,6 @@ export const footerNav: readonly FooterNavSection[] = [
   },
   {
     title: "About",
-    items: [{ href: "/about", label: "About Rean Linux" }],
+    items: [{ href: "/about", label: "About rean-linux" }],
   },
 ];

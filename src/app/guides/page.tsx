@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/layout/page-header";
 export const metadata: Metadata = {
   title: "Guides",
   description:
-    "Practical Linux guides will be published here as the Rean Linux content system is built.",
+    "Practical Linux guides will be published here as the rean-linux content system is built.",
 };
 
 export default function GuidesPage() {

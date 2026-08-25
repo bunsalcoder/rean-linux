@@ -7,7 +7,7 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Rean Linux is a modern Linux learning platform, from beginner fundamentals to advanced real-world practice.",
+    "rean-linux is a modern Linux learning platform, from beginner fundamentals to advanced real-world practice.",
 };
 
 export default function AboutPage() {

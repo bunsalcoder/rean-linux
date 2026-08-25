@@ -5,6 +5,7 @@ import { Container } from "@/components/layout/container";
 import { MainNav } from "@/components/layout/main-nav";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { siteConfig } from "@/config/site";
 
 export function Header() {
   return (
@@ -12,7 +13,8 @@ export function Header() {
       <Container className="flex h-14 items-center gap-4 md:h-16">
         <Link
           href="/"
-          className="text-foreground focus-visible:ring-ring flex shrink-0 rounded-md focus-visible:ring-2 focus-visible:outline-none"
+          aria-label={siteConfig.name}
+          className="focus-visible:ring-ring flex shrink-0 rounded-md focus-visible:ring-2 focus-visible:outline-none"
         >
           <BrandMark />
         </Link>

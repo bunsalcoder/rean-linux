@@ -14,7 +14,7 @@ import { contentCategories } from "@/config/content";
 export const metadata: Metadata = {
   title: "Learn",
   description:
-    "Browse the Linux learning paths that Rean Linux will cover, from basics through administration, DevOps, and security.",
+    "Browse the Linux learning paths that rean-linux will cover, from basics through administration, DevOps, and security.",
 };
 
 export default function LearnPage() {
