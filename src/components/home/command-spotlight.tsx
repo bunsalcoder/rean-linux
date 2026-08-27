@@ -2,8 +2,8 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { Container } from "@/components/layout/container";
-import { Terminal } from "@/components/ui/terminal";
-import { spotlightCommand } from "@/config/commands";
+import { CopyButton } from "@/components/ui/copy-button";
+import { spotlightCommands, type SpotlightCommand } from "@/config/commands";
 import { cn } from "@/lib/utils";
 
 const exploreLinkClassName = cn(
@@ -12,12 +12,8 @@ const exploreLinkClassName = cn(
 );
 
 export function CommandSpotlight() {
-  const command = spotlightCommand;
-  const headingId = "command-spotlight-heading";
-  const titleId = `command-${command.command}-title`;
-
   return (
-    <section aria-labelledby={headingId} className="border-t">
+    <section aria-labelledby="command-spotlight-heading" className="border-t">
       <Container className="py-16 sm:py-20 lg:py-24">
         <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
           <div className="max-w-2xl min-w-0">
@@ -25,17 +21,16 @@ export function CommandSpotlight() {
               <span className="text-primary" aria-hidden="true">
                 ${" "}
               </span>
-              LINUX COMMANDS
+              COMMAND REFERENCE
             </p>
             <h2
-              id={headingId}
+              id="command-spotlight-heading"
               className="font-heading mt-5 text-3xl font-semibold tracking-tight text-pretty sm:text-4xl"
             >
-              Get comfortable in the{" "}
-              <span className="text-primary">terminal</span>.
+              Learn the commands. Understand what they do.
             </h2>
             <p className="text-muted-foreground mt-4 max-w-xl text-base leading-relaxed sm:text-lg">
-              Explore essential Linux commands with simple explanations and
+              Explore essential Linux commands with clear explanations and
               practical examples.
             </p>
           </div>
@@ -43,98 +38,13 @@ export function CommandSpotlight() {
           <ExploreCommandsLink className="hidden shrink-0 sm:inline-flex" />
         </header>
 
-        <div className="mt-12 grid grid-cols-1 gap-4 sm:mt-16 sm:gap-5 lg:grid-cols-2 lg:items-stretch lg:gap-6">
-          <article aria-labelledby={titleId} className="group/command min-w-0">
-            <div
-              className={cn(
-                "bg-card h-full rounded-lg border p-5 sm:p-6",
-                "transition-[border-color,box-shadow] duration-200",
-                "group-hover/command:border-primary/40 group-hover/command:shadow-sm",
-              )}
-            >
-              <h3
-                id={titleId}
-                className="font-heading text-xl font-semibold tracking-tight sm:text-2xl"
-              >
-                <code
-                  className={cn(
-                    "text-primary bg-transparent p-0 font-mono text-[1.15em] font-semibold",
-                    "group-hover/command:text-primary/80 transition-colors duration-200",
-                  )}
-                >
-                  {command.command}
-                </code>
-                <span> — </span>
-                {command.title}
-              </h3>
-
-              <p className="text-muted-foreground mt-3 text-sm leading-relaxed sm:text-base">
-                {command.description}
-              </p>
-
-              <dl className="mt-6 grid grid-cols-1 gap-3 border-y py-4 sm:grid-cols-3 sm:gap-4">
-                <MetaItem term="Command" value={command.command} mono />
-                <MetaItem term="Category" value={command.category} />
-                <MetaItem term="Difficulty" value={command.difficulty} />
-              </dl>
-
-              <div className="mt-6">
-                <h4 className="text-muted-foreground font-mono text-xs tracking-[0.14em] uppercase">
-                  Syntax
-                </h4>
-                <pre className="bg-muted mt-2 overflow-x-auto rounded-md border-0 px-3 py-2.5">
-                  <code>{command.syntax}</code>
-                </pre>
-              </div>
-
-              <div className="mt-6">
-                <h4 className="text-muted-foreground font-mono text-xs tracking-[0.14em] uppercase">
-                  Common options
-                </h4>
-                <dl className="mt-3 space-y-2">
-                  {command.options.map((option) => (
-                    <div
-                      key={option.flag}
-                      className="grid grid-cols-[auto_1fr] items-baseline gap-x-3 gap-y-0.5 text-sm"
-                    >
-                      <dt>
-                        <code
-                          className={cn(
-                            "bg-muted text-foreground px-1.5 py-0.5",
-                            "hover:text-primary transition-colors duration-200",
-                          )}
-                        >
-                          {option.flag}
-                        </code>
-                      </dt>
-                      <dd className="text-muted-foreground">
-                        <span aria-hidden="true">— </span>
-                        {option.description}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-            </div>
-          </article>
-
-          <div className="flex min-w-0 flex-col gap-3">
-            <Terminal
-              title="learner@rean:~"
-              language="bash"
-              copyLabel="Copy command examples"
-              className="h-full shadow-sm"
-              lines={command.examples.map((example) => ({
-                command: example.command,
-                output: example.output,
-                note:
-                  example.description === command.description
-                    ? undefined
-                    : example.description,
-              }))}
-            />
-          </div>
-        </div>
+        <ul className="mt-12 grid grid-cols-1 gap-4 sm:mt-16 sm:gap-5 md:grid-cols-2">
+          {spotlightCommands.map((command) => (
+            <li key={command.name} className="min-w-0">
+              <CommandCard command={command} />
+            </li>
+          ))}
+        </ul>
 
         <div className="mt-8 sm:hidden">
           <ExploreCommandsLink />
@@ -144,29 +54,79 @@ export function CommandSpotlight() {
   );
 }
 
-function MetaItem({
-  term,
-  value,
-  mono = false,
-}: {
-  term: string;
-  value: string;
-  mono?: boolean;
-}) {
+function CommandCard({ command }: { command: SpotlightCommand }) {
+  const titleId = `command-${command.name}-title`;
+  const descId = `command-${command.name}-desc`;
+
   return (
-    <div className="min-w-0">
-      <dt className="text-muted-foreground font-mono text-[0.7rem] tracking-[0.14em] uppercase">
-        {term}
-      </dt>
-      <dd
+    <article
+      aria-labelledby={titleId}
+      aria-describedby={descId}
+      className={cn(
+        "group/command bg-card flex h-full min-w-0 flex-col rounded-lg border p-4 sm:p-5",
+        "transition-[border-color,box-shadow] duration-200",
+        "hover:border-primary/40 hover:shadow-sm",
+        "focus-within:border-primary/40",
+      )}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 id={titleId} className="leading-none">
+            <Link
+              href={command.href}
+              className={cn(
+                "text-primary font-mono text-xl font-semibold tracking-tight sm:text-2xl",
+                "rounded-sm transition-colors duration-200",
+                "hover:text-primary/80",
+                "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+              )}
+            >
+              {command.name}
+            </Link>
+          </h3>
+          <p
+            id={descId}
+            className="text-muted-foreground mt-2 text-sm leading-relaxed"
+          >
+            {command.description}
+          </p>
+        </div>
+
+        <Link
+          href={command.href}
+          className={cn(
+            "text-muted-foreground hover:text-primary inline-flex size-10 shrink-0 items-center justify-center rounded-md sm:size-8",
+            "transition-colors duration-200",
+            "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+          )}
+          aria-label={`Learn more about ${command.name}`}
+        >
+          <ArrowRight
+            aria-hidden="true"
+            className="size-4 transition-transform duration-200 group-hover/command:translate-x-0.5"
+          />
+        </Link>
+      </div>
+
+      <div
         className={cn(
-          "mt-1 text-sm font-medium",
-          mono && "text-primary font-mono",
+          "bg-terminal text-terminal-foreground mt-4 flex min-w-0 items-center gap-2 rounded-md border",
+          "px-3 py-2",
         )}
       >
-        {mono ? <code className="bg-transparent p-0">{value}</code> : value}
-      </dd>
-    </div>
+        <div className="min-w-0 flex-1 overflow-x-auto font-mono text-sm leading-relaxed whitespace-nowrap">
+          <span className="text-prompt select-none" aria-hidden="true">
+            ${" "}
+          </span>
+          <span>{command.example}</span>
+        </div>
+        <CopyButton
+          text={command.example}
+          label={`Copy ${command.name} command`}
+          className="text-terminal-foreground/80 hover:text-terminal-foreground size-10 shrink-0 hover:bg-white/10 sm:size-8"
+        />
+      </div>
+    </article>
   );
 }
 
