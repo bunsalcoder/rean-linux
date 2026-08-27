@@ -8,9 +8,37 @@ import { Button } from "@/components/ui/button";
 type CopyButtonProps = {
   text: string;
   className?: string;
+  label?: string;
 };
 
-export function CopyButton({ text, className }: CopyButtonProps) {
+function copyWithFallback(text: string): boolean {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.setAttribute("aria-hidden", "true");
+  textarea.style.position = "fixed";
+  textarea.style.top = "0";
+  textarea.style.left = "0";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+
+  try {
+    return document.execCommand("copy");
+  } catch {
+    return false;
+  } finally {
+    textarea.remove();
+  }
+}
+
+export function CopyButton({
+  text,
+  className,
+  label = "Copy to clipboard",
+}: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef<number | null>(null);
 
@@ -26,7 +54,9 @@ export function CopyButton({ text, className }: CopyButtonProps) {
     try {
       await navigator.clipboard.writeText(text);
     } catch {
-      return;
+      if (!copyWithFallback(text)) {
+        return;
+      }
     }
 
     setCopied(true);
@@ -47,7 +77,7 @@ export function CopyButton({ text, className }: CopyButtonProps) {
       size="icon-xs"
       onClick={handleCopy}
       className={className}
-      aria-label={copied ? "Copied" : "Copy to clipboard"}
+      aria-label={copied ? "Copied" : label}
     >
       {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
       <span className="sr-only" aria-live="polite">
