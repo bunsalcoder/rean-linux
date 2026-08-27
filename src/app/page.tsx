@@ -1,3 +1,4 @@
+import { CommandSpotlight } from "@/components/home/command-spotlight";
 import { ExploreTopics } from "@/components/home/explore-topics";
 import { FeaturedGuides } from "@/components/home/featured-guides";
 import { Hero } from "@/components/home/hero";
@@ -10,6 +11,7 @@ export default function HomePage() {
       <LearningPath />
       <ExploreTopics />
       <FeaturedGuides />
+      <CommandSpotlight />
     </>
   );
 }
