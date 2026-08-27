@@ -1,61 +1,45 @@
-export const COMMAND_DIFFICULTIES = ["Beginner", "Intermediate"] as const;
-
-export type CommandDifficulty = (typeof COMMAND_DIFFICULTIES)[number];
-
-export type CommandOption = {
-  flag: string;
-  description: string;
-};
-
-export type CommandExample = {
-  command: string;
-  output?: string;
-  description: string;
-};
-
 export type SpotlightCommand = {
-  command: string;
-  title: string;
+  name: string;
   description: string;
-  category: string;
-  difficulty: CommandDifficulty;
-  syntax: string;
-  options: readonly CommandOption[];
-  examples: readonly CommandExample[];
+  example: string;
+  href: string;
 };
 
-export const spotlightCommand: SpotlightCommand = {
-  command: "ls",
-  title: "List directory contents",
-  description: "List files and directories in the current location.",
-  category: "Filesystem",
-  difficulty: "Beginner",
-  syntax: "ls [options] [directory]",
-  options: [
-    { flag: "-l", description: "detailed listing" },
-    { flag: "-a", description: "show hidden files" },
-    { flag: "-h", description: "human-readable sizes" },
-  ],
-  examples: [
-    {
-      command: "ls",
-      output: "Documents  Downloads  Music  Pictures  Projects",
-      description: "List files and directories in the current location.",
-    },
-    {
-      command: "ls -la",
-      output: [
-        "total 32",
-        "drwxr-xr-x  .",
-        "drwxr-xr-x  ..",
-        "-rw-r--r--  .bashrc",
-        "drwxr-xr-x  Documents",
-        "drwxr-xr-x  Downloads",
-        "drwxr-xr-x  Music",
-        "drwxr-xr-x  Pictures",
-        "drwxr-xr-x  Projects",
-      ].join("\n"),
-      description: "Show detailed information, including hidden files.",
-    },
-  ],
-};
+export const spotlightCommands: readonly SpotlightCommand[] = [
+  {
+    name: "pwd",
+    description: "Print the current working directory.",
+    example: "pwd",
+    href: "/commands/pwd",
+  },
+  {
+    name: "ls",
+    description: "List files and directories.",
+    example: "ls -la",
+    href: "/commands/ls",
+  },
+  {
+    name: "cd",
+    description: "Change the current working directory.",
+    example: "cd /var/log",
+    href: "/commands/cd",
+  },
+  {
+    name: "mkdir",
+    description: "Create a new directory.",
+    example: "mkdir projects",
+    href: "/commands/mkdir",
+  },
+  {
+    name: "grep",
+    description: "Search text using patterns.",
+    example: 'grep "error" app.log',
+    href: "/commands/grep",
+  },
+  {
+    name: "chmod",
+    description: "Change file or directory permissions.",
+    example: "chmod 755 script.sh",
+    href: "/commands/chmod",
+  },
+];

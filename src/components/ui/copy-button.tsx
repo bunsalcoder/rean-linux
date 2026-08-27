@@ -4,6 +4,7 @@ import { Check, Copy } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type CopyButtonProps = {
   text: string;
@@ -76,7 +77,7 @@ export function CopyButton({
       variant="ghost"
       size="icon-xs"
       onClick={handleCopy}
-      className={className}
+      className={cn(className, copied && "text-success hover:text-success")}
       aria-label={copied ? "Copied" : label}
     >
       {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
