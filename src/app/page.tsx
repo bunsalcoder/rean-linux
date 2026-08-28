@@ -3,6 +3,7 @@ import { ExploreTopics } from "@/components/home/explore-topics";
 import { FeaturedGuides } from "@/components/home/featured-guides";
 import { Hero } from "@/components/home/hero";
 import { LearningPath } from "@/components/home/learning-path";
+import { WhyReanLinux } from "@/components/home/why-rean-linux";
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <ExploreTopics />
       <FeaturedGuides />
       <CommandSpotlight />
+      <WhyReanLinux />
     </>
   );
 }
