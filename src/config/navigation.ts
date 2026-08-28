@@ -19,24 +19,21 @@ export type FooterNavSection = {
 
 export const footerNav: readonly FooterNavSection[] = [
   {
-    title: "Learning",
+    title: "Learn",
     items: [
-      { href: "/learn", label: "Learn" },
-      { href: "/guides", label: "Guides" },
-      { href: "/commands", label: "Commands" },
-      { label: "Projects" },
+      { href: "/learn", label: "Learning Path" },
+      { href: "/learn/fundamentals", label: "Linux Fundamentals" },
+      { href: "/learn/terminal", label: "Terminal & Commands" },
+      { href: "/learn/filesystem", label: "Filesystem" },
+      { href: "/learn/networking", label: "Networking" },
     ],
   },
   {
     title: "Resources",
     items: [
-      { label: "Linux Documentation" },
-      { label: "Cheatsheets" },
-      { label: "Community" },
+      { href: "/guides", label: "Guides" },
+      { href: "/commands", label: "Commands" },
+      { href: "/about", label: "About" },
     ],
-  },
-  {
-    title: "About",
-    items: [{ href: "/about", label: "About rean-linux" }],
   },
 ];
