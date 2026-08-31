@@ -108,7 +108,7 @@ function LearningStage({
               "group-hover/stage:border-primary/40 group-hover/stage:bg-accent/30 group-hover/stage:shadow-sm",
               "group-focus-visible/stage:border-primary/40",
               isRecommended &&
-                "border-primary/35 bg-accent/20 shadow-xs ring-1 ring-primary/10",
+                "border-primary/35 bg-accent/20 ring-primary/10 shadow-xs ring-1",
             )}
           >
             <CardHeader>
