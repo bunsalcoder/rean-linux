@@ -1,3 +1,12 @@
+import {
+  BookOpen,
+  Boxes,
+  FolderTree,
+  Server,
+  Terminal,
+  type LucideIcon,
+} from "lucide-react";
+
 export const LEARNING_LEVEL_SLUGS = [
   "beginner",
   "user",
@@ -12,8 +21,11 @@ export type LearningLevel = {
   slug: LearningLevelSlug;
   indicator: string;
   title: string;
+  label: string;
   description: string;
   topics: readonly string[];
+  icon: LucideIcon;
+  recommended?: boolean;
 };
 
 export const learningLevels: readonly LearningLevel[] = [
@@ -21,48 +33,62 @@ export const learningLevels: readonly LearningLevel[] = [
     slug: "beginner",
     indicator: "01",
     title: "Linux Beginner",
-    description: "Understand what Linux is and learn the fundamentals.",
+    label: "Start here",
+    description:
+      "Build your foundation and understand what Linux is, how it works, and how to use the terminal.",
     topics: [
-      "What is Linux?",
-      "Linux distributions",
-      "Installing Linux",
+      "Linux fundamentals",
+      "Distributions",
+      "Installation",
       "Terminal basics",
     ],
+    icon: BookOpen,
+    recommended: true,
   },
   {
     slug: "user",
     indicator: "02",
     title: "Linux User",
-    description: "Become comfortable working with Linux every day.",
+    label: "Build your confidence",
+    description:
+      "Learn to work with files, permissions, users, packages, and everyday Linux tasks.",
     topics: [
-      "Files and directories",
+      "Files & directories",
       "Permissions",
-      "Users and groups",
+      "Users & groups",
       "Package management",
     ],
+    icon: FolderTree,
   },
   {
     slug: "power-user",
     indicator: "03",
     title: "Linux Power User",
+    label: "Master the command line",
     description:
-      "Go deeper into the system and become productive from the command line.",
-    topics: ["Bash", "Processes", "Environment variables", "Shell scripting"],
+      "Become productive with Bash, processes, environment variables, and shell scripting.",
+    topics: ["Bash", "Processes", "Jobs", "Shell scripting"],
+    icon: Terminal,
   },
   {
     slug: "administrator",
     indicator: "04",
     title: "Linux Administrator",
-    description: "Learn how to operate and maintain real Linux systems.",
-    topics: ["Networking", "SSH", "Services", "System administration"],
+    label: "Manage real systems",
+    description:
+      "Learn the skills required to operate and maintain Linux machines and servers.",
+    topics: ["Networking", "SSH", "Services", "Logs", "Storage"],
+    icon: Server,
   },
   {
     slug: "devops",
     indicator: "05",
-    title: "Linux / DevOps Expert",
+    title: "Linux & DevOps",
+    label: "Go beyond Linux",
     description:
-      "Apply Linux knowledge to servers, infrastructure, and modern DevOps.",
-    topics: ["Docker", "Kubernetes", "Nginx", "CI/CD", "Cloud infrastructure"],
+      "Apply your Linux knowledge to containers, infrastructure, automation, and DevOps.",
+    topics: ["Docker", "Kubernetes", "Nginx", "CI/CD", "Cloud"],
+    icon: Boxes,
   },
 ];
 
