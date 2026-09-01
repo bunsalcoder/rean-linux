@@ -86,12 +86,16 @@ export function LinuxDistributionsContent() {
             target different ecosystems.
           </li>
           <li>
-            <strong className="text-foreground">Different release models</strong>{" "}
+            <strong className="text-foreground">
+              Different release models
+            </strong>{" "}
             — Some release on fixed schedules with long-term support; others
             update continuously as new packages become available.
           </li>
           <li>
-            <strong className="text-foreground">Different default software</strong>{" "}
+            <strong className="text-foreground">
+              Different default software
+            </strong>{" "}
             — Desktop environments, server tools, and preinstalled applications
             vary widely between distributions.
           </li>
@@ -291,14 +295,16 @@ sudo apt install nginx`}
 
       <LessonSection id={vsDesktop.id} title={vsDesktop.title}>
         <p>
-          <strong className="text-foreground">Distribution ≠ Desktop Environment</strong>
+          <strong className="text-foreground">
+            Distribution ≠ Desktop Environment
+          </strong>
         </p>
         <p>
           A distribution is the broader operating system package — kernel,
           tools, package manager, and default software. A{" "}
           <strong className="text-foreground">desktop environment</strong> is
-          the graphical layer that provides windows, panels, menus, and
-          settings for daily desktop use.
+          the graphical layer that provides windows, panels, menus, and settings
+          for daily desktop use.
         </p>
         <p>
           The same distribution can ship with different desktop environments,
@@ -323,8 +329,8 @@ sudo apt install nginx`}
             Ready to install Linux?
           </h3>
           <p>
-            Now that you understand distributions, the next step is preparing and
-            installing a Linux system.
+            Now that you understand distributions, the next step is preparing
+            and installing a Linux system.
           </p>
           <p>
             <TextLink href="/learn/beginner/installing-linux">

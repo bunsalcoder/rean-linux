@@ -8,7 +8,11 @@ type LessonTableProps = {
   className?: string;
 };
 
-export function LessonTable({ caption, children, className }: LessonTableProps) {
+export function LessonTable({
+  caption,
+  children,
+  className,
+}: LessonTableProps) {
   return (
     <div
       className={cn(
@@ -61,7 +65,7 @@ export function LessonTableCellPrimary({ children }: { children: ReactNode }) {
   return (
     <th
       scope="row"
-      className="text-foreground px-4 py-3 text-left font-medium align-top"
+      className="text-foreground px-4 py-3 text-left align-top font-medium"
     >
       {children}
     </th>
