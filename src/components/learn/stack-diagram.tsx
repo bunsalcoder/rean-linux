@@ -24,7 +24,10 @@ export function StackDiagram({
         className="flex flex-col items-center gap-2 px-4 py-6 sm:px-6"
       >
         {layers.map((layer, index) => (
-          <div key={layer} className="flex w-full max-w-xs flex-col items-center">
+          <div
+            key={layer}
+            className="flex w-full max-w-xs flex-col items-center"
+          >
             <div className="border-border bg-background text-foreground w-full rounded-md border px-4 py-2.5 text-center font-mono text-sm">
               {layer}
             </div>
@@ -70,7 +73,10 @@ export function CompositionDiagram({
         className="flex flex-col items-center gap-2 px-4 py-6 sm:px-6"
       >
         {components.map((component, index) => (
-          <div key={component} className="flex w-full max-w-xs flex-col items-center">
+          <div
+            key={component}
+            className="flex w-full max-w-xs flex-col items-center"
+          >
             <div className="border-border bg-background text-foreground w-full rounded-md border px-4 py-2.5 text-center font-mono text-sm">
               {component}
             </div>

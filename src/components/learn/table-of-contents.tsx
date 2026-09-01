@@ -8,10 +8,7 @@ type TableOfContentsProps = {
 
 export function TableOfContents({ sections, className }: TableOfContentsProps) {
   return (
-    <nav
-      aria-labelledby="lesson-toc-heading"
-      className={cn(className)}
-    >
+    <nav aria-labelledby="lesson-toc-heading" className={cn(className)}>
       <p
         id="lesson-toc-heading"
         className="text-foreground mb-3 text-sm font-medium"

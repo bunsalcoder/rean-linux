@@ -17,9 +17,16 @@ type LessonLayoutProps = {
   className?: string;
 };
 
-export function LessonLayout({ lesson, children, className }: LessonLayoutProps) {
+export function LessonLayout({
+  lesson,
+  children,
+  className,
+}: LessonLayoutProps) {
   return (
-    <Container width="wide" className={cn("py-10 sm:py-14 md:py-16", className)}>
+    <Container
+      width="wide"
+      className={cn("py-10 sm:py-14 md:py-16", className)}
+    >
       <Breadcrumb items={lesson.breadcrumb} />
 
       <LessonHeader

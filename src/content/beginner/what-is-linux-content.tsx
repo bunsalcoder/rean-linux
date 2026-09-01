@@ -23,10 +23,10 @@ export function WhatIsLinuxContent() {
       <LessonSection id={simpleTerms.id} title={simpleTerms.title}>
         <p>
           At its core, <strong className="text-foreground">Linux</strong> is an
-          open-source operating system kernel — the foundational layer of software
-          that lets your computer hardware and applications work together. When
-          people say they use &ldquo;Linux,&rdquo; they are usually referring to
-          a complete system built around that kernel.
+          open-source operating system kernel — the foundational layer of
+          software that lets your computer hardware and applications work
+          together. When people say they use &ldquo;Linux,&rdquo; they are
+          usually referring to a complete system built around that kernel.
         </p>
         <p>
           An <strong className="text-foreground">operating system</strong>{" "}
@@ -65,13 +65,11 @@ export function WhatIsLinuxContent() {
         <p>
           When you open a file, connect to Wi-Fi, or run a program, the request
           eventually reaches the kernel. It decides how CPU time is shared,
-          which memory regions belong to which process, how devices are accessed,
-          and how data moves between storage, network interfaces, and
+          which memory regions belong to which process, how devices are
+          accessed, and how data moves between storage, network interfaces, and
           applications.
         </p>
-        <p>
-          In practical terms, the kernel handles responsibilities such as:
-        </p>
+        <p>In practical terms, the kernel handles responsibilities such as:</p>
         <ul className="list-disc space-y-2 pl-5">
           <li>Scheduling processes on the CPU</li>
           <li>Managing RAM and virtual memory</li>
@@ -135,8 +133,8 @@ export function WhatIsLinuxContent() {
         <ul className="space-y-4">
           <li>
             <strong className="text-foreground">Open source</strong> — The
-            kernel and most distributions can be inspected, modified, and
-            shared freely. Organizations can audit code and communities can fix
+            kernel and most distributions can be inspected, modified, and shared
+            freely. Organizations can audit code and communities can fix
             problems without waiting on a single vendor.
           </li>
           <li>
@@ -197,12 +195,14 @@ export function WhatIsLinuxContent() {
             run on Linux hosts.
           </li>
           <li>
-            <strong className="text-foreground">Containers</strong> — Tools
-            such as Docker and Kubernetes rely on Linux kernel features for
-            isolation and resource control.
+            <strong className="text-foreground">Containers</strong> — Tools such
+            as Docker and Kubernetes rely on Linux kernel features for isolation
+            and resource control.
           </li>
           <li>
-            <strong className="text-foreground">Development environments</strong>{" "}
+            <strong className="text-foreground">
+              Development environments
+            </strong>{" "}
             — Many developers use Linux locally or in remote environments
             because it mirrors production servers closely.
           </li>
@@ -211,9 +211,9 @@ export function WhatIsLinuxContent() {
             Routers, switches, and firewalls often run embedded Linux systems.
           </li>
           <li>
-            <strong className="text-foreground">Embedded systems</strong> —
-            TVs, appliances, industrial controllers, and IoT devices frequently
-            use a trimmed-down Linux build.
+            <strong className="text-foreground">Embedded systems</strong> — TVs,
+            appliances, industrial controllers, and IoT devices frequently use a
+            trimmed-down Linux build.
           </li>
           <li>
             <strong className="text-foreground">Supercomputers</strong> — Most
@@ -230,9 +230,9 @@ export function WhatIsLinuxContent() {
 
       <LessonSection id={distributions.id} title={distributions.title}>
         <p>
-          There are hundreds of distributions, but a few names come up constantly
-          when you start learning. Here are five well-known options and what
-          makes each approachable for beginners.
+          There are hundreds of distributions, but a few names come up
+          constantly when you start learning. Here are five well-known options
+          and what makes each approachable for beginners.
         </p>
         <dl className="space-y-5">
           <div>
