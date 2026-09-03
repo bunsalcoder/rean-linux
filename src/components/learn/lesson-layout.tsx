@@ -30,10 +30,10 @@ export function LessonLayout({
       <Breadcrumb items={lesson.breadcrumb} />
 
       <LessonHeader
-        category={lesson.category}
+        levelNumber={lesson.levelNumber}
+        level={lesson.level}
         title={lesson.title}
         description={lesson.description}
-        level={lesson.level}
         readingTime={lesson.readingTime}
       />
 

@@ -13,7 +13,7 @@ export type LessonNavLink = {
 export type LessonConfig = {
   title: string;
   description: string;
-  category: string;
+  levelNumber: string;
   level: string;
   readingTime: string;
   sections: readonly LessonSection[];

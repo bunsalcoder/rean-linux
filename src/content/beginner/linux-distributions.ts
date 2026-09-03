@@ -38,9 +38,9 @@ export const linuxDistributionsLesson: LessonConfig = {
   title: "Linux Distributions",
   description:
     "Linux comes in many distributions, each packaged with its own tools, defaults, and goals. Understanding the differences helps you choose the right environment for learning.",
-  category: "Linux Fundamentals",
+  levelNumber: "02",
   level: "Beginner",
-  readingTime: "10 min",
+  readingTime: "10 min read",
   sections: linuxDistributionsSections,
   breadcrumb: [
     { label: "Learn", href: "/learn" },
