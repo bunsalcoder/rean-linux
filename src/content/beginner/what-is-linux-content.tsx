@@ -229,9 +229,9 @@ export function WhatIsLinuxContent() {
           </li>
         </ul>
         <p>
-          Next, you will look at Linux distributions in more detail — what
-          makes them different, and how to think about choosing one as you
-          continue learning.
+          Next, you will look at Linux distributions in more detail — what makes
+          them different, and how to think about choosing one as you continue
+          learning.
         </p>
       </LessonSection>
     </>
