@@ -19,7 +19,7 @@ export function CodeBlock({
   return (
     <figure
       className={cn(
-        "bg-code text-code-foreground overflow-hidden rounded-lg border",
+        "border-border bg-code text-code-foreground overflow-hidden rounded-lg border",
         className,
       )}
     >

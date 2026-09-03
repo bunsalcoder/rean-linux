@@ -5,7 +5,9 @@ import { WhatIsLinuxContent } from "@/content/beginner/what-is-linux-content";
 import { whatIsLinuxLesson } from "@/content/beginner/what-is-linux";
 
 export const metadata: Metadata = {
-  title: whatIsLinuxLesson.title,
+  title: {
+    absolute: "What is Linux? | Rean Linux",
+  },
   description: whatIsLinuxLesson.description,
 };
 

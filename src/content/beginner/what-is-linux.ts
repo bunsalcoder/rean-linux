@@ -1,33 +1,33 @@
 import type { LessonConfig, LessonSection } from "@/types/lesson";
 
 export const WHAT_IS_LINUX_SECTIONS = {
-  simpleTerms: {
-    id: "linux-in-simple-terms",
-    title: "Linux in simple terms",
+  whatIs: {
+    id: "what-is-linux",
+    title: "What is Linux?",
   },
   kernel: {
-    id: "what-is-the-linux-kernel",
-    title: "What is the Linux kernel?",
+    id: "the-linux-kernel",
+    title: "The Linux Kernel",
   },
-  vsDistribution: {
-    id: "linux-vs-a-linux-distribution",
-    title: "Linux vs a Linux distribution",
-  },
-  popularity: {
-    id: "why-is-linux-so-popular",
-    title: "Why is Linux so popular?",
-  },
-  whereUsed: {
-    id: "where-is-linux-used",
-    title: "Where is Linux used?",
+  gnuLinux: {
+    id: "gnu-linux",
+    title: "GNU/Linux",
   },
   distributions: {
     id: "linux-distributions",
-    title: "Linux distributions",
+    title: "Linux Distributions",
   },
-  nextSteps: {
-    id: "what-should-you-learn-next",
-    title: "What should you learn next?",
+  whyLearn: {
+    id: "why-learn-linux",
+    title: "Why Learn Linux?",
+  },
+  everywhere: {
+    id: "linux-is-everywhere",
+    title: "Linux Is Everywhere",
+  },
+  summary: {
+    id: "summary",
+    title: "Summary",
   },
 } as const satisfies Record<string, LessonSection>;
 
@@ -38,10 +38,10 @@ export const whatIsLinuxSections: readonly LessonSection[] = Object.values(
 export const whatIsLinuxLesson: LessonConfig = {
   title: "What is Linux?",
   description:
-    "Linux is an open-source operating system kernel that powers everything from personal computers and smartphones to web servers and cloud infrastructure.",
-  category: "Linux Fundamentals",
+    "A beginner-friendly introduction to the operating system that powers servers, desktops, cloud infrastructure, and much more.",
+  levelNumber: "01",
   level: "Beginner",
-  readingTime: "8 min",
+  readingTime: "8 min read",
   sections: whatIsLinuxSections,
   breadcrumb: [
     { label: "Learn", href: "/learn" },
@@ -49,7 +49,6 @@ export const whatIsLinuxLesson: LessonConfig = {
     { label: "What is Linux?" },
   ],
   navigation: {
-    previous: { label: "Beginner Path", href: "/learn/beginner" },
     next: {
       label: "Linux Distributions",
       href: "/learn/beginner/linux-distributions",

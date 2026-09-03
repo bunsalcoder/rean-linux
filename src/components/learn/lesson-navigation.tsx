@@ -52,6 +52,21 @@ function NavCard({
   );
 }
 
+function DisabledPrevious() {
+  return (
+    <div
+      aria-disabled="true"
+      className="border-border bg-muted/20 text-muted-foreground flex min-h-[5.5rem] flex-col items-start justify-center rounded-lg border border-dashed p-4 sm:p-5"
+    >
+      <span className="flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase">
+        <ArrowLeft aria-hidden="true" className="size-3.5" />
+        Previous
+      </span>
+      <span className="mt-2 text-sm">Start of path</span>
+    </div>
+  );
+}
+
 export function LessonNavigation({
   previous,
   next,
@@ -65,13 +80,16 @@ export function LessonNavigation({
     <nav
       aria-label="Lesson navigation"
       className={cn(
-        "border-border mt-12 grid gap-4 border-t pt-8 sm:mt-14 sm:pt-10",
-        previous && next ? "sm:grid-cols-2" : "sm:grid-cols-1",
+        "border-border mt-12 grid gap-4 border-t pt-8 sm:mt-14 sm:grid-cols-2 sm:pt-10",
         className,
       )}
     >
-      {previous ? <NavCard direction="previous" link={previous} /> : <div />}
-      {next ? <NavCard direction="next" link={next} /> : null}
+      {previous ? (
+        <NavCard direction="previous" link={previous} />
+      ) : (
+        <DisabledPrevious />
+      )}
+      {next ? <NavCard direction="next" link={next} /> : <div />}
     </nav>
   );
 }
