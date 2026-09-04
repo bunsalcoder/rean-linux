@@ -104,3 +104,62 @@ export function CompositionDiagram({
     </figure>
   );
 }
+
+export type TreeNode = {
+  label: string;
+  children?: readonly TreeNode[];
+};
+
+type TreeDiagramProps = {
+  root: TreeNode;
+  ariaLabel: string;
+  className?: string;
+};
+
+function TreeBranch({
+  node,
+  isRoot = false,
+}: {
+  node: TreeNode;
+  isRoot?: boolean;
+}) {
+  const children = node.children ?? [];
+
+  return (
+    <li className={cn(!isRoot && "mt-2")}>
+      <div
+        className={cn(
+          "border-border bg-background text-foreground inline-block rounded-md border px-3 py-2 font-mono text-sm",
+          isRoot && "border-primary/30 bg-primary/5 font-medium",
+        )}
+      >
+        {node.label}
+      </div>
+      {children.length > 0 ? (
+        <ul className="border-border mt-2 space-y-0 border-l pl-4 sm:pl-5">
+          {children.map((child) => (
+            <TreeBranch key={child.label} node={child} />
+          ))}
+        </ul>
+      ) : null}
+    </li>
+  );
+}
+
+export function TreeDiagram({ root, ariaLabel, className }: TreeDiagramProps) {
+  return (
+    <figure
+      className={cn(
+        "border-border bg-muted/30 my-6 overflow-hidden rounded-lg border",
+        className,
+      )}
+    >
+      <div role="img" aria-label={ariaLabel} className="px-4 py-6 sm:px-6">
+        <ul className="list-none">
+          <TreeBranch node={root} isRoot />
+        </ul>
+      </div>
+      <figcaption className="sr-only">{ariaLabel}</figcaption>
+    </figure>
+  );
+}
