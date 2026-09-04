@@ -167,7 +167,9 @@ export function TerminalContent() {
         <h3 className="text-foreground font-heading text-lg font-semibold tracking-tight sm:text-xl">
           <code className="font-mono">echo</code>
         </h3>
-        <p>Print text to the terminal. Useful for messages and simple checks.</p>
+        <p>
+          Print text to the terminal. Useful for messages and simple checks.
+        </p>
         <CodeBlock code='echo "Hello Linux"' language="bash" title="bash" />
       </LessonSection>
 
@@ -218,8 +220,8 @@ export function TerminalContent() {
 
       <LessonSection id={tryIt.id} title={tryIt.title}>
         <p>
-          Experiment with the commands you&apos;ve just learned. This terminal is
-          simulated, so you can safely explore.
+          Experiment with the commands you&apos;ve just learned. This terminal
+          is simulated, so you can safely explore.
         </p>
         <TerminalSimulator />
       </LessonSection>
@@ -236,12 +238,8 @@ export function TerminalContent() {
       <LessonSection id={summary.id} title={summary.title}>
         <p>In this lesson, you learned that:</p>
         <ul className="list-disc space-y-2 pl-5">
-          <li>
-            A terminal is a text-based interface for entering commands
-          </li>
-          <li>
-            A shell is the program that interprets those commands
-          </li>
+          <li>A terminal is a text-based interface for entering commands</li>
+          <li>A shell is the program that interprets those commands</li>
           <li>
             The terminal and the shell work together, but they are different
             pieces

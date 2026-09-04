@@ -139,10 +139,7 @@ export function TerminalSimulator({
       return;
     }
 
-    setHistory((prev) => [
-      ...prev,
-      { command: raw, output: result.lines },
-    ]);
+    setHistory((prev) => [...prev, { command: raw, output: result.lines }]);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -226,10 +223,7 @@ export function TerminalSimulator({
           aria-relevant="additions"
         >
           {history.map((entry, index) => (
-            <div
-              key={`${entry.command}-${index}`}
-              className="mb-3 last:mb-0"
-            >
+            <div key={`${entry.command}-${index}`} className="mb-3 last:mb-0">
               <div className="break-all whitespace-pre-wrap">
                 <span className="text-prompt select-none" aria-hidden="true">
                   {PROMPT}{" "}

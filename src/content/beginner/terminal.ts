@@ -35,9 +35,8 @@ export const TERMINAL_SECTIONS = {
   },
 } as const satisfies Record<string, LessonSection>;
 
-export const terminalSections: readonly LessonSection[] = Object.values(
-  TERMINAL_SECTIONS,
-);
+export const terminalSections: readonly LessonSection[] =
+  Object.values(TERMINAL_SECTIONS);
 
 export const terminalLesson: LessonConfig = {
   title: "The Linux Terminal",
