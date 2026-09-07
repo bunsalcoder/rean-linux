@@ -13,6 +13,12 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { simulateTerminalCommand } from "@/lib/simulate-terminal-command";
+import {
+  createLearnerHomeFs,
+  formatTerminalPrompt,
+  simulateFsCommand,
+  type SimulatedFsState,
+} from "@/lib/simulated-filesystem";
 import { cn } from "@/lib/utils";
 
 const DEFAULT_SUGGESTIONS = [
@@ -24,20 +30,61 @@ const DEFAULT_SUGGESTIONS = [
   "help",
 ] as const;
 
-const PROMPT = "learner@rean-linux:~$";
+const DEFAULT_FS_SUGGESTIONS = ["pwd", "ls", "ls -la", "help"] as const;
 
 type HistoryEntry = {
   command: string;
   output: readonly string[];
+  prompt: string;
 };
+
+export type TerminalSuggestion =
+  | string
+  | {
+      command: string;
+      label?: string;
+    };
 
 type TerminalSimulatorProps = {
   className?: string;
   title?: string;
-  suggestions?: readonly string[];
+  suggestions?: readonly TerminalSuggestion[];
+  /**
+   * Enable the in-memory filesystem command set (pwd/ls/cd/mkdir/...).
+   * When omitted, the simpler Lesson 04 command set is used.
+   */
+  filesystem?: boolean | SimulatedFsState;
+  onFsChange?: (state: SimulatedFsState) => void;
+  suggestionsLabel?: string;
 };
 
 const emptySubscribe = () => () => {};
+
+function suggestionCommand(suggestion: TerminalSuggestion): string {
+  return typeof suggestion === "string" ? suggestion : suggestion.command;
+}
+
+function suggestionLabel(suggestion: TerminalSuggestion): string {
+  if (typeof suggestion === "string") {
+    return suggestion;
+  }
+  return suggestion.label ?? suggestion.command;
+}
+
+function resolveInitialFs(
+  filesystem: boolean | SimulatedFsState | undefined,
+): SimulatedFsState | null {
+  if (!filesystem) {
+    return null;
+  }
+  if (filesystem === true) {
+    return createLearnerHomeFs();
+  }
+  return {
+    cwd: filesystem.cwd,
+    nodes: { ...filesystem.nodes },
+  };
+}
 
 function TerminalShellFrame({
   title,
@@ -78,7 +125,10 @@ function TerminalShellFrame({
 export function TerminalSimulator({
   className,
   title = "rean-linux",
-  suggestions = DEFAULT_SUGGESTIONS,
+  suggestions,
+  filesystem,
+  onFsChange,
+  suggestionsLabel = "Try a command",
 }: TerminalSimulatorProps) {
   const inputId = useId();
   const outputId = useId();
@@ -90,10 +140,25 @@ export function TerminalSimulator({
     () => false,
   );
 
+  const [fsState, setFsState] = useState<SimulatedFsState | null>(() =>
+    resolveInitialFs(filesystem),
+  );
+  const fsRef = useRef(fsState);
+  const onFsChangeRef = useRef(onFsChange);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [currentInput, setCurrentInput] = useState("");
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number | null>(null);
+
+  const useFilesystem = fsState !== null;
+  const resolvedSuggestions =
+    suggestions ??
+    (useFilesystem ? DEFAULT_FS_SUGGESTIONS : DEFAULT_SUGGESTIONS);
+  const prompt = formatTerminalPrompt(fsState?.cwd ?? "/home/learner");
+
+  useEffect(() => {
+    onFsChangeRef.current = onFsChange;
+  }, [onFsChange]);
 
   useEffect(() => {
     if (!mounted) {
@@ -108,7 +173,7 @@ export function TerminalSimulator({
         <TerminalShellFrame title={title}>
           <div className="max-h-[min(22rem,55vh)] min-h-[12rem] p-3 font-mono text-sm leading-relaxed sm:max-h-[min(26rem,60vh)] sm:p-4">
             <span className="text-prompt select-none" aria-hidden="true">
-              {PROMPT}
+              {formatTerminalPrompt("/home/learner")}
             </span>
             <span className="sr-only">Loading interactive terminal</span>
           </div>
@@ -119,7 +184,10 @@ export function TerminalSimulator({
 
   function runCommand(raw: string) {
     const trimmed = raw.trim();
-    const result = simulateTerminalCommand(raw);
+    const currentFs = fsRef.current;
+    const currentPrompt = formatTerminalPrompt(
+      currentFs?.cwd ?? "/home/learner",
+    );
 
     if (trimmed) {
       setCommandHistory((prev) =>
@@ -129,17 +197,51 @@ export function TerminalSimulator({
     setHistoryIndex(null);
     setCurrentInput("");
 
+    if (currentFs) {
+      const { result, state } = simulateFsCommand(raw, currentFs);
+      fsRef.current = state;
+      setFsState(state);
+      onFsChangeRef.current?.(state);
+
+      if (result.kind === "clear") {
+        setHistory([]);
+        return;
+      }
+
+      if (result.kind === "empty") {
+        setHistory((prev) => [
+          ...prev,
+          { command: "", output: [], prompt: currentPrompt },
+        ]);
+        return;
+      }
+
+      setHistory((prev) => [
+        ...prev,
+        { command: raw, output: result.lines, prompt: currentPrompt },
+      ]);
+      return;
+    }
+
+    const result = simulateTerminalCommand(raw);
+
     if (result.kind === "clear") {
       setHistory([]);
       return;
     }
 
     if (result.kind === "empty") {
-      setHistory((prev) => [...prev, { command: "", output: [] }]);
+      setHistory((prev) => [
+        ...prev,
+        { command: "", output: [], prompt: currentPrompt },
+      ]);
       return;
     }
 
-    setHistory((prev) => [...prev, { command: raw, output: result.lines }]);
+    setHistory((prev) => [
+      ...prev,
+      { command: raw, output: result.lines, prompt: currentPrompt },
+    ]);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -226,9 +328,11 @@ export function TerminalSimulator({
             <div key={`${entry.command}-${index}`} className="mb-3 last:mb-0">
               <div className="break-all whitespace-pre-wrap">
                 <span className="text-prompt select-none" aria-hidden="true">
-                  {PROMPT}{" "}
+                  {entry.prompt}{" "}
                 </span>
-                <span className="sr-only">Prompt: {PROMPT}. Command: </span>
+                <span className="sr-only">
+                  Prompt: {entry.prompt}. Command:{" "}
+                </span>
                 <span>{entry.command}</span>
               </div>
               {entry.output.length > 0 ? (
@@ -250,7 +354,7 @@ export function TerminalSimulator({
               className="text-prompt shrink-0 select-none"
               aria-hidden="true"
             >
-              {PROMPT}
+              {prompt}
             </span>
             <input
               ref={inputRef}
@@ -274,27 +378,33 @@ export function TerminalSimulator({
         </div>
       </TerminalShellFrame>
 
-      <div>
-        <p className="text-muted-foreground font-mono text-xs tracking-[0.08em] uppercase">
-          Try a command
-        </p>
-        <ul className="mt-2 flex flex-wrap gap-2">
-          {suggestions.map((suggestion) => (
-            <li key={suggestion}>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => handleSuggestion(suggestion)}
-                className="font-mono"
-                aria-label={`Run simulated command: ${suggestion}`}
-              >
-                {suggestion}
-              </Button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {resolvedSuggestions.length > 0 ? (
+        <div>
+          <p className="text-muted-foreground font-mono text-xs tracking-[0.08em] uppercase">
+            {suggestionsLabel}
+          </p>
+          <ul className="mt-2 flex flex-wrap gap-2">
+            {resolvedSuggestions.map((suggestion) => {
+              const command = suggestionCommand(suggestion);
+              const label = suggestionLabel(suggestion);
+              return (
+                <li key={`${command}-${label}`}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleSuggestion(command)}
+                    className="min-h-10 font-mono sm:min-h-8"
+                    aria-label={`Run simulated command: ${command}`}
+                  >
+                    {label}
+                  </Button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : null}
     </div>
   );
 }
