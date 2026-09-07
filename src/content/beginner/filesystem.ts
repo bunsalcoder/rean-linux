@@ -47,9 +47,8 @@ export const FILESYSTEM_SECTIONS = {
   },
 } as const satisfies Record<string, LessonSection>;
 
-export const filesystemSections: readonly LessonSection[] = Object.values(
-  FILESYSTEM_SECTIONS,
-);
+export const filesystemSections: readonly LessonSection[] =
+  Object.values(FILESYSTEM_SECTIONS);
 
 export const filesystemLesson: LessonConfig = {
   title: "Understanding the Linux Filesystem",

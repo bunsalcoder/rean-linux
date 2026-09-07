@@ -13,10 +13,7 @@ import {
 } from "@/lib/simulated-filesystem";
 import { cn } from "@/lib/utils";
 
-type StepCheck = (
-  state: SimulatedFsState,
-  command?: string,
-) => boolean;
+type StepCheck = (state: SimulatedFsState, command?: string) => boolean;
 
 const GUIDED_STEPS: readonly {
   id: string;

@@ -116,8 +116,9 @@ export function FilesystemContent() {
           <code className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-[0.875em]">
             /
           </code>{" "}
-          is called the <strong className="text-foreground">root directory</strong>
-          . Keep these related ideas separate:
+          is called the{" "}
+          <strong className="text-foreground">root directory</strong>. Keep
+          these related ideas separate:
         </p>
         <ul className="list-disc space-y-2 pl-5">
           <li>
@@ -148,14 +149,8 @@ export function FilesystemContent() {
         </p>
         <CodeBlock code="pwd" language="bash" title="bash" />
         <CodeBlock code="/home/learner" language="text" title="output" />
-        <p>
-          Then move to the root and confirm again:
-        </p>
-        <CodeBlock
-          code={"cd /\npwd"}
-          language="bash"
-          title="bash"
-        />
+        <p>Then move to the root and confirm again:</p>
+        <CodeBlock code={"cd /\npwd"} language="bash" title="bash" />
         <CodeBlock code="/" language="text" title="output" />
         <TerminalSimulator
           filesystem={createFilesystemLessonFs()}
@@ -183,17 +178,13 @@ export function FilesystemContent() {
               <LessonTableCellPrimary>
                 <code className="font-mono">/</code>
               </LessonTableCellPrimary>
-              <LessonTableCell>
-                Root of the entire filesystem
-              </LessonTableCell>
+              <LessonTableCell>Root of the entire filesystem</LessonTableCell>
             </LessonTableRow>
             <LessonTableRow>
               <LessonTableCellPrimary>
                 <code className="font-mono">/home</code>
               </LessonTableCellPrimary>
-              <LessonTableCell>
-                Personal directories for users
-              </LessonTableCell>
+              <LessonTableCell>Personal directories for users</LessonTableCell>
             </LessonTableRow>
             <LessonTableRow>
               <LessonTableCellPrimary>
@@ -229,9 +220,7 @@ export function FilesystemContent() {
               <LessonTableCellPrimary>
                 <code className="font-mono">/bin</code>
               </LessonTableCellPrimary>
-              <LessonTableCell>
-                Essential command-line programs
-              </LessonTableCell>
+              <LessonTableCell>Essential command-line programs</LessonTableCell>
             </LessonTableRow>
             <LessonTableRow>
               <LessonTableCellPrimary>
@@ -458,11 +447,7 @@ export function FilesystemContent() {
         </p>
         <CodeBlock code={"cd ~\npwd"} language="bash" title="bash" />
         <CodeBlock code="/home/learner" language="text" title="output" />
-        <CodeBlock
-          code={"cd ~/Documents\npwd"}
-          language="bash"
-          title="bash"
-        />
+        <CodeBlock code={"cd ~/Documents\npwd"} language="bash" title="bash" />
         <CodeBlock
           code="/home/learner/Documents"
           language="text"
@@ -500,7 +485,9 @@ export function FilesystemContent() {
         />
         <p>Keep this mental model close:</p>
         <CodeBlock
-          code={"pwd → Where am I?\n\nls → What's here?\n\ncd → Move somewhere else."}
+          code={
+            "pwd → Where am I?\n\nls → What's here?\n\ncd → Move somewhere else."
+          }
           language="text"
           title="mental model"
         />
@@ -571,11 +558,7 @@ export function FilesystemContent() {
         <h3 className="text-foreground font-heading text-lg font-semibold tracking-tight sm:text-xl">
           Mistake 2 — Confusing / and ~
         </h3>
-        <CodeBlock
-          code={"/\n~"}
-          language="text"
-          title="paths"
-        />
+        <CodeBlock code={"/\n~"} language="text" title="paths" />
         <ul className="list-disc space-y-2 pl-5">
           <li>
             <code className="bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-[0.875em]">
@@ -651,9 +634,7 @@ export function FilesystemContent() {
               <LessonTableCellPrimary>
                 <code className="font-mono">ls</code>
               </LessonTableCellPrimary>
-              <LessonTableCell>
-                Lists files and directories
-              </LessonTableCell>
+              <LessonTableCell>Lists files and directories</LessonTableCell>
             </LessonTableRow>
             <LessonTableRow>
               <LessonTableCellPrimary>
@@ -665,17 +646,13 @@ export function FilesystemContent() {
               <LessonTableCellPrimary>
                 <code className="font-mono">cd ..</code>
               </LessonTableCellPrimary>
-              <LessonTableCell>
-                Moves to the parent directory
-              </LessonTableCell>
+              <LessonTableCell>Moves to the parent directory</LessonTableCell>
             </LessonTableRow>
             <LessonTableRow>
               <LessonTableCellPrimary>
                 <code className="font-mono">cd .</code>
               </LessonTableCellPrimary>
-              <LessonTableCell>
-                Stays in the current directory
-              </LessonTableCell>
+              <LessonTableCell>Stays in the current directory</LessonTableCell>
             </LessonTableRow>
             <LessonTableRow>
               <LessonTableCellPrimary>
