@@ -176,8 +176,12 @@ function isDangerousRm(tokens: string[]): boolean {
 
 export function createLearnerHomeFs(options?: {
   includeNotes?: boolean;
+  includeProjects?: boolean;
+  includeSystemDirs?: boolean;
 }): SimulatedFsState {
   const includeNotes = options?.includeNotes ?? true;
+  const includeProjects = options?.includeProjects ?? false;
+  const includeSystemDirs = options?.includeSystemDirs ?? true;
   const nodes: Record<string, SimulatedNode> = {
     "/": { type: "directory" },
     "/home": { type: "directory" },
@@ -187,6 +191,20 @@ export function createLearnerHomeFs(options?: {
     [`${SIMULATED_HOME}/Downloads`]: { type: "directory" },
   };
 
+  if (includeSystemDirs) {
+    nodes["/etc"] = { type: "directory" };
+    nodes["/var"] = { type: "directory" };
+    nodes["/var/log"] = { type: "directory" };
+    nodes["/tmp"] = { type: "directory" };
+    nodes["/usr"] = { type: "directory" };
+    nodes["/bin"] = { type: "directory" };
+    nodes["/sbin"] = { type: "directory" };
+  }
+
+  if (includeProjects) {
+    nodes[`${SIMULATED_HOME}/Documents/projects`] = { type: "directory" };
+  }
+
   if (includeNotes) {
     nodes[`${SIMULATED_HOME}/notes.txt`] = {
       type: "file",
@@ -195,6 +213,26 @@ export function createLearnerHomeFs(options?: {
   }
 
   return { nodes, cwd: SIMULATED_HOME };
+}
+
+/** Full beginner filesystem used by the filesystem lesson. */
+export function createFilesystemLessonFs(): SimulatedFsState {
+  return createLearnerHomeFs({
+    includeNotes: true,
+    includeProjects: true,
+    includeSystemDirs: true,
+  });
+}
+
+export function listDirectoryChildren(
+  state: SimulatedFsState,
+  dirPath: string,
+): { name: string; path: string; node: SimulatedNode }[] {
+  return listChildren(state, dirPath).map(({ name, node }) => ({
+    name,
+    path: dirPath === "/" ? `/${name}` : `${dirPath}/${name}`,
+    node,
+  }));
 }
 
 export function formatPromptPath(cwd: string): string {

@@ -8,6 +8,8 @@ export type LessonSection = {
 export type LessonNavLink = {
   label: string;
   href: string;
+  /** Soft completion styling for finishing a learning stage. */
+  emphasis?: "finish";
 };
 
 export type LessonConfig = {
