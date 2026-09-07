@@ -41,6 +41,7 @@ export const learningLevels: readonly LearningLevel[] = [
       "Distributions",
       "Installation",
       "Terminal basics",
+      "Filesystem",
     ],
     icon: BookOpen,
     recommended: true,

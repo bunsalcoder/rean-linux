@@ -55,6 +55,7 @@ type TerminalSimulatorProps = {
    */
   filesystem?: boolean | SimulatedFsState;
   onFsChange?: (state: SimulatedFsState) => void;
+  onCommand?: (command: string, state: SimulatedFsState) => void;
   suggestionsLabel?: string;
 };
 
@@ -128,6 +129,7 @@ export function TerminalSimulator({
   suggestions,
   filesystem,
   onFsChange,
+  onCommand,
   suggestionsLabel = "Try a command",
 }: TerminalSimulatorProps) {
   const inputId = useId();
@@ -145,6 +147,7 @@ export function TerminalSimulator({
   );
   const fsRef = useRef(fsState);
   const onFsChangeRef = useRef(onFsChange);
+  const onCommandRef = useRef(onCommand);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [currentInput, setCurrentInput] = useState("");
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
@@ -159,6 +162,10 @@ export function TerminalSimulator({
   useEffect(() => {
     onFsChangeRef.current = onFsChange;
   }, [onFsChange]);
+
+  useEffect(() => {
+    onCommandRef.current = onCommand;
+  }, [onCommand]);
 
   useEffect(() => {
     if (!mounted) {
@@ -202,6 +209,9 @@ export function TerminalSimulator({
       fsRef.current = state;
       setFsState(state);
       onFsChangeRef.current?.(state);
+      if (trimmed) {
+        onCommandRef.current?.(trimmed, state);
+      }
 
       if (result.kind === "clear") {
         setHistory([]);

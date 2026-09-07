@@ -18,6 +18,7 @@ function NavCard({
   link: LessonNavLink;
 }) {
   const isPrevious = direction === "previous";
+  const isFinish = link.emphasis === "finish";
 
   return (
     <Link
@@ -26,6 +27,8 @@ function NavCard({
         "group border-border bg-card hover:border-primary/40 hover:bg-accent/30 flex min-h-[5.5rem] flex-col justify-center rounded-lg border p-4 transition-[border-color,background-color] sm:p-5",
         "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
         isPrevious ? "items-start text-left" : "items-end text-right",
+        isFinish &&
+          "border-primary/35 bg-primary/5 hover:border-primary/50 hover:bg-primary/10",
       )}
     >
       <span className="text-muted-foreground flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase">
@@ -36,6 +39,14 @@ function NavCard({
               className="size-3.5 transition-transform group-hover:-translate-x-0.5"
             />
             Previous
+          </>
+        ) : isFinish ? (
+          <>
+            Finish
+            <ArrowRight
+              aria-hidden="true"
+              className="size-3.5 transition-transform group-hover:translate-x-0.5"
+            />
           </>
         ) : (
           <>

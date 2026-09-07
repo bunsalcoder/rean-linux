@@ -74,7 +74,7 @@ export const beginnerLessons: readonly BeginnerLesson[] = [
     title: "Understanding the Linux Filesystem",
     description:
       "Learn how Linux organizes files and directories and why paths like /home and /etc matter.",
-    duration: "12 min",
+    duration: "15 min",
     href: "/learn/beginner/filesystem",
   },
 ];
