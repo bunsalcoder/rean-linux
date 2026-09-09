@@ -11,15 +11,17 @@ import {
 } from "@/components/ui/card";
 import {
   getLearningLevelHref,
+  getLessonStatusLabel,
   learningLevels,
   type LearningLevel,
 } from "@/config/learning-path";
 import { cn } from "@/lib/utils";
+import type { LessonStatus } from "@/types/lesson";
 
 export function LearningJourney() {
   return (
     <ol
-      aria-label="Learning path from beginner to DevOps"
+      aria-label="Learning path from beginner foundations to DevOps"
       className="relative mt-12 sm:mt-16"
     >
       {learningLevels.map((level, index) => (
@@ -33,6 +35,32 @@ export function LearningJourney() {
   );
 }
 
+function statusBadgeVariant(
+  status: LessonStatus,
+): "success" | "info" | "warning" {
+  switch (status) {
+    case "completed":
+      return "success";
+    case "available":
+      return "info";
+    case "coming-soon":
+      return "warning";
+  }
+}
+
+function stageCtaLabel(level: LearningLevel) {
+  switch (level.status) {
+    case "completed":
+      return "Review this stage";
+    case "available":
+      return level.slug === "essentials"
+        ? "Explore the curriculum"
+        : "Begin this path";
+    case "coming-soon":
+      return "View placeholder";
+  }
+}
+
 function LearningStage({
   level,
   isLast,
@@ -44,7 +72,9 @@ function LearningStage({
   const href = getLearningLevelHref(level.slug);
   const titleId = `learn-stage-${level.slug}-title`;
   const descId = `learn-stage-${level.slug}-desc`;
-  const isRecommended = Boolean(level.recommended);
+  const statusLabel = getLessonStatusLabel(level.status);
+  const isHighlighted =
+    level.status === "completed" || level.status === "available";
 
   return (
     <li
@@ -73,7 +103,7 @@ function LearningStage({
           aria-hidden="true"
           className={cn(
             "flex size-10 items-center justify-center rounded-full border font-mono text-xs font-medium tabular-nums sm:size-12 sm:text-sm",
-            isRecommended
+            isHighlighted
               ? "border-primary/60 bg-primary/10 text-primary"
               : "border-border bg-background text-muted-foreground",
           )}
@@ -107,8 +137,11 @@ function LearningStage({
               "h-full transition-[border-color,background-color,box-shadow] duration-200",
               "group-hover/stage:border-primary/40 group-hover/stage:bg-accent/30 group-hover/stage:shadow-sm",
               "group-focus-visible/stage:border-primary/40",
-              isRecommended &&
+              level.status === "completed" &&
                 "border-primary/35 bg-accent/20 ring-primary/10 shadow-xs ring-1",
+              level.status === "available" &&
+                "border-primary/35 bg-accent/20 ring-primary/10 shadow-xs ring-1",
+              level.status === "coming-soon" && "opacity-90",
             )}
           >
             <CardHeader>
@@ -118,20 +151,21 @@ function LearningStage({
                     aria-hidden="true"
                     className={cn(
                       "flex size-8 shrink-0 items-center justify-center rounded-md border transition-colors duration-200",
-                      isRecommended
+                      isHighlighted
                         ? "border-primary/30 bg-primary/10 text-primary"
                         : "bg-muted text-muted-foreground group-hover/stage:border-primary/30 group-hover/stage:bg-primary/10 group-hover/stage:text-primary group-focus-visible/stage:border-primary/30 group-focus-visible/stage:bg-primary/10 group-focus-visible/stage:text-primary",
                     )}
                   >
                     <Icon className="size-4" />
                   </span>
-                  {isRecommended ? (
-                    <Badge variant="success">{level.label}</Badge>
-                  ) : (
+                  <Badge variant={statusBadgeVariant(level.status)}>
+                    {statusLabel}
+                  </Badge>
+                  {level.label !== statusLabel ? (
                     <span className="text-muted-foreground text-xs font-medium">
                       {level.label}
                     </span>
-                  )}
+                  ) : null}
                 </div>
                 <ArrowRight
                   aria-hidden="true"
@@ -157,6 +191,19 @@ function LearningStage({
             </CardHeader>
 
             <CardContent className="mt-auto flex flex-col gap-4">
+              <p className="text-muted-foreground flex flex-wrap gap-x-3 gap-y-1 text-xs">
+                {typeof level.lessonCount === "number" ? (
+                  <span>
+                    <span className="sr-only">Lessons: </span>
+                    {level.lessonCount} lessons
+                  </span>
+                ) : null}
+                <span>
+                  <span className="sr-only">Difficulty: </span>
+                  {level.difficulty}
+                </span>
+              </p>
+
               <ul
                 className="flex flex-wrap gap-1.5"
                 aria-label={`Topics in ${level.title}`}
@@ -172,7 +219,7 @@ function LearningStage({
                 aria-hidden="true"
                 className="text-muted-foreground group-hover/stage:text-primary group-focus-visible/stage:text-primary inline-flex items-center gap-1 text-xs font-medium transition-colors duration-200"
               >
-                {isRecommended ? "Begin this path" : "Explore this stage"}
+                {stageCtaLabel(level)}
                 <ArrowRight className="size-3.5 transition-transform duration-200 group-hover/stage:translate-x-0.5 group-focus-visible/stage:translate-x-0.5" />
               </span>
             </CardContent>

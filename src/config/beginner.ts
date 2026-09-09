@@ -1,3 +1,5 @@
+import type { LessonStatus } from "@/types/lesson";
+
 export const BEGINNER_LESSON_SLUGS = [
   "what-is-linux",
   "linux-distributions",
@@ -14,18 +16,23 @@ export type BeginnerLesson = {
   title: string;
   description: string;
   duration: string;
+  difficulty: string;
+  status: LessonStatus;
   href: `/learn/beginner/${BeginnerLessonSlug}`;
 };
 
 export const beginnerPath = {
-  eyebrow: "LEVEL 01",
-  title: "Linux Beginner",
+  slug: "beginner",
+  number: 1,
+  eyebrow: "STAGE 01",
+  title: "Beginner Foundations",
   badge: "BEGINNER",
   description:
     "Start your Linux journey by understanding the fundamentals, setting up your environment, and becoming comfortable with the terminal.",
   level: "Beginner",
   lessonCount: 6,
   estimatedTime: "About 1–2 hours",
+  status: "completed" as const satisfies LessonStatus,
 } as const;
 
 export const beginnerLessons: readonly BeginnerLesson[] = [
@@ -35,6 +42,8 @@ export const beginnerLessons: readonly BeginnerLesson[] = [
     description:
       "Understand what Linux is, where it came from, and why it powers everything from personal computers to servers.",
     duration: "8 min",
+    difficulty: "Beginner",
+    status: "available",
     href: "/learn/beginner/what-is-linux",
   },
   {
@@ -43,6 +52,8 @@ export const beginnerLessons: readonly BeginnerLesson[] = [
     description:
       "Learn what a Linux distribution is and understand the differences between popular distributions.",
     duration: "10 min",
+    difficulty: "Beginner",
+    status: "available",
     href: "/learn/beginner/linux-distributions",
   },
   {
@@ -51,6 +62,8 @@ export const beginnerLessons: readonly BeginnerLesson[] = [
     description:
       "Understand the different ways to install Linux and what you should prepare before starting.",
     duration: "12 min",
+    difficulty: "Beginner",
+    status: "available",
     href: "/learn/beginner/installing-linux",
   },
   {
@@ -59,6 +72,8 @@ export const beginnerLessons: readonly BeginnerLesson[] = [
     description:
       "Meet the command line and learn why the terminal is one of the most important tools in Linux.",
     duration: "10 min",
+    difficulty: "Beginner",
+    status: "available",
     href: "/learn/beginner/terminal",
   },
   {
@@ -67,6 +82,8 @@ export const beginnerLessons: readonly BeginnerLesson[] = [
     description:
       "Learn your first essential commands and start navigating a Linux system.",
     duration: "15 min",
+    difficulty: "Beginner",
+    status: "available",
     href: "/learn/beginner/first-commands",
   },
   {
@@ -75,6 +92,8 @@ export const beginnerLessons: readonly BeginnerLesson[] = [
     description:
       "Learn how Linux organizes files and directories and why paths like /home and /etc matter.",
     duration: "15 min",
+    difficulty: "Beginner",
+    status: "available",
     href: "/learn/beginner/filesystem",
   },
 ];
