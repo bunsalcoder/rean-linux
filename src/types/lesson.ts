@@ -37,9 +37,7 @@ export type LessonTreeNode = {
 };
 
 export type LessonTerminalPreset =
-  | "simple"
-  | "learner-home"
-  | "filesystem-lesson";
+  "simple" | "learner-home" | "filesystem-lesson";
 
 export type LessonBlock =
   | {

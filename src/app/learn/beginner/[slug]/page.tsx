@@ -25,9 +25,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: lesson.seoTitle
-      ? { absolute: lesson.seoTitle }
-      : lesson.title,
+    title: lesson.seoTitle ? { absolute: lesson.seoTitle } : lesson.title,
     description: lesson.seoDescription ?? lesson.description,
   };
 }

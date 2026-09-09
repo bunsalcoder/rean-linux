@@ -572,10 +572,7 @@ export const filesystemLesson = {
         },
         {
           type: "list",
-          items: [
-            "`/` → filesystem root",
-            "`~` → user's home directory",
-          ],
+          items: ["`/` → filesystem root", "`~` → user's home directory"],
         },
         {
           type: "heading",

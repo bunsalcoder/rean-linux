@@ -126,13 +126,7 @@ export const whatIsLinuxLesson = {
         },
         {
           type: "list",
-          items: [
-            "Ubuntu",
-            "Debian",
-            "Fedora",
-            "Arch Linux",
-            "openSUSE",
-          ],
+          items: ["Ubuntu", "Debian", "Fedora", "Arch Linux", "openSUSE"],
         },
         {
           type: "paragraph",

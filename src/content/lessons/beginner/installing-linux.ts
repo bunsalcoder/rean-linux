@@ -149,10 +149,7 @@ export const installingLinuxLesson = {
             children: [
               {
                 label: "Bootloader",
-                children: [
-                  { label: "Operating System A" },
-                  { label: "Linux" },
-                ],
+                children: [{ label: "Operating System A" }, { label: "Linux" }],
               },
             ],
           },
@@ -271,7 +268,7 @@ export const installingLinuxLesson = {
         },
         {
           type: "paragraph",
-          text: 'You usually do not “install” an ISO by opening it like a regular application. Instead, you use it to create bootable media or attach it to a virtual machine so the installer can start.',
+          text: "You usually do not “install” an ISO by opening it like a regular application. Instead, you use it to create bootable media or attach it to a virtual machine so the installer can start.",
         },
       ],
     },

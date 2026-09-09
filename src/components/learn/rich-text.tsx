@@ -11,8 +11,7 @@ type RichTextProps = {
   codeStyle?: "prose" | "plain";
 };
 
-const TOKEN_PATTERN =
-  /(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
+const TOKEN_PATTERN = /(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
 
 function InlineCode({
   children,
@@ -96,5 +95,8 @@ export function RichTextParagraph({
 }
 
 export function listItemClassName(variant: "disc" | "plain" = "disc") {
-  return cn(variant === "disc" && "list-disc space-y-2 pl-5", variant === "plain" && "space-y-4");
+  return cn(
+    variant === "disc" && "list-disc space-y-2 pl-5",
+    variant === "plain" && "space-y-4",
+  );
 }

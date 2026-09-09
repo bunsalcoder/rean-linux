@@ -149,9 +149,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
         </dl>
       );
     case "stack-diagram":
-      return (
-        <StackDiagram layers={block.layers} ariaLabel={block.ariaLabel} />
-      );
+      return <StackDiagram layers={block.layers} ariaLabel={block.ariaLabel} />;
     case "composition-diagram":
       return (
         <CompositionDiagram
@@ -188,10 +186,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
             {block.title}
           </h3>
           {block.blocks.map((child, index) => (
-            <LessonBlockView
-              key={`${child.type}-${index}`}
-              block={child}
-            />
+            <LessonBlockView key={`${child.type}-${index}`} block={child} />
           ))}
         </div>
       );
@@ -233,7 +228,10 @@ function ContentSectionView({ section }: { section: LessonContentSection }) {
   return (
     <LessonSection id={section.id} title={section.title}>
       {section.blocks.map((block, index) => (
-        <LessonBlockView key={`${section.id}-${block.type}-${index}`} block={block} />
+        <LessonBlockView
+          key={`${section.id}-${block.type}-${index}`}
+          block={block}
+        />
       ))}
     </LessonSection>
   );
@@ -249,7 +247,10 @@ export function LessonContent({ lesson }: LessonContentProps) {
       {lesson.intro && lesson.intro.length > 0 ? (
         <section className="space-y-4" aria-label="Lesson introduction">
           {lesson.intro.map((block, index) => (
-            <LessonBlockView key={`intro-${block.type}-${index}`} block={block} />
+            <LessonBlockView
+              key={`intro-${block.type}-${index}`}
+              block={block}
+            />
           ))}
         </section>
       ) : null}
