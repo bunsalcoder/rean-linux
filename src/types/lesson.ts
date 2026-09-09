@@ -137,6 +137,9 @@ export type LessonContentSection = {
 
 export type LessonLevel = "beginner";
 
+/** Curriculum availability — no persisted learner progress. */
+export type LessonStatus = "available" | "completed" | "coming-soon";
+
 export type Lesson = {
   slug: string;
   level: LessonLevel;

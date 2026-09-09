@@ -12,10 +12,25 @@ import {
 } from "@/components/ui/card";
 import {
   getLearningLevelHref,
+  getLessonStatusLabel,
   learningLevels,
   type LearningLevel,
 } from "@/config/learning-path";
 import { cn } from "@/lib/utils";
+import type { LessonStatus } from "@/types/lesson";
+
+function statusBadgeVariant(
+  status: LessonStatus,
+): "success" | "info" | "warning" {
+  switch (status) {
+    case "completed":
+      return "success";
+    case "available":
+      return "info";
+    case "coming-soon":
+      return "warning";
+  }
+}
 
 const NODE_STYLES = [
   "border-border bg-background text-muted-foreground",
@@ -147,9 +162,9 @@ function LearningPathLevel({
                   >
                     {level.indicator}
                   </span>
-                  {index === 0 ? (
-                    <Badge variant="success">Start here</Badge>
-                  ) : null}
+                  <Badge variant={statusBadgeVariant(level.status)}>
+                    {getLessonStatusLabel(level.status)}
+                  </Badge>
                 </div>
                 <ArrowRight
                   aria-hidden="true"

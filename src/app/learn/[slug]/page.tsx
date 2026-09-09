@@ -10,10 +10,12 @@ type LearnSlugPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-/** Static `/learn/beginner` owns that path; exclude it from the dynamic slug route. */
+/** Dedicated stage hubs own these paths; exclude them from the dynamic slug route. */
+const DEDICATED_LEARN_SLUGS = new Set(["beginner", "essentials"]);
+
 const LEARN_PAGE_SLUGS = Array.from(
   new Set<string>([...LEARNING_LEVEL_SLUGS, ...TOPIC_SLUGS]),
-).filter((slug) => slug !== "beginner");
+).filter((slug) => !DEDICATED_LEARN_SLUGS.has(slug));
 
 export function generateStaticParams() {
   return LEARN_PAGE_SLUGS.map((slug) => ({ slug }));
