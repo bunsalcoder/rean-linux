@@ -75,9 +75,10 @@ export const essentialsLessons: readonly EssentialsLesson[] = [
     slug: "file-permissions",
     title: "File Permissions",
     description: "Learn how Linux controls access to files and directories.",
-    duration: "20 min",
+    duration: "20–25 min",
     difficulty: "Intermediate",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/essentials/file-permissions",
     topics: [
       "Read",
       "Write",

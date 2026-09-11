@@ -4,6 +4,7 @@ import { installingLinuxLesson } from "@/content/lessons/beginner/installing-lin
 import { linuxDistributionsLesson } from "@/content/lessons/beginner/linux-distributions";
 import { terminalLesson } from "@/content/lessons/beginner/terminal";
 import { whatIsLinuxLesson } from "@/content/lessons/beginner/what-is-linux";
+import { filePermissionsLesson } from "@/content/lessons/essentials/file-permissions";
 import { usersAndGroupsLesson } from "@/content/lessons/essentials/users-and-groups";
 import type { Lesson, LessonLevel } from "@/types/lesson";
 
@@ -15,6 +16,7 @@ export const lessons = [
   firstCommandsLesson,
   filesystemLesson,
   usersAndGroupsLesson,
+  filePermissionsLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];

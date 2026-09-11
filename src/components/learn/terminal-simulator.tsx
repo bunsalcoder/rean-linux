@@ -20,6 +20,12 @@ import {
   type SimulatedFsState,
 } from "@/lib/simulated-filesystem";
 import {
+  createInitialPermissionsState,
+  formatFilePermissionsPrompt,
+  simulateFilePermissionsCommand,
+  type SimulatedPermissionsState,
+} from "@/lib/simulate-file-permissions";
+import {
   formatUsersIdentityPrompt,
   simulateUsersIdentityCommand,
 } from "@/lib/simulate-users-identity";
@@ -45,6 +51,15 @@ const DEFAULT_IDENTITY_SUGGESTIONS = [
   "help",
 ] as const;
 
+const DEFAULT_PERMISSIONS_SUGGESTIONS = [
+  "ls -l",
+  "chmod 755 script.sh",
+  "chmod 644 notes.txt",
+  "chmod 600 private.txt",
+  "chmod u+x script.sh",
+  "help",
+] as const;
+
 type HistoryEntry = {
   command: string;
   output: readonly string[];
@@ -65,7 +80,7 @@ type TerminalSimulatorProps = {
   /**
    * Enable the in-memory filesystem command set (pwd/ls/cd/mkdir/...).
    * When omitted, the simpler Lesson 04 command set is used.
-   * Ignored when `identity` is true.
+   * Ignored when `identity` or `permissions` is true.
    */
   filesystem?: boolean | SimulatedFsState;
   /**
@@ -73,7 +88,13 @@ type TerminalSimulatorProps = {
    * Frontend-only simulated data — never reads the host system.
    */
   identity?: boolean;
+  /**
+   * Enable the file-permissions command set (ls -l / chmod...).
+   * Frontend-only simulated metadata — never touches the host filesystem.
+   */
+  permissions?: boolean;
   onFsChange?: (state: SimulatedFsState) => void;
+  onPermissionsChange?: (state: SimulatedPermissionsState) => void;
   onCommand?: (command: string, state: SimulatedFsState) => void;
   /** Fires for every non-empty command in any simulator mode. */
   onCommandRun?: (command: string) => void;
@@ -150,7 +171,9 @@ export function TerminalSimulator({
   suggestions,
   filesystem,
   identity = false,
+  permissions = false,
   onFsChange,
+  onPermissionsChange,
   onCommand,
   onCommandRun,
   suggestionsLabel = "Try a command",
@@ -166,10 +189,16 @@ export function TerminalSimulator({
   );
 
   const [fsState, setFsState] = useState<SimulatedFsState | null>(() =>
-    identity ? null : resolveInitialFs(filesystem),
+    identity || permissions ? null : resolveInitialFs(filesystem),
   );
+  const [permissionsState, setPermissionsState] =
+    useState<SimulatedPermissionsState | null>(() =>
+      permissions ? createInitialPermissionsState() : null,
+    );
   const fsRef = useRef(fsState);
+  const permissionsRef = useRef(permissionsState);
   const onFsChangeRef = useRef(onFsChange);
+  const onPermissionsChangeRef = useRef(onPermissionsChange);
   const onCommandRef = useRef(onCommand);
   const onCommandRunRef = useRef(onCommandRun);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -177,21 +206,29 @@ export function TerminalSimulator({
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number | null>(null);
 
-  const useFilesystem = !identity && fsState !== null;
+  const useFilesystem = !identity && !permissions && fsState !== null;
   const resolvedSuggestions =
     suggestions ??
     (identity
       ? DEFAULT_IDENTITY_SUGGESTIONS
-      : useFilesystem
-        ? DEFAULT_FS_SUGGESTIONS
-        : DEFAULT_SUGGESTIONS);
+      : permissions
+        ? DEFAULT_PERMISSIONS_SUGGESTIONS
+        : useFilesystem
+          ? DEFAULT_FS_SUGGESTIONS
+          : DEFAULT_SUGGESTIONS);
   const prompt = identity
     ? formatUsersIdentityPrompt()
-    : formatTerminalPrompt(fsState?.cwd ?? "/home/learner");
+    : permissions
+      ? formatFilePermissionsPrompt()
+      : formatTerminalPrompt(fsState?.cwd ?? "/home/learner");
 
   useEffect(() => {
     onFsChangeRef.current = onFsChange;
   }, [onFsChange]);
+
+  useEffect(() => {
+    onPermissionsChangeRef.current = onPermissionsChange;
+  }, [onPermissionsChange]);
 
   useEffect(() => {
     onCommandRef.current = onCommand;
@@ -216,7 +253,9 @@ export function TerminalSimulator({
             <span className="text-prompt select-none" aria-hidden="true">
               {identity
                 ? formatUsersIdentityPrompt()
-                : formatTerminalPrompt("/home/learner")}
+                : permissions
+                  ? formatFilePermissionsPrompt()
+                  : formatTerminalPrompt("/home/learner")}
             </span>
             <span className="sr-only">Loading interactive terminal</span>
           </div>
@@ -228,9 +267,12 @@ export function TerminalSimulator({
   function runCommand(raw: string) {
     const trimmed = raw.trim();
     const currentFs = fsRef.current;
+    const currentPermissions = permissionsRef.current;
     const currentPrompt = identity
       ? formatUsersIdentityPrompt()
-      : formatTerminalPrompt(currentFs?.cwd ?? "/home/learner");
+      : permissions
+        ? formatFilePermissionsPrompt()
+        : formatTerminalPrompt(currentFs?.cwd ?? "/home/learner");
 
     if (trimmed) {
       setCommandHistory((prev) =>
@@ -243,6 +285,35 @@ export function TerminalSimulator({
 
     if (identity) {
       const result = simulateUsersIdentityCommand(raw);
+
+      if (result.kind === "clear") {
+        setHistory([]);
+        return;
+      }
+
+      if (result.kind === "empty") {
+        setHistory((prev) => [
+          ...prev,
+          { command: "", output: [], prompt: currentPrompt },
+        ]);
+        return;
+      }
+
+      setHistory((prev) => [
+        ...prev,
+        { command: raw, output: result.lines, prompt: currentPrompt },
+      ]);
+      return;
+    }
+
+    if (permissions && currentPermissions) {
+      const { result, state } = simulateFilePermissionsCommand(
+        raw,
+        currentPermissions,
+      );
+      permissionsRef.current = state;
+      setPermissionsState(state);
+      onPermissionsChangeRef.current?.(state);
 
       if (result.kind === "clear") {
         setHistory([]);
