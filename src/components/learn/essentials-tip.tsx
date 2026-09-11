@@ -8,12 +8,12 @@ export function EssentialsTip() {
         id="essentials-tip-heading"
         className="font-heading text-base font-semibold tracking-tight sm:text-lg"
       >
-        Curriculum preview
+        Getting started
       </h2>
       <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed sm:text-[0.9375rem]">
-        This stage is ready to explore, but its lessons are still being built.
-        Finish Beginner Foundations first, then return here as each Essentials
-        lesson ships.
+        Start with Users and Groups, then return here as more Essentials lessons
+        ship. Finish Beginner Foundations first if you are still building
+        terminal and filesystem confidence.
       </p>
     </aside>
   );

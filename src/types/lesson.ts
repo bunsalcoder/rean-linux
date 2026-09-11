@@ -14,6 +14,8 @@ export type LessonNavLink = {
   href: string;
   /** Soft completion styling for finishing a learning stage. */
   emphasis?: "finish";
+  /** Shown as disabled — next lesson exists in curriculum but is not published yet. */
+  unavailable?: boolean;
 };
 
 /**
@@ -37,7 +39,7 @@ export type LessonTreeNode = {
 };
 
 export type LessonTerminalPreset =
-  "simple" | "learner-home" | "filesystem-lesson";
+  "simple" | "learner-home" | "filesystem-lesson" | "users-and-groups";
 
 export type LessonBlock =
   | {
@@ -114,7 +116,10 @@ export type LessonBlock =
     }
   | {
       type: "exercise";
-      id: "first-commands-practice" | "filesystem-practice";
+      id:
+        | "first-commands-practice"
+        | "filesystem-practice"
+        | "users-and-groups-practice";
     }
   | {
       type: "panel";
@@ -135,7 +140,7 @@ export type LessonContentSection = {
   blocks: readonly LessonBlock[];
 };
 
-export type LessonLevel = "beginner";
+export type LessonLevel = "beginner" | "essentials";
 
 /** Curriculum availability — no persisted learner progress. */
 export type LessonStatus = "available" | "completed" | "coming-soon";

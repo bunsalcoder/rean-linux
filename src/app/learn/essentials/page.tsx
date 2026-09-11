@@ -45,7 +45,7 @@ export default function EssentialsLearnPage() {
           <div className="flex items-baseline gap-2">
             <dt className="text-foreground font-medium">Status</dt>
             <dd>
-              <Badge variant="warning">{statusLabel}</Badge>
+              <Badge variant="info">{statusLabel}</Badge>
             </dd>
           </div>
         </dl>
@@ -61,11 +61,11 @@ export default function EssentialsLearnPage() {
           id="essentials-lessons-heading"
           className="font-heading text-xl font-semibold tracking-tight sm:text-2xl"
         >
-          Planned lessons
+          Lessons
         </h2>
         <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed sm:text-[0.9375rem]">
-          Twelve lessons are planned for this stage. None are available to study
-          yet — each card below is a curriculum preview only.
+          Twelve lessons are planned for this stage. Users and Groups is ready
+          now — the rest remain curriculum previews until they ship.
         </p>
         <EssentialsLessonJourney />
       </section>
