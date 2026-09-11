@@ -22,6 +22,7 @@ import {
   StackDiagram,
   TreeDiagram,
 } from "@/components/learn/stack-diagram";
+import { FilePermissionsPractice } from "@/components/learn/file-permissions-practice";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -41,7 +42,12 @@ function resolveTerminalFilesystem(
   includeNotes: boolean | undefined,
   cwd: string | undefined,
 ) {
-  if (!preset || preset === "simple" || preset === "users-and-groups") {
+  if (
+    !preset ||
+    preset === "simple" ||
+    preset === "users-and-groups" ||
+    preset === "file-permissions"
+  ) {
     return undefined;
   }
 
@@ -165,6 +171,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       return (
         <TerminalSimulator
           identity={block.preset === "users-and-groups"}
+          permissions={block.preset === "file-permissions"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -182,6 +189,9 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "users-and-groups-practice") {
         return <UsersAndGroupsPractice />;
+      }
+      if (block.id === "file-permissions-practice") {
+        return <FilePermissionsPractice />;
       }
       return <FilesystemPractice />;
     case "panel":

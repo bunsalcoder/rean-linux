@@ -25,7 +25,6 @@ export const usersAndGroupsLesson = {
     next: {
       label: "File Permissions",
       href: "/learn/essentials/file-permissions",
-      unavailable: true,
     },
   },
   sections: [

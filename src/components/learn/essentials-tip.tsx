@@ -11,9 +11,9 @@ export function EssentialsTip() {
         Getting started
       </h2>
       <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed sm:text-[0.9375rem]">
-        Start with Users and Groups, then return here as more Essentials lessons
-        ship. Finish Beginner Foundations first if you are still building
-        terminal and filesystem confidence.
+        Start with Users and Groups, then continue to File Permissions. Return
+        here as more Essentials lessons ship. Finish Beginner Foundations first
+        if you are still building terminal and filesystem confidence.
       </p>
     </aside>
   );

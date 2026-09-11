@@ -64,8 +64,9 @@ export default function EssentialsLearnPage() {
           Lessons
         </h2>
         <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed sm:text-[0.9375rem]">
-          Twelve lessons are planned for this stage. Users and Groups is ready
-          now — the rest remain curriculum previews until they ship.
+          Twelve lessons are planned for this stage. Users and Groups and File
+          Permissions are ready now — the rest remain curriculum previews until
+          they ship.
         </p>
         <EssentialsLessonJourney />
       </section>

@@ -39,7 +39,11 @@ export type LessonTreeNode = {
 };
 
 export type LessonTerminalPreset =
-  "simple" | "learner-home" | "filesystem-lesson" | "users-and-groups";
+  | "simple"
+  | "learner-home"
+  | "filesystem-lesson"
+  | "users-and-groups"
+  | "file-permissions";
 
 export type LessonBlock =
   | {
@@ -119,7 +123,8 @@ export type LessonBlock =
       id:
         | "first-commands-practice"
         | "filesystem-practice"
-        | "users-and-groups-practice";
+        | "users-and-groups-practice"
+        | "file-permissions-practice";
     }
   | {
       type: "panel";
