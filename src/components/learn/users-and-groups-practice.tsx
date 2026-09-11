@@ -127,7 +127,8 @@ export function UsersAndGroupsPractice() {
             You inspected a simulated Linux identity. Answers for this terminal:{" "}
             UID is {SIMULATED_IDENTITY_UID}, primary GID is{" "}
             {SIMULATED_IDENTITY_PRIMARY_GID} (group{" "}
-            {SIMULATED_IDENTITY_PRIMARY_GROUP}), and the supplementary groups are{" "}
+            {SIMULATED_IDENTITY_PRIMARY_GROUP}), and the supplementary groups
+            are{" "}
             {SIMULATED_IDENTITY_SUPPLEMENTARY_GROUPS.map(
               (group) => group.name,
             ).join(" and ")}

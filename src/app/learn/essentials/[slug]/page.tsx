@@ -2,10 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { LessonLayout } from "@/components/learn/lesson-layout";
-import {
-  getLessonBySlug,
-  getLessonSlugsByLevel,
-} from "@/content/lessons";
+import { getLessonBySlug, getLessonSlugsByLevel } from "@/content/lessons";
 
 type EssentialsLessonPageProps = {
   params: Promise<{ slug: string }>;
