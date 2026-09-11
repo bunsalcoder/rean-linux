@@ -19,6 +19,10 @@ import {
   simulateFsCommand,
   type SimulatedFsState,
 } from "@/lib/simulated-filesystem";
+import {
+  formatUsersIdentityPrompt,
+  simulateUsersIdentityCommand,
+} from "@/lib/simulate-users-identity";
 import { cn } from "@/lib/utils";
 
 const DEFAULT_SUGGESTIONS = [
@@ -31,6 +35,15 @@ const DEFAULT_SUGGESTIONS = [
 ] as const;
 
 const DEFAULT_FS_SUGGESTIONS = ["pwd", "ls", "ls -la", "help"] as const;
+
+const DEFAULT_IDENTITY_SUGGESTIONS = [
+  "whoami",
+  "id",
+  "groups",
+  "cat /etc/passwd",
+  "cat /etc/group",
+  "help",
+] as const;
 
 type HistoryEntry = {
   command: string;
@@ -52,10 +65,18 @@ type TerminalSimulatorProps = {
   /**
    * Enable the in-memory filesystem command set (pwd/ls/cd/mkdir/...).
    * When omitted, the simpler Lesson 04 command set is used.
+   * Ignored when `identity` is true.
    */
   filesystem?: boolean | SimulatedFsState;
+  /**
+   * Enable the users/groups identity command set (whoami/id/groups/cat...).
+   * Frontend-only simulated data — never reads the host system.
+   */
+  identity?: boolean;
   onFsChange?: (state: SimulatedFsState) => void;
   onCommand?: (command: string, state: SimulatedFsState) => void;
+  /** Fires for every non-empty command in any simulator mode. */
+  onCommandRun?: (command: string) => void;
   suggestionsLabel?: string;
 };
 
@@ -128,8 +149,10 @@ export function TerminalSimulator({
   title = "rean-linux",
   suggestions,
   filesystem,
+  identity = false,
   onFsChange,
   onCommand,
+  onCommandRun,
   suggestionsLabel = "Try a command",
 }: TerminalSimulatorProps) {
   const inputId = useId();
@@ -143,21 +166,28 @@ export function TerminalSimulator({
   );
 
   const [fsState, setFsState] = useState<SimulatedFsState | null>(() =>
-    resolveInitialFs(filesystem),
+    identity ? null : resolveInitialFs(filesystem),
   );
   const fsRef = useRef(fsState);
   const onFsChangeRef = useRef(onFsChange);
   const onCommandRef = useRef(onCommand);
+  const onCommandRunRef = useRef(onCommandRun);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [currentInput, setCurrentInput] = useState("");
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number | null>(null);
 
-  const useFilesystem = fsState !== null;
+  const useFilesystem = !identity && fsState !== null;
   const resolvedSuggestions =
     suggestions ??
-    (useFilesystem ? DEFAULT_FS_SUGGESTIONS : DEFAULT_SUGGESTIONS);
-  const prompt = formatTerminalPrompt(fsState?.cwd ?? "/home/learner");
+    (identity
+      ? DEFAULT_IDENTITY_SUGGESTIONS
+      : useFilesystem
+        ? DEFAULT_FS_SUGGESTIONS
+        : DEFAULT_SUGGESTIONS);
+  const prompt = identity
+    ? formatUsersIdentityPrompt()
+    : formatTerminalPrompt(fsState?.cwd ?? "/home/learner");
 
   useEffect(() => {
     onFsChangeRef.current = onFsChange;
@@ -166,6 +196,10 @@ export function TerminalSimulator({
   useEffect(() => {
     onCommandRef.current = onCommand;
   }, [onCommand]);
+
+  useEffect(() => {
+    onCommandRunRef.current = onCommandRun;
+  }, [onCommandRun]);
 
   useEffect(() => {
     if (!mounted) {
@@ -180,7 +214,9 @@ export function TerminalSimulator({
         <TerminalShellFrame title={title}>
           <div className="max-h-[min(22rem,55vh)] min-h-[12rem] p-3 font-mono text-sm leading-relaxed sm:max-h-[min(26rem,60vh)] sm:p-4">
             <span className="text-prompt select-none" aria-hidden="true">
-              {formatTerminalPrompt("/home/learner")}
+              {identity
+                ? formatUsersIdentityPrompt()
+                : formatTerminalPrompt("/home/learner")}
             </span>
             <span className="sr-only">Loading interactive terminal</span>
           </div>
@@ -192,17 +228,41 @@ export function TerminalSimulator({
   function runCommand(raw: string) {
     const trimmed = raw.trim();
     const currentFs = fsRef.current;
-    const currentPrompt = formatTerminalPrompt(
-      currentFs?.cwd ?? "/home/learner",
-    );
+    const currentPrompt = identity
+      ? formatUsersIdentityPrompt()
+      : formatTerminalPrompt(currentFs?.cwd ?? "/home/learner");
 
     if (trimmed) {
       setCommandHistory((prev) =>
         prev[prev.length - 1] === trimmed ? prev : [...prev, trimmed],
       );
+      onCommandRunRef.current?.(trimmed);
     }
     setHistoryIndex(null);
     setCurrentInput("");
+
+    if (identity) {
+      const result = simulateUsersIdentityCommand(raw);
+
+      if (result.kind === "clear") {
+        setHistory([]);
+        return;
+      }
+
+      if (result.kind === "empty") {
+        setHistory((prev) => [
+          ...prev,
+          { command: "", output: [], prompt: currentPrompt },
+        ]);
+        return;
+      }
+
+      setHistory((prev) => [
+        ...prev,
+        { command: raw, output: result.lines, prompt: currentPrompt },
+      ]);
+      return;
+    }
 
     if (currentFs) {
       const { result, state } = simulateFsCommand(raw, currentFs);

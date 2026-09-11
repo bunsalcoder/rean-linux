@@ -26,6 +26,7 @@ export type EssentialsLesson = {
   difficulty: string;
   status: LessonStatus;
   topics: readonly string[];
+  href?: `/learn/essentials/${EssentialsLessonSlug}`;
 };
 
 export const essentialsPath = {
@@ -39,7 +40,7 @@ export const essentialsPath = {
   level: "Intermediate",
   lessonCount: 12,
   estimatedTime: "About 4–6 hours",
-  status: "coming-soon" as const satisfies LessonStatus,
+  status: "available" as const satisfies LessonStatus,
   seoTitle: "Linux Essentials — Rean Linux",
   seoDescription:
     "Build practical Linux skills with users, permissions, processes, packages, environment variables, shell techniques, and Bash scripting.",
@@ -52,9 +53,10 @@ export const essentialsLessons: readonly EssentialsLesson[] = [
     title: "Users and Groups",
     description:
       "Learn how Linux identifies users and organizes them into groups.",
-    duration: "15 min",
+    duration: "15–20 min",
     difficulty: "Intermediate",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/essentials/users-and-groups",
     topics: [
       "Users",
       "User IDs",

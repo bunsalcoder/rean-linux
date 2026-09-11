@@ -7,23 +7,23 @@ import {
   getLessonSlugsByLevel,
 } from "@/content/lessons";
 
-type BeginnerLessonPageProps = {
+type EssentialsLessonPageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return getLessonSlugsByLevel("beginner").map((slug) => ({ slug }));
+  return getLessonSlugsByLevel("essentials").map((slug) => ({ slug }));
 }
 
 export const dynamicParams = false;
 
 export async function generateMetadata({
   params,
-}: BeginnerLessonPageProps): Promise<Metadata> {
+}: EssentialsLessonPageProps): Promise<Metadata> {
   const { slug } = await params;
   const lesson = getLessonBySlug(slug);
 
-  if (!lesson || lesson.level !== "beginner") {
+  if (!lesson || lesson.level !== "essentials") {
     return { title: "Lesson" };
   }
 
@@ -33,13 +33,13 @@ export async function generateMetadata({
   };
 }
 
-export default async function BeginnerLessonPage({
+export default async function EssentialsLessonPage({
   params,
-}: BeginnerLessonPageProps) {
+}: EssentialsLessonPageProps) {
   const { slug } = await params;
   const lesson = getLessonBySlug(slug);
 
-  if (!lesson || lesson.level !== "beginner") {
+  if (!lesson || lesson.level !== "essentials") {
     notFound();
   }
 

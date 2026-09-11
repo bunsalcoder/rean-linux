@@ -20,6 +20,36 @@ function NavCard({
   const isPrevious = direction === "previous";
   const isFinish = link.emphasis === "finish";
 
+  if (link.unavailable) {
+    return (
+      <div
+        aria-disabled="true"
+        className={cn(
+          "border-border bg-muted/20 text-muted-foreground flex min-h-[5.5rem] flex-col justify-center rounded-lg border border-dashed p-4 sm:p-5",
+          isPrevious ? "items-start text-left" : "items-end text-right",
+        )}
+      >
+        <span className="flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase">
+          {isPrevious ? (
+            <>
+              <ArrowLeft aria-hidden="true" className="size-3.5" />
+              Previous
+            </>
+          ) : (
+            <>
+              Next
+              <ArrowRight aria-hidden="true" className="size-3.5" />
+            </>
+          )}
+        </span>
+        <span className="mt-2 text-sm font-medium text-inherit">
+          {link.label}
+        </span>
+        <span className="mt-1 text-xs">Coming soon</span>
+      </div>
+    );
+  }
+
   return (
     <Link
       href={link.href}

@@ -4,6 +4,7 @@ import { installingLinuxLesson } from "@/content/lessons/beginner/installing-lin
 import { linuxDistributionsLesson } from "@/content/lessons/beginner/linux-distributions";
 import { terminalLesson } from "@/content/lessons/beginner/terminal";
 import { whatIsLinuxLesson } from "@/content/lessons/beginner/what-is-linux";
+import { usersAndGroupsLesson } from "@/content/lessons/essentials/users-and-groups";
 import type { Lesson, LessonLevel } from "@/types/lesson";
 
 export const lessons = [
@@ -13,6 +14,7 @@ export const lessons = [
   terminalLesson,
   firstCommandsLesson,
   filesystemLesson,
+  usersAndGroupsLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];
@@ -31,4 +33,10 @@ export function getLessonsByLevel(level: LessonLevel): readonly Lesson[] {
 
 export function getAllLessonSlugs(): readonly LessonSlug[] {
   return lessons.map((lesson) => lesson.slug);
+}
+
+export function getLessonSlugsByLevel(
+  level: LessonLevel,
+): readonly LessonSlug[] {
+  return getLessonsByLevel(level).map((lesson) => lesson.slug as LessonSlug);
 }
