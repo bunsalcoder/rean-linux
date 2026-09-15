@@ -24,6 +24,7 @@ import {
 } from "@/components/learn/stack-diagram";
 import { FilePermissionsPractice } from "@/components/learn/file-permissions-practice";
 import { OwnershipAndSudoPractice } from "@/components/learn/ownership-and-sudo-practice";
+import { ProcessesPractice } from "@/components/learn/processes-practice";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -48,7 +49,8 @@ function resolveTerminalFilesystem(
     preset === "simple" ||
     preset === "users-and-groups" ||
     preset === "file-permissions" ||
-    preset === "ownership-and-sudo"
+    preset === "ownership-and-sudo" ||
+    preset === "processes"
   ) {
     return undefined;
   }
@@ -175,6 +177,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           identity={block.preset === "users-and-groups"}
           permissions={block.preset === "file-permissions"}
           ownership={block.preset === "ownership-and-sudo"}
+          processes={block.preset === "processes"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -198,6 +201,9 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "ownership-and-sudo-practice") {
         return <OwnershipAndSudoPractice />;
+      }
+      if (block.id === "processes-practice") {
+        return <ProcessesPractice />;
       }
       return <FilesystemPractice />;
     case "panel":

@@ -6,6 +6,7 @@ import { terminalLesson } from "@/content/lessons/beginner/terminal";
 import { whatIsLinuxLesson } from "@/content/lessons/beginner/what-is-linux";
 import { filePermissionsLesson } from "@/content/lessons/essentials/file-permissions";
 import { ownershipAndSudoLesson } from "@/content/lessons/essentials/ownership-and-sudo";
+import { processesLesson } from "@/content/lessons/essentials/processes";
 import { usersAndGroupsLesson } from "@/content/lessons/essentials/users-and-groups";
 import type { Lesson, LessonLevel } from "@/types/lesson";
 
@@ -19,6 +20,7 @@ export const lessons = [
   usersAndGroupsLesson,
   filePermissionsLesson,
   ownershipAndSudoLesson,
+  processesLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];
