@@ -25,7 +25,6 @@ export const ownershipAndSudoLesson = {
     next: {
       label: "Processes",
       href: "/learn/essentials/processes",
-      unavailable: true,
     },
   },
   intro: [

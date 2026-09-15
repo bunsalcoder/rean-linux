@@ -32,6 +32,12 @@ import {
   type SimulatedOwnershipState,
 } from "@/lib/simulate-ownership-sudo";
 import {
+  createInitialProcessState,
+  formatProcessesPrompt,
+  simulateProcessesCommand,
+  type SimulatedProcessState,
+} from "@/lib/simulate-processes";
+import {
   formatUsersIdentityPrompt,
   simulateUsersIdentityCommand,
 } from "@/lib/simulate-users-identity";
@@ -75,6 +81,16 @@ const DEFAULT_OWNERSHIP_SUGGESTIONS = [
   "help",
 ] as const;
 
+const DEFAULT_PROCESSES_SUGGESTIONS = [
+  "ps",
+  "ps aux",
+  "top",
+  "jobs",
+  "kill 2345",
+  "sudo kill 3100",
+  "help",
+] as const;
+
 type HistoryEntry = {
   command: string;
   output: readonly string[];
@@ -95,7 +111,7 @@ type TerminalSimulatorProps = {
   /**
    * Enable the in-memory filesystem command set (pwd/ls/cd/mkdir/...).
    * When omitted, the simpler Lesson 04 command set is used.
-   * Ignored when `identity`, `permissions`, or `ownership` is true.
+   * Ignored when `identity`, `permissions`, `ownership`, or `processes` is true.
    */
   filesystem?: boolean | SimulatedFsState;
   /**
@@ -113,9 +129,15 @@ type TerminalSimulatorProps = {
    * Frontend-only simulated metadata — never authenticates or touches the host.
    */
   ownership?: boolean;
+  /**
+   * Enable the processes command set (ps / top / kill / jobs...).
+   * Frontend-only simulated process table — never signals real processes.
+   */
+  processes?: boolean;
   onFsChange?: (state: SimulatedFsState) => void;
   onPermissionsChange?: (state: SimulatedPermissionsState) => void;
   onOwnershipChange?: (state: SimulatedOwnershipState) => void;
+  onProcessesChange?: (state: SimulatedProcessState) => void;
   onCommand?: (command: string, state: SimulatedFsState) => void;
   /** Fires for every non-empty command in any simulator mode. */
   onCommandRun?: (command: string) => void;
@@ -194,9 +216,11 @@ export function TerminalSimulator({
   identity = false,
   permissions = false,
   ownership = false,
+  processes = false,
   onFsChange,
   onPermissionsChange,
   onOwnershipChange,
+  onProcessesChange,
   onCommand,
   onCommandRun,
   suggestionsLabel = "Try a command",
@@ -211,8 +235,10 @@ export function TerminalSimulator({
     () => false,
   );
 
+  const specializedMode = identity || permissions || ownership || processes;
+
   const [fsState, setFsState] = useState<SimulatedFsState | null>(() =>
-    identity || permissions || ownership ? null : resolveInitialFs(filesystem),
+    specializedMode ? null : resolveInitialFs(filesystem),
   );
   const [permissionsState, setPermissionsState] =
     useState<SimulatedPermissionsState | null>(() =>
@@ -222,12 +248,18 @@ export function TerminalSimulator({
     useState<SimulatedOwnershipState | null>(() =>
       ownership ? createInitialOwnershipState() : null,
     );
+  const [processesState, setProcessesState] =
+    useState<SimulatedProcessState | null>(() =>
+      processes ? createInitialProcessState() : null,
+    );
   const fsRef = useRef(fsState);
   const permissionsRef = useRef(permissionsState);
   const ownershipRef = useRef(ownershipState);
+  const processesRef = useRef(processesState);
   const onFsChangeRef = useRef(onFsChange);
   const onPermissionsChangeRef = useRef(onPermissionsChange);
   const onOwnershipChangeRef = useRef(onOwnershipChange);
+  const onProcessesChangeRef = useRef(onProcessesChange);
   const onCommandRef = useRef(onCommand);
   const onCommandRunRef = useRef(onCommandRun);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -235,26 +267,29 @@ export function TerminalSimulator({
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number | null>(null);
 
-  const useFilesystem =
-    !identity && !permissions && !ownership && fsState !== null;
+  const useFilesystem = !specializedMode && fsState !== null;
   const resolvedSuggestions =
     suggestions ??
     (identity
       ? DEFAULT_IDENTITY_SUGGESTIONS
-      : ownership
-        ? DEFAULT_OWNERSHIP_SUGGESTIONS
-        : permissions
-          ? DEFAULT_PERMISSIONS_SUGGESTIONS
-          : useFilesystem
-            ? DEFAULT_FS_SUGGESTIONS
-            : DEFAULT_SUGGESTIONS);
+      : processes
+        ? DEFAULT_PROCESSES_SUGGESTIONS
+        : ownership
+          ? DEFAULT_OWNERSHIP_SUGGESTIONS
+          : permissions
+            ? DEFAULT_PERMISSIONS_SUGGESTIONS
+            : useFilesystem
+              ? DEFAULT_FS_SUGGESTIONS
+              : DEFAULT_SUGGESTIONS);
   const prompt = identity
     ? formatUsersIdentityPrompt()
-    : ownership
-      ? formatOwnershipSudoPrompt()
-      : permissions
-        ? formatFilePermissionsPrompt()
-        : formatTerminalPrompt(fsState?.cwd ?? "/home/learner");
+    : processes
+      ? formatProcessesPrompt()
+      : ownership
+        ? formatOwnershipSudoPrompt()
+        : permissions
+          ? formatFilePermissionsPrompt()
+          : formatTerminalPrompt(fsState?.cwd ?? "/home/learner");
 
   useEffect(() => {
     onFsChangeRef.current = onFsChange;
@@ -267,6 +302,10 @@ export function TerminalSimulator({
   useEffect(() => {
     onOwnershipChangeRef.current = onOwnershipChange;
   }, [onOwnershipChange]);
+
+  useEffect(() => {
+    onProcessesChangeRef.current = onProcessesChange;
+  }, [onProcessesChange]);
 
   useEffect(() => {
     onCommandRef.current = onCommand;
@@ -291,11 +330,13 @@ export function TerminalSimulator({
             <span className="text-prompt select-none" aria-hidden="true">
               {identity
                 ? formatUsersIdentityPrompt()
-                : ownership
-                  ? formatOwnershipSudoPrompt()
-                  : permissions
-                    ? formatFilePermissionsPrompt()
-                    : formatTerminalPrompt("/home/learner")}
+                : processes
+                  ? formatProcessesPrompt()
+                  : ownership
+                    ? formatOwnershipSudoPrompt()
+                    : permissions
+                      ? formatFilePermissionsPrompt()
+                      : formatTerminalPrompt("/home/learner")}
             </span>
             <span className="sr-only">Loading interactive terminal</span>
           </div>
@@ -309,13 +350,16 @@ export function TerminalSimulator({
     const currentFs = fsRef.current;
     const currentPermissions = permissionsRef.current;
     const currentOwnership = ownershipRef.current;
+    const currentProcesses = processesRef.current;
     const currentPrompt = identity
       ? formatUsersIdentityPrompt()
-      : ownership
-        ? formatOwnershipSudoPrompt()
-        : permissions
-          ? formatFilePermissionsPrompt()
-          : formatTerminalPrompt(currentFs?.cwd ?? "/home/learner");
+      : processes
+        ? formatProcessesPrompt()
+        : ownership
+          ? formatOwnershipSudoPrompt()
+          : permissions
+            ? formatFilePermissionsPrompt()
+            : formatTerminalPrompt(currentFs?.cwd ?? "/home/learner");
 
     if (trimmed) {
       setCommandHistory((prev) =>
@@ -328,6 +372,32 @@ export function TerminalSimulator({
 
     if (identity) {
       const result = simulateUsersIdentityCommand(raw);
+
+      if (result.kind === "clear") {
+        setHistory([]);
+        return;
+      }
+
+      if (result.kind === "empty") {
+        setHistory((prev) => [
+          ...prev,
+          { command: "", output: [], prompt: currentPrompt },
+        ]);
+        return;
+      }
+
+      setHistory((prev) => [
+        ...prev,
+        { command: raw, output: result.lines, prompt: currentPrompt },
+      ]);
+      return;
+    }
+
+    if (processes && currentProcesses) {
+      const { result, state } = simulateProcessesCommand(raw, currentProcesses);
+      processesRef.current = state;
+      setProcessesState(state);
+      onProcessesChangeRef.current?.(state);
 
       if (result.kind === "clear") {
         setHistory([]);
