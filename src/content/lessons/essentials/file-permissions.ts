@@ -25,7 +25,6 @@ export const filePermissionsLesson = {
     next: {
       label: "Ownership and sudo",
       href: "/learn/essentials/ownership-and-sudo",
-      unavailable: true,
     },
   },
   sections: [

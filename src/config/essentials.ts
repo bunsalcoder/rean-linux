@@ -96,9 +96,10 @@ export const essentialsLessons: readonly EssentialsLesson[] = [
     slug: "ownership-and-sudo",
     title: "Ownership and sudo",
     description: "Learn ownership and administrative privileges.",
-    duration: "15 min",
+    duration: "20–25 min",
     difficulty: "Intermediate",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/essentials/ownership-and-sudo",
     topics: [
       "File ownership",
       "chown",
