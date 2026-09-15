@@ -23,6 +23,7 @@ import {
   TreeDiagram,
 } from "@/components/learn/stack-diagram";
 import { FilePermissionsPractice } from "@/components/learn/file-permissions-practice";
+import { OwnershipAndSudoPractice } from "@/components/learn/ownership-and-sudo-practice";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -46,7 +47,8 @@ function resolveTerminalFilesystem(
     !preset ||
     preset === "simple" ||
     preset === "users-and-groups" ||
-    preset === "file-permissions"
+    preset === "file-permissions" ||
+    preset === "ownership-and-sudo"
   ) {
     return undefined;
   }
@@ -172,6 +174,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
         <TerminalSimulator
           identity={block.preset === "users-and-groups"}
           permissions={block.preset === "file-permissions"}
+          ownership={block.preset === "ownership-and-sudo"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -192,6 +195,9 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "file-permissions-practice") {
         return <FilePermissionsPractice />;
+      }
+      if (block.id === "ownership-and-sudo-practice") {
+        return <OwnershipAndSudoPractice />;
       }
       return <FilesystemPractice />;
     case "panel":
