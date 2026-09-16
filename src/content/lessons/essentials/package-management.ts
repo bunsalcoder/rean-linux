@@ -25,7 +25,6 @@ export const packageManagementLesson = {
     next: {
       label: "Environment Variables",
       href: "/learn/essentials/environment-variables",
-      unavailable: true,
     },
   },
   intro: [

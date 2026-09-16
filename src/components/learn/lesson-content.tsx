@@ -26,6 +26,7 @@ import { FilePermissionsPractice } from "@/components/learn/file-permissions-pra
 import { OwnershipAndSudoPractice } from "@/components/learn/ownership-and-sudo-practice";
 import { ProcessesPractice } from "@/components/learn/processes-practice";
 import { PackageManagementPractice } from "@/components/learn/package-management-practice";
+import { EnvironmentVariablesPractice } from "@/components/learn/environment-variables-practice";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -52,7 +53,8 @@ function resolveTerminalFilesystem(
     preset === "file-permissions" ||
     preset === "ownership-and-sudo" ||
     preset === "processes" ||
-    preset === "package-management"
+    preset === "package-management" ||
+    preset === "environment-variables"
   ) {
     return undefined;
   }
@@ -181,6 +183,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           ownership={block.preset === "ownership-and-sudo"}
           processes={block.preset === "processes"}
           packages={block.preset === "package-management"}
+          environment={block.preset === "environment-variables"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -210,6 +213,9 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "package-management-practice") {
         return <PackageManagementPractice />;
+      }
+      if (block.id === "environment-variables-practice") {
+        return <EnvironmentVariablesPractice />;
       }
       return <FilesystemPractice />;
     case "panel":
