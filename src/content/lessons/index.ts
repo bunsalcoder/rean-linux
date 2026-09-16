@@ -7,6 +7,7 @@ import { whatIsLinuxLesson } from "@/content/lessons/beginner/what-is-linux";
 import { filePermissionsLesson } from "@/content/lessons/essentials/file-permissions";
 import { ownershipAndSudoLesson } from "@/content/lessons/essentials/ownership-and-sudo";
 import { packageManagementLesson } from "@/content/lessons/essentials/package-management";
+import { environmentVariablesLesson } from "@/content/lessons/essentials/environment-variables";
 import { processesLesson } from "@/content/lessons/essentials/processes";
 import { usersAndGroupsLesson } from "@/content/lessons/essentials/users-and-groups";
 import type { Lesson, LessonLevel } from "@/types/lesson";
@@ -23,6 +24,7 @@ export const lessons = [
   ownershipAndSudoLesson,
   processesLesson,
   packageManagementLesson,
+  environmentVariablesLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];

@@ -155,10 +155,11 @@ export const essentialsLessons: readonly EssentialsLesson[] = [
     slug: "environment-variables",
     title: "Environment Variables",
     description:
-      "Learn how the shell and applications use environment variables.",
-    duration: "15 min",
+      "Understand how Linux stores environment settings, how to inspect and change them, and why variables like PATH and HOME matter.",
+    duration: "20–25 min",
     difficulty: "Intermediate",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/essentials/environment-variables",
     topics: [
       "What environment variables are",
       "env",

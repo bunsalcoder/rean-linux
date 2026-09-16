@@ -46,7 +46,8 @@ export type LessonTerminalPreset =
   | "file-permissions"
   | "ownership-and-sudo"
   | "processes"
-  | "package-management";
+  | "package-management"
+  | "environment-variables";
 
 export type LessonBlock =
   | {
@@ -130,7 +131,8 @@ export type LessonBlock =
         | "file-permissions-practice"
         | "ownership-and-sudo-practice"
         | "processes-practice"
-        | "package-management-practice";
+        | "package-management-practice"
+        | "environment-variables-practice";
     }
   | {
       type: "panel";
