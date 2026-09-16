@@ -135,10 +135,11 @@ export const essentialsLessons: readonly EssentialsLesson[] = [
     slug: "package-management",
     title: "Package Management",
     description:
-      "Understand how Linux installs and manages software across distributions.",
-    duration: "20 min",
+      "Learn how Linux installs, updates, searches, and removes software using package managers and repositories.",
+    duration: "20–25 min",
     difficulty: "Intermediate",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/essentials/package-management",
     topics: [
       "Packages",
       "Package repositories",

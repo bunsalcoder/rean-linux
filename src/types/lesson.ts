@@ -45,7 +45,8 @@ export type LessonTerminalPreset =
   | "users-and-groups"
   | "file-permissions"
   | "ownership-and-sudo"
-  | "processes";
+  | "processes"
+  | "package-management";
 
 export type LessonBlock =
   | {
@@ -128,7 +129,8 @@ export type LessonBlock =
         | "users-and-groups-practice"
         | "file-permissions-practice"
         | "ownership-and-sudo-practice"
-        | "processes-practice";
+        | "processes-practice"
+        | "package-management-practice";
     }
   | {
       type: "panel";
