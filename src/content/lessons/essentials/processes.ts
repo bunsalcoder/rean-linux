@@ -25,7 +25,6 @@ export const processesLesson = {
     next: {
       label: "Package Management",
       href: "/learn/essentials/package-management",
-      unavailable: true,
     },
   },
   intro: [
