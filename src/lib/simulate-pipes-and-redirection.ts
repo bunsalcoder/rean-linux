@@ -9,8 +9,7 @@ export const SIMULATED_PIPES_USER = "bunsal";
 export const SIMULATED_PIPES_HOME = `/home/${SIMULATED_PIPES_USER}`;
 
 export type SimulatedPipesNode =
-  | { type: "file"; content: string }
-  | { type: "directory" };
+  { type: "file"; content: string } | { type: "directory" };
 
 export type SimulatedPipesState = {
   nodes: Record<string, SimulatedPipesNode>;
@@ -695,10 +694,7 @@ export function simulatePipesAndRedirectionCommand(
     const applied = applyRedirections(streams, stage.redirs, next);
 
     if (isLast) {
-      displayLines.push(
-        ...applied.remainingStdout,
-        ...applied.remainingStderr,
-      );
+      displayLines.push(...applied.remainingStdout, ...applied.remainingStderr);
     } else {
       // Intermediate stderr still surfaces; stdout feeds the next stage.
       displayLines.push(...applied.remainingStderr);

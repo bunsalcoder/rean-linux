@@ -520,7 +520,7 @@ export const pipesAndRedirectionLesson = {
         },
         {
           type: "paragraph",
-          text: "Running `echo \"new\" > notes.txt` a second time does not add a line — it starts the file over.",
+          text: 'Running `echo "new" > notes.txt` a second time does not add a line — it starts the file over.',
         },
         {
           type: "heading",

@@ -20,7 +20,8 @@ const PRACTICE_STEPS = [
   },
   {
     command: "ls | grep txt",
-    lookFor: "Filenames containing `txt`, such as `notes.txt` and `readme.txt`.",
+    lookFor:
+      "Filenames containing `txt`, such as `notes.txt` and `readme.txt`.",
   },
   {
     command: "ls nonexistent 2> errors.txt",
@@ -28,13 +29,11 @@ const PRACTICE_STEPS = [
   },
   {
     command: "cat errors.txt",
-    lookFor:
-      "The stored error message about `nonexistent` not existing.",
+    lookFor: "The stored error message about `nonexistent` not existing.",
   },
   {
     command: "ls nonexistent > output.txt 2>&1",
-    lookFor:
-      "No visible output — stdout and stderr both went to `output.txt`.",
+    lookFor: "No visible output — stdout and stderr both went to `output.txt`.",
   },
 ] as const;
 
