@@ -62,6 +62,12 @@ import {
   type SimulatedSearchState,
 } from "@/lib/simulate-searching-and-finding-files";
 import {
+  createInitialTextProcessingState,
+  formatTextProcessingPrompt,
+  simulateTextProcessingCommand,
+  type SimulatedTextState,
+} from "@/lib/simulate-text-processing";
+import {
   formatUsersIdentityPrompt,
   simulateUsersIdentityCommand,
 } from "@/lib/simulate-users-identity";
@@ -156,6 +162,17 @@ const DEFAULT_SEARCH_SUGGESTIONS = [
   "help",
 ] as const;
 
+const DEFAULT_TEXT_PROCESSING_SUGGESTIONS = [
+  "wc -l notes.txt",
+  "sort names.txt",
+  "sort names.txt | uniq",
+  "cut -d: -f1 users.txt",
+  "cat users.txt | cut -d: -f3 | sort | uniq",
+  "head -n 5 notes.txt",
+  "tail -n 5 notes.txt",
+  "help",
+] as const;
+
 type HistoryEntry = {
   command: string;
   output: readonly string[];
@@ -176,7 +193,7 @@ type TerminalSimulatorProps = {
   /**
    * Enable the in-memory filesystem command set (pwd/ls/cd/mkdir/...).
    * When omitted, the simpler Lesson 04 command set is used.
-   * Ignored when `identity`, `permissions`, `ownership`, `processes`, `packages`, `environment`, `pipes`, or `searching` is true.
+   * Ignored when `identity`, `permissions`, `ownership`, `processes`, `packages`, `environment`, `pipes`, `searching`, or `textProcessing` is true.
    */
   filesystem?: boolean | SimulatedFsState;
   /**
@@ -219,6 +236,11 @@ type TerminalSimulatorProps = {
    * Frontend-only simulated filesystem — never searches the host filesystem.
    */
   searching?: boolean;
+  /**
+   * Enable the text-processing command set (wc / sort / uniq / cut / head / tail).
+   * Frontend-only simulated filesystem — never executes a real shell.
+   */
+  textProcessing?: boolean;
   onFsChange?: (state: SimulatedFsState) => void;
   onPermissionsChange?: (state: SimulatedPermissionsState) => void;
   onOwnershipChange?: (state: SimulatedOwnershipState) => void;
@@ -227,6 +249,7 @@ type TerminalSimulatorProps = {
   onEnvironmentChange?: (state: SimulatedEnvState) => void;
   onPipesChange?: (state: SimulatedPipesState) => void;
   onSearchingChange?: (state: SimulatedSearchState) => void;
+  onTextProcessingChange?: (state: SimulatedTextState) => void;
   onCommand?: (command: string, state: SimulatedFsState) => void;
   /** Fires for every non-empty command in any simulator mode. */
   onCommandRun?: (command: string) => void;
@@ -310,6 +333,7 @@ export function TerminalSimulator({
   environment = false,
   pipes = false,
   searching = false,
+  textProcessing = false,
   onFsChange,
   onPermissionsChange,
   onOwnershipChange,
@@ -318,6 +342,7 @@ export function TerminalSimulator({
   onEnvironmentChange,
   onPipesChange,
   onSearchingChange,
+  onTextProcessingChange,
   onCommand,
   onCommandRun,
   suggestionsLabel = "Try a command",
@@ -340,7 +365,8 @@ export function TerminalSimulator({
     packages ||
     environment ||
     pipes ||
-    searching;
+    searching ||
+    textProcessing;
 
   const [fsState, setFsState] = useState<SimulatedFsState | null>(() =>
     specializedMode ? null : resolveInitialFs(filesystem),
@@ -371,6 +397,9 @@ export function TerminalSimulator({
   const [searchState, setSearchState] = useState<SimulatedSearchState | null>(
     () => (searching ? createInitialSearchState() : null),
   );
+  const [textState, setTextState] = useState<SimulatedTextState | null>(() =>
+    textProcessing ? createInitialTextProcessingState() : null,
+  );
   const fsRef = useRef(fsState);
   const permissionsRef = useRef(permissionsState);
   const ownershipRef = useRef(ownershipState);
@@ -379,6 +408,7 @@ export function TerminalSimulator({
   const environmentRef = useRef(environmentState);
   const pipesRef = useRef(pipesState);
   const searchRef = useRef(searchState);
+  const textRef = useRef(textState);
   const onFsChangeRef = useRef(onFsChange);
   const onPermissionsChangeRef = useRef(onPermissionsChange);
   const onOwnershipChangeRef = useRef(onOwnershipChange);
@@ -387,6 +417,7 @@ export function TerminalSimulator({
   const onEnvironmentChangeRef = useRef(onEnvironmentChange);
   const onPipesChangeRef = useRef(onPipesChange);
   const onSearchingChangeRef = useRef(onSearchingChange);
+  const onTextProcessingChangeRef = useRef(onTextProcessingChange);
   const onCommandRef = useRef(onCommand);
   const onCommandRunRef = useRef(onCommandRun);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -399,40 +430,44 @@ export function TerminalSimulator({
     suggestions ??
     (identity
       ? DEFAULT_IDENTITY_SUGGESTIONS
-      : searching
-        ? DEFAULT_SEARCH_SUGGESTIONS
-        : pipes
-          ? DEFAULT_PIPES_SUGGESTIONS
-          : environment
-            ? DEFAULT_ENV_SUGGESTIONS
-            : packages
-              ? DEFAULT_PACKAGES_SUGGESTIONS
-              : processes
-                ? DEFAULT_PROCESSES_SUGGESTIONS
-                : ownership
-                  ? DEFAULT_OWNERSHIP_SUGGESTIONS
-                  : permissions
-                    ? DEFAULT_PERMISSIONS_SUGGESTIONS
-                    : useFilesystem
-                      ? DEFAULT_FS_SUGGESTIONS
-                      : DEFAULT_SUGGESTIONS);
+      : textProcessing
+        ? DEFAULT_TEXT_PROCESSING_SUGGESTIONS
+        : searching
+          ? DEFAULT_SEARCH_SUGGESTIONS
+          : pipes
+            ? DEFAULT_PIPES_SUGGESTIONS
+            : environment
+              ? DEFAULT_ENV_SUGGESTIONS
+              : packages
+                ? DEFAULT_PACKAGES_SUGGESTIONS
+                : processes
+                  ? DEFAULT_PROCESSES_SUGGESTIONS
+                  : ownership
+                    ? DEFAULT_OWNERSHIP_SUGGESTIONS
+                    : permissions
+                      ? DEFAULT_PERMISSIONS_SUGGESTIONS
+                      : useFilesystem
+                        ? DEFAULT_FS_SUGGESTIONS
+                        : DEFAULT_SUGGESTIONS);
   const prompt = identity
     ? formatUsersIdentityPrompt()
-    : searching
-      ? formatSearchingAndFindingPrompt(searchState?.cwd)
-      : pipes
-        ? formatPipesAndRedirectionPrompt(pipesState?.cwd)
-        : environment
-          ? formatEnvironmentVariablesPrompt()
-          : packages
-            ? formatPackageManagementPrompt()
-            : processes
-              ? formatProcessesPrompt()
-              : ownership
-                ? formatOwnershipSudoPrompt()
-                : permissions
-                  ? formatFilePermissionsPrompt()
-                  : formatTerminalPrompt(fsState?.cwd ?? "/home/learner");
+    : textProcessing
+      ? formatTextProcessingPrompt(textState?.cwd)
+      : searching
+        ? formatSearchingAndFindingPrompt(searchState?.cwd)
+        : pipes
+          ? formatPipesAndRedirectionPrompt(pipesState?.cwd)
+          : environment
+            ? formatEnvironmentVariablesPrompt()
+            : packages
+              ? formatPackageManagementPrompt()
+              : processes
+                ? formatProcessesPrompt()
+                : ownership
+                  ? formatOwnershipSudoPrompt()
+                  : permissions
+                    ? formatFilePermissionsPrompt()
+                    : formatTerminalPrompt(fsState?.cwd ?? "/home/learner");
 
   useEffect(() => {
     onFsChangeRef.current = onFsChange;
@@ -467,6 +502,10 @@ export function TerminalSimulator({
   }, [onSearchingChange]);
 
   useEffect(() => {
+    onTextProcessingChangeRef.current = onTextProcessingChange;
+  }, [onTextProcessingChange]);
+
+  useEffect(() => {
     onCommandRef.current = onCommand;
   }, [onCommand]);
 
@@ -489,21 +528,23 @@ export function TerminalSimulator({
             <span className="text-prompt select-none" aria-hidden="true">
               {identity
                 ? formatUsersIdentityPrompt()
-                : searching
-                  ? formatSearchingAndFindingPrompt()
-                  : pipes
-                    ? formatPipesAndRedirectionPrompt()
-                    : environment
-                      ? formatEnvironmentVariablesPrompt()
-                      : packages
-                        ? formatPackageManagementPrompt()
-                        : processes
-                          ? formatProcessesPrompt()
-                          : ownership
-                            ? formatOwnershipSudoPrompt()
-                            : permissions
-                              ? formatFilePermissionsPrompt()
-                              : formatTerminalPrompt("/home/learner")}
+                : textProcessing
+                  ? formatTextProcessingPrompt()
+                  : searching
+                    ? formatSearchingAndFindingPrompt()
+                    : pipes
+                      ? formatPipesAndRedirectionPrompt()
+                      : environment
+                        ? formatEnvironmentVariablesPrompt()
+                        : packages
+                          ? formatPackageManagementPrompt()
+                          : processes
+                            ? formatProcessesPrompt()
+                            : ownership
+                              ? formatOwnershipSudoPrompt()
+                              : permissions
+                                ? formatFilePermissionsPrompt()
+                                : formatTerminalPrompt("/home/learner")}
             </span>
             <span className="sr-only">Loading interactive terminal</span>
           </div>
@@ -522,23 +563,26 @@ export function TerminalSimulator({
     const currentEnvironment = environmentRef.current;
     const currentPipes = pipesRef.current;
     const currentSearch = searchRef.current;
+    const currentText = textRef.current;
     const currentPrompt = identity
       ? formatUsersIdentityPrompt()
-      : searching
-        ? formatSearchingAndFindingPrompt(currentSearch?.cwd)
-        : pipes
-          ? formatPipesAndRedirectionPrompt(currentPipes?.cwd)
-          : environment
-            ? formatEnvironmentVariablesPrompt()
-            : packages
-              ? formatPackageManagementPrompt()
-              : processes
-                ? formatProcessesPrompt()
-                : ownership
-                  ? formatOwnershipSudoPrompt()
-                  : permissions
-                    ? formatFilePermissionsPrompt()
-                    : formatTerminalPrompt(currentFs?.cwd ?? "/home/learner");
+      : textProcessing
+        ? formatTextProcessingPrompt(currentText?.cwd)
+        : searching
+          ? formatSearchingAndFindingPrompt(currentSearch?.cwd)
+          : pipes
+            ? formatPipesAndRedirectionPrompt(currentPipes?.cwd)
+            : environment
+              ? formatEnvironmentVariablesPrompt()
+              : packages
+                ? formatPackageManagementPrompt()
+                : processes
+                  ? formatProcessesPrompt()
+                  : ownership
+                    ? formatOwnershipSudoPrompt()
+                    : permissions
+                      ? formatFilePermissionsPrompt()
+                      : formatTerminalPrompt(currentFs?.cwd ?? "/home/learner");
 
     if (trimmed) {
       setCommandHistory((prev) =>
@@ -551,6 +595,32 @@ export function TerminalSimulator({
 
     if (identity) {
       const result = simulateUsersIdentityCommand(raw);
+
+      if (result.kind === "clear") {
+        setHistory([]);
+        return;
+      }
+
+      if (result.kind === "empty") {
+        setHistory((prev) => [
+          ...prev,
+          { command: "", output: [], prompt: currentPrompt },
+        ]);
+        return;
+      }
+
+      setHistory((prev) => [
+        ...prev,
+        { command: raw, output: result.lines, prompt: currentPrompt },
+      ]);
+      return;
+    }
+
+    if (textProcessing && currentText) {
+      const { result, state } = simulateTextProcessingCommand(raw, currentText);
+      textRef.current = state;
+      setTextState(state);
+      onTextProcessingChangeRef.current?.(state);
 
       if (result.kind === "clear") {
         setHistory([]);

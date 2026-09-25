@@ -29,6 +29,7 @@ import { PackageManagementPractice } from "@/components/learn/package-management
 import { EnvironmentVariablesPractice } from "@/components/learn/environment-variables-practice";
 import { PipesAndRedirectionPractice } from "@/components/learn/pipes-and-redirection-practice";
 import { SearchingAndFindingFilesPractice } from "@/components/learn/searching-and-finding-files-practice";
+import { TextProcessingPractice } from "@/components/learn/text-processing-practice";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -58,7 +59,8 @@ function resolveTerminalFilesystem(
     preset === "package-management" ||
     preset === "environment-variables" ||
     preset === "pipes-and-redirection" ||
-    preset === "searching-and-finding-files"
+    preset === "searching-and-finding-files" ||
+    preset === "text-processing"
   ) {
     return undefined;
   }
@@ -190,6 +192,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           environment={block.preset === "environment-variables"}
           pipes={block.preset === "pipes-and-redirection"}
           searching={block.preset === "searching-and-finding-files"}
+          textProcessing={block.preset === "text-processing"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -228,6 +231,9 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "searching-and-finding-files-practice") {
         return <SearchingAndFindingFilesPractice />;
+      }
+      if (block.id === "text-processing-practice") {
+        return <TextProcessingPractice />;
       }
       return <FilesystemPractice />;
     case "panel":

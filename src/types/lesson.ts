@@ -49,7 +49,8 @@ export type LessonTerminalPreset =
   | "package-management"
   | "environment-variables"
   | "pipes-and-redirection"
-  | "searching-and-finding-files";
+  | "searching-and-finding-files"
+  | "text-processing";
 
 export type LessonBlock =
   | {
@@ -136,7 +137,8 @@ export type LessonBlock =
         | "package-management-practice"
         | "environment-variables-practice"
         | "pipes-and-redirection-practice"
-        | "searching-and-finding-files-practice";
+        | "searching-and-finding-files-practice"
+        | "text-processing-practice";
     }
   | {
       type: "panel";

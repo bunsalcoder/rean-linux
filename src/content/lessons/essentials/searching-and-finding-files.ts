@@ -25,7 +25,6 @@ export const searchingAndFindingFilesLesson = {
     next: {
       label: "Text Processing",
       href: "/learn/essentials/text-processing",
-      unavailable: true,
     },
   },
   intro: [
