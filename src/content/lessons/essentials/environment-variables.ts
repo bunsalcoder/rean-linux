@@ -25,7 +25,6 @@ export const environmentVariablesLesson = {
     next: {
       label: "Pipes and Redirection",
       href: "/learn/essentials/pipes-and-redirection",
-      unavailable: true,
     },
   },
   intro: [

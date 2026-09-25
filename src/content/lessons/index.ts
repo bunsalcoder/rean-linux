@@ -8,6 +8,7 @@ import { filePermissionsLesson } from "@/content/lessons/essentials/file-permiss
 import { ownershipAndSudoLesson } from "@/content/lessons/essentials/ownership-and-sudo";
 import { packageManagementLesson } from "@/content/lessons/essentials/package-management";
 import { environmentVariablesLesson } from "@/content/lessons/essentials/environment-variables";
+import { pipesAndRedirectionLesson } from "@/content/lessons/essentials/pipes-and-redirection";
 import { processesLesson } from "@/content/lessons/essentials/processes";
 import { usersAndGroupsLesson } from "@/content/lessons/essentials/users-and-groups";
 import type { Lesson, LessonLevel } from "@/types/lesson";
@@ -25,6 +26,7 @@ export const lessons = [
   processesLesson,
   packageManagementLesson,
   environmentVariablesLesson,
+  pipesAndRedirectionLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];

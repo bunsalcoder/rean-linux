@@ -27,6 +27,7 @@ import { OwnershipAndSudoPractice } from "@/components/learn/ownership-and-sudo-
 import { ProcessesPractice } from "@/components/learn/processes-practice";
 import { PackageManagementPractice } from "@/components/learn/package-management-practice";
 import { EnvironmentVariablesPractice } from "@/components/learn/environment-variables-practice";
+import { PipesAndRedirectionPractice } from "@/components/learn/pipes-and-redirection-practice";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -54,7 +55,8 @@ function resolveTerminalFilesystem(
     preset === "ownership-and-sudo" ||
     preset === "processes" ||
     preset === "package-management" ||
-    preset === "environment-variables"
+    preset === "environment-variables" ||
+    preset === "pipes-and-redirection"
   ) {
     return undefined;
   }
@@ -184,6 +186,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           processes={block.preset === "processes"}
           packages={block.preset === "package-management"}
           environment={block.preset === "environment-variables"}
+          pipes={block.preset === "pipes-and-redirection"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -216,6 +219,9 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "environment-variables-practice") {
         return <EnvironmentVariablesPractice />;
+      }
+      if (block.id === "pipes-and-redirection-practice") {
+        return <PipesAndRedirectionPractice />;
       }
       return <FilesystemPractice />;
     case "panel":
