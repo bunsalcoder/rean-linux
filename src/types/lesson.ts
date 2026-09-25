@@ -47,7 +47,8 @@ export type LessonTerminalPreset =
   | "ownership-and-sudo"
   | "processes"
   | "package-management"
-  | "environment-variables";
+  | "environment-variables"
+  | "pipes-and-redirection";
 
 export type LessonBlock =
   | {
@@ -132,7 +133,8 @@ export type LessonBlock =
         | "ownership-and-sudo-practice"
         | "processes-practice"
         | "package-management-practice"
-        | "environment-variables-practice";
+        | "environment-variables-practice"
+        | "pipes-and-redirection-practice";
     }
   | {
       type: "panel";

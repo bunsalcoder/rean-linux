@@ -176,10 +176,12 @@ export const essentialsLessons: readonly EssentialsLesson[] = [
     number: 7,
     slug: "pipes-and-redirection",
     title: "Pipes and Redirection",
-    description: "Learn how commands can work together.",
-    duration: "25 min",
+    description:
+      "Learn how to connect commands with pipes and control where command input and output go.",
+    duration: "20–25 min",
     difficulty: "Intermediate",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/essentials/pipes-and-redirection",
     topics: [
       "Standard input",
       "Standard output",
@@ -188,7 +190,8 @@ export const essentialsLessons: readonly EssentialsLesson[] = [
       ">>",
       "<",
       "|",
-      "tee",
+      "2>",
+      "2>&1",
     ],
   },
   {
