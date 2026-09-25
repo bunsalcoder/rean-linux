@@ -25,7 +25,6 @@ export const pipesAndRedirectionLesson = {
     next: {
       label: "Searching and Finding Files",
       href: "/learn/essentials/searching-and-finding-files",
-      unavailable: true,
     },
   },
   intro: [
