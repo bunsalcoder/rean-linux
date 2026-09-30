@@ -25,7 +25,6 @@ export const textProcessingLesson = {
     next: {
       label: "Shell Basics",
       href: "/learn/essentials/shell-basics",
-      unavailable: true,
     },
   },
   intro: [
