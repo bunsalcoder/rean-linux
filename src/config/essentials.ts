@@ -11,7 +11,7 @@ export const ESSENTIALS_LESSON_SLUGS = [
   "searching-and-finding-files",
   "text-processing",
   "shell-basics",
-  "introduction-to-bash-scripting",
+  "bash-scripting",
   "linux-essentials-challenge",
 ] as const;
 
@@ -260,21 +260,24 @@ export const essentialsLessons: readonly EssentialsLesson[] = [
   },
   {
     number: 11,
-    slug: "introduction-to-bash-scripting",
+    slug: "bash-scripting",
     title: "Introduction to Bash Scripting",
-    description: "Create simple reusable shell scripts.",
-    duration: "40 min",
+    description:
+      "Learn how to automate repetitive tasks with Bash scripts using variables, command sequences, conditions, and loops.",
+    duration: "30–35 min",
     difficulty: "Intermediate",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/essentials/bash-scripting",
     topics: [
+      "What is a Bash script?",
       "Shebang",
+      "Creating scripts",
       "Variables",
-      "Arguments",
-      "Exit codes",
-      "Conditions",
-      "Loops",
-      "Functions",
-      "Executable scripts",
+      "read",
+      "Command sequences",
+      "if / else",
+      "for loops",
+      "while loops",
     ],
   },
   {

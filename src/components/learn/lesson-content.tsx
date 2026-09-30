@@ -31,6 +31,7 @@ import { PipesAndRedirectionPractice } from "@/components/learn/pipes-and-redire
 import { SearchingAndFindingFilesPractice } from "@/components/learn/searching-and-finding-files-practice";
 import { TextProcessingPractice } from "@/components/learn/text-processing-practice";
 import { ShellBasicsPractice } from "@/components/learn/shell-basics-practice";
+import { BashScriptingPractice } from "@/components/learn/bash-scripting-practice";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -62,7 +63,8 @@ function resolveTerminalFilesystem(
     preset === "pipes-and-redirection" ||
     preset === "searching-and-finding-files" ||
     preset === "text-processing" ||
-    preset === "shell-basics"
+    preset === "shell-basics" ||
+    preset === "bash-scripting"
   ) {
     return undefined;
   }
@@ -196,6 +198,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           searching={block.preset === "searching-and-finding-files"}
           textProcessing={block.preset === "text-processing"}
           shellBasics={block.preset === "shell-basics"}
+          bashScripting={block.preset === "bash-scripting"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -240,6 +243,9 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "shell-basics-practice") {
         return <ShellBasicsPractice />;
+      }
+      if (block.id === "bash-scripting-practice") {
+        return <BashScriptingPractice />;
       }
       return <FilesystemPractice />;
     case "panel":

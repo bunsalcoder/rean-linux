@@ -24,8 +24,7 @@ export const shellBasicsLesson = {
     },
     next: {
       label: "Introduction to Bash Scripting",
-      href: "/learn/essentials/introduction-to-bash-scripting",
-      unavailable: true,
+      href: "/learn/essentials/bash-scripting",
     },
   },
   intro: [
