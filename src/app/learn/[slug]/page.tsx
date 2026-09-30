@@ -11,7 +11,11 @@ type LearnSlugPageProps = {
 };
 
 /** Dedicated stage hubs own these paths; exclude them from the dynamic slug route. */
-const DEDICATED_LEARN_SLUGS = new Set(["beginner", "essentials"]);
+const DEDICATED_LEARN_SLUGS = new Set([
+  "beginner",
+  "essentials",
+  "administration",
+]);
 
 const LEARN_PAGE_SLUGS = Array.from(
   new Set<string>([...LEARNING_LEVEL_SLUGS, ...TOPIC_SLUGS]),
