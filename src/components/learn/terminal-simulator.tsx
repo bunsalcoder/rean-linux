@@ -681,16 +681,22 @@ export function TerminalSimulator({
       setCommandHistory((prev) =>
         prev[prev.length - 1] === trimmed ? prev : [...prev, trimmed],
       );
-      onCommandRunRef.current?.(trimmed);
     }
     setHistoryIndex(null);
     setCurrentInput("");
+
+    const notifyCommandRun = () => {
+      if (trimmed) {
+        onCommandRunRef.current?.(trimmed);
+      }
+    };
 
     if (identity) {
       const result = simulateUsersIdentityCommand(raw);
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -699,6 +705,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -706,6 +713,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -720,6 +728,7 @@ export function TerminalSimulator({
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -728,6 +737,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -735,6 +745,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -746,6 +757,7 @@ export function TerminalSimulator({
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -754,6 +766,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -761,6 +774,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -772,6 +786,7 @@ export function TerminalSimulator({
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -780,6 +795,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -787,6 +803,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -801,6 +818,7 @@ export function TerminalSimulator({
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -809,6 +827,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -816,6 +835,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -830,6 +850,7 @@ export function TerminalSimulator({
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -838,6 +859,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -845,6 +867,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -859,6 +882,7 @@ export function TerminalSimulator({
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -867,6 +891,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -874,6 +899,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -888,6 +914,7 @@ export function TerminalSimulator({
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -896,6 +923,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -903,6 +931,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -914,6 +943,7 @@ export function TerminalSimulator({
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -922,6 +952,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -929,6 +960,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -943,6 +975,7 @@ export function TerminalSimulator({
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -951,6 +984,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -958,6 +992,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -972,6 +1007,7 @@ export function TerminalSimulator({
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -980,6 +1016,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -987,6 +1024,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -1001,6 +1039,7 @@ export function TerminalSimulator({
 
       if (result.kind === "clear") {
         setHistory([]);
+        notifyCommandRun();
         return;
       }
 
@@ -1009,6 +1048,7 @@ export function TerminalSimulator({
           ...prev,
           { command: "", output: [], prompt: currentPrompt },
         ]);
+        notifyCommandRun();
         return;
       }
 
@@ -1016,6 +1056,7 @@ export function TerminalSimulator({
         ...prev,
         { command: raw, output: result.lines, prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -1023,6 +1064,7 @@ export function TerminalSimulator({
 
     if (result.kind === "clear") {
       setHistory([]);
+      notifyCommandRun();
       return;
     }
 
@@ -1031,6 +1073,7 @@ export function TerminalSimulator({
         ...prev,
         { command: "", output: [], prompt: currentPrompt },
       ]);
+      notifyCommandRun();
       return;
     }
 
@@ -1038,6 +1081,7 @@ export function TerminalSimulator({
       ...prev,
       { command: raw, output: result.lines, prompt: currentPrompt },
     ]);
+    notifyCommandRun();
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {

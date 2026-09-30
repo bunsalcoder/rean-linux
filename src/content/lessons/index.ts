@@ -13,6 +13,7 @@ import { searchingAndFindingFilesLesson } from "@/content/lessons/essentials/sea
 import { textProcessingLesson } from "@/content/lessons/essentials/text-processing";
 import { shellBasicsLesson } from "@/content/lessons/essentials/shell-basics";
 import { bashScriptingLesson } from "@/content/lessons/essentials/bash-scripting";
+import { linuxEssentialsChallengeLesson } from "@/content/lessons/essentials/linux-essentials-challenge";
 import { processesLesson } from "@/content/lessons/essentials/processes";
 import { usersAndGroupsLesson } from "@/content/lessons/essentials/users-and-groups";
 import type { Lesson, LessonLevel } from "@/types/lesson";
@@ -35,6 +36,7 @@ export const lessons = [
   textProcessingLesson,
   shellBasicsLesson,
   bashScriptingLesson,
+  linuxEssentialsChallengeLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];
