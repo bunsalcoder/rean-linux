@@ -40,23 +40,27 @@ const PRACTICE_STEPS = [
   },
   {
     command: "mkdir projects && cd projects",
-    lookFor: "No error — `cd` runs because `mkdir` succeeded. The prompt should move into `projects`.",
+    lookFor:
+      "No error — `cd` runs because `mkdir` succeeded. The prompt should move into `projects`.",
   },
   {
     command: 'ls nonexistent || echo "Command failed"',
-    lookFor: "An `ls` error, then `Command failed` because `||` runs on failure.",
+    lookFor:
+      "An `ls` error, then `Command failed` because `||` runs on failure.",
   },
   {
     command: 'echo "A"; echo "B"',
     lookFor: "`A` and `B` — `;` always continues.",
   },
   {
-    command: 'ls missing && echo skipped',
-    lookFor: "An `ls` error only — `&&` does not run `echo skipped` after failure.",
+    command: "ls missing && echo skipped",
+    lookFor:
+      "An `ls` error only — `&&` does not run `echo skipped` after failure.",
   },
   {
-    command: 'pwd || echo skipped',
-    lookFor: "Only the `pwd` path — `||` skips when the previous command succeeds.",
+    command: "pwd || echo skipped",
+    lookFor:
+      "Only the `pwd` path — `||` skips when the previous command succeeds.",
   },
 ] as const;
 
@@ -88,11 +92,11 @@ const PRACTICE_SUGGESTIONS = [
     label: 'echo "A"; echo "B"',
   },
   {
-    command: 'ls missing && echo skipped',
+    command: "ls missing && echo skipped",
     label: "ls missing && echo skipped",
   },
   {
-    command: 'pwd || echo skipped',
+    command: "pwd || echo skipped",
     label: "pwd || echo skipped",
   },
 ] as const;

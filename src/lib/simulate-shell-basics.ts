@@ -26,7 +26,10 @@ const INITIAL_EXPORTED: Record<string, string> = {
 
 export type SimulatedShellState = {
   cwd: string;
-  nodes: Record<string, { type: "file"; content: string } | { type: "directory" }>;
+  nodes: Record<
+    string,
+    { type: "file"; content: string } | { type: "directory" }
+  >;
   /** All shell variables (exported and non-exported). */
   values: Record<string, string>;
   /** Keys that are part of the exported environment. */
@@ -118,7 +121,9 @@ export function createInitialShellState(): SimulatedShellState {
   };
 }
 
-export function cloneShellState(state: SimulatedShellState): SimulatedShellState {
+export function cloneShellState(
+  state: SimulatedShellState,
+): SimulatedShellState {
   return {
     cwd: state.cwd,
     nodes: { ...state.nodes },
@@ -217,7 +222,9 @@ function listChildren(
     }
   }
 
-  return [...names].sort((a, b) => a.localeCompare(b)).map((name) => ({ name }));
+  return [...names]
+    .sort((a, b) => a.localeCompare(b))
+    .map((name) => ({ name }));
 }
 
 function syncPwd(state: SimulatedShellState): void {
@@ -227,7 +234,9 @@ function syncPwd(state: SimulatedShellState): void {
 /**
  * Split a line on top-level `;`, `&&`, and `||` (not inside quotes).
  */
-export function splitCommandChain(input: string): ChainSegment[] | { error: string } {
+export function splitCommandChain(
+  input: string,
+): ChainSegment[] | { error: string } {
   const segments: ChainSegment[] = [];
   let current = "";
   let connector: ChainConnector | null = null;
@@ -331,7 +340,9 @@ type RawToken = {
 /**
  * Tokenize a single command, preserving quote kind for expansion rules.
  */
-export function tokenizeShellInput(input: string): RawToken[] | { error: string } {
+export function tokenizeShellInput(
+  input: string,
+): RawToken[] | { error: string } {
   const tokens: RawToken[] = [];
   let i = 0;
 
@@ -432,7 +443,11 @@ function runSimulatedSubstitution(
     return { output: state.cwd };
   }
 
-  if (lower === "echo" || lower.startsWith("echo ") || lower.startsWith("echo\t")) {
+  if (
+    lower === "echo" ||
+    lower.startsWith("echo ") ||
+    lower.startsWith("echo\t")
+  ) {
     const rest = trimmed.slice("echo".length).trimStart();
     const expanded = expandToken(rest, "double", state);
     if ("error" in expanded) {
@@ -473,7 +488,13 @@ function expandToken(
     if (ch === "\\" && i + 1 < raw.length) {
       const next = raw[i + 1] ?? "";
       if (quote === "double") {
-        if (next === "$" || next === "`" || next === '"' || next === "\\" || next === "\n") {
+        if (
+          next === "$" ||
+          next === "`" ||
+          next === '"' ||
+          next === "\\" ||
+          next === "\n"
+        ) {
           result += next;
           i += 2;
           continue;
@@ -506,11 +527,15 @@ function expandToken(
         j += 1;
       }
       if (depth !== 0) {
-        return { error: "syntax error: unexpected end of file in command substitution" };
+        return {
+          error: "syntax error: unexpected end of file in command substitution",
+        };
       }
       const inner = raw.slice(start, j);
       if (inner.includes("$(")) {
-        return { error: "nested command substitution is not supported in this lesson" };
+        return {
+          error: "nested command substitution is not supported in this lesson",
+        };
       }
       const substituted = runSimulatedSubstitution(inner, state);
       if (substituted.error) {
@@ -675,7 +700,9 @@ function runMkdir(argv: string[], state: SimulatedShellState): CommandStreams {
   if (!state.nodes[parent] || state.nodes[parent]?.type !== "directory") {
     return {
       stdout: [],
-      stderr: [`mkdir: cannot create directory '${name}': No such file or directory`],
+      stderr: [
+        `mkdir: cannot create directory '${name}': No such file or directory`,
+      ],
       status: 1,
     };
   }
@@ -782,7 +809,11 @@ function executeSingleCommand(
   }
 
   if (argv.length === 0 || argv[0] === "") {
-    return { stdout: [], stderr: ["bash: syntax error: empty command"], status: 2 };
+    return {
+      stdout: [],
+      stderr: ["bash: syntax error: empty command"],
+      status: 2,
+    };
   }
 
   return runSimpleCommand(argv, state);

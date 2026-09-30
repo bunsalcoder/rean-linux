@@ -426,8 +426,8 @@ export function TerminalSimulator({
   const [textState, setTextState] = useState<SimulatedTextState | null>(() =>
     textProcessing ? createInitialTextProcessingState() : null,
   );
-  const [shellState, setShellState] = useState<SimulatedShellState | null>(() =>
-    shellBasics ? createInitialShellState() : null,
+  const [shellState, setShellState] = useState<SimulatedShellState | null>(
+    () => (shellBasics ? createInitialShellState() : null),
   );
   const fsRef = useRef(fsState);
   const permissionsRef = useRef(permissionsState);
@@ -626,7 +626,9 @@ export function TerminalSimulator({
                       ? formatOwnershipSudoPrompt()
                       : permissions
                         ? formatFilePermissionsPrompt()
-                        : formatTerminalPrompt(currentFs?.cwd ?? "/home/learner");
+                        : formatTerminalPrompt(
+                            currentFs?.cwd ?? "/home/learner",
+                          );
 
     if (trimmed) {
       setCommandHistory((prev) =>

@@ -110,7 +110,7 @@ export const shellBasicsLesson = {
         },
         {
           type: "code",
-          code: "ls -l\ncat notes.txt\ngrep \"Linux\" notes.txt",
+          code: 'ls -l\ncat notes.txt\ngrep "Linux" notes.txt',
           language: "bash",
           title: "examples",
         },
@@ -223,7 +223,7 @@ export const shellBasicsLesson = {
         },
         {
           type: "note",
-          text: "You may also see examples like `echo \"Hello\\ World\"`. This lesson focuses on escaping `$` — enough for everyday quoting mistakes without advanced escape rules.",
+          text: 'You may also see examples like `echo "Hello\\ World"`. This lesson focuses on escaping `$` — enough for everyday quoting mistakes without advanced escape rules.',
         },
         {
           type: "terminal",
@@ -254,8 +254,8 @@ export const shellBasicsLesson = {
           type: "list",
           items: [
             "Variable names are **case-sensitive** (`NAME` and `name` are different).",
-            "Assignments do **not** use spaces around `=` — write `NAME=\"Bunsal\"`, not `NAME = \"Bunsal\"`.",
-            "`$NAME` (or `\"$NAME\"`) expands the variable’s value.",
+            'Assignments do **not** use spaces around `=` — write `NAME="Bunsal"`, not `NAME = "Bunsal"`.',
+            '`$NAME` (or `"$NAME"`) expands the variable’s value.',
             "**Shell variables** live in the current shell; **exported environment variables** can be inherited by child processes — related, but not identical.",
           ],
         },
@@ -567,7 +567,7 @@ export const shellBasicsLesson = {
         },
         {
           type: "paragraph",
-          text: "`echo NAME` prints the word `NAME`. `echo \"$NAME\"` prints the variable’s value.",
+          text: '`echo NAME` prints the word `NAME`. `echo "$NAME"` prints the variable’s value.',
         },
         {
           type: "heading",
