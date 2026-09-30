@@ -12,8 +12,8 @@ import type { LessonStatus } from "@/types/lesson";
 export const LEARNING_LEVEL_SLUGS = [
   "beginner",
   "essentials",
+  "administration",
   "power-user",
-  "administrator",
   "devops",
 ] as const;
 
@@ -74,26 +74,27 @@ export const learningLevels: readonly LearningLevel[] = [
     lessonCount: 12,
   },
   {
-    slug: "power-user",
+    slug: "administration",
     indicator: "03",
+    title: "Linux Administration",
+    label: "Up next",
+    description:
+      "Learn how to manage Linux services, monitor system activity, configure networking, manage storage, and maintain a Linux system.",
+    topics: ["Services", "Logs", "Networking", "Storage", "SSH"],
+    icon: Server,
+    status: "available",
+    difficulty: "Advanced",
+    lessonCount: 12,
+  },
+  {
+    slug: "power-user",
+    indicator: "04",
     title: "Linux Power User",
     label: "Coming soon",
     description:
       "Go deeper on productivity, automation habits, and advanced command-line workflows.",
     topics: ["Advanced Bash", "Jobs", "Automation habits", "Tooling"],
     icon: Terminal,
-    status: "coming-soon",
-    difficulty: "Advanced",
-  },
-  {
-    slug: "administrator",
-    indicator: "04",
-    title: "Linux Administration",
-    label: "Coming soon",
-    description:
-      "Learn the skills required to operate and maintain Linux machines and servers.",
-    topics: ["Networking", "SSH", "Services", "Logs", "Storage"],
-    icon: Server,
     status: "coming-soon",
     difficulty: "Advanced",
   },
