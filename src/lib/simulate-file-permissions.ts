@@ -277,6 +277,32 @@ export function simulateFilePermissionsCommand(
         };
       }
 
+      if (
+        tokens.length === 3 &&
+        (tokens[1] === "-l" || tokens[1] === "-la" || tokens[1] === "-al")
+      ) {
+        const fileArg = tokens[2] ?? "";
+        const entryName = resolveEntryName(nextState, fileArg);
+        if (!entryName) {
+          return {
+            result: {
+              kind: "output",
+              lines: [
+                `ls: cannot access '${fileArg}': No such file or directory`,
+              ],
+            },
+            state: nextState,
+          };
+        }
+        return {
+          result: {
+            kind: "output",
+            lines: [formatLsLine(nextState.entries[entryName]!)],
+          },
+          state: nextState,
+        };
+      }
+
       return {
         result: { kind: "output", lines: UNSUPPORTED_MESSAGE },
         state: nextState,

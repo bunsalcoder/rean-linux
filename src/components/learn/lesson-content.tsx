@@ -32,6 +32,12 @@ import { SearchingAndFindingFilesPractice } from "@/components/learn/searching-a
 import { TextProcessingPractice } from "@/components/learn/text-processing-practice";
 import { ShellBasicsPractice } from "@/components/learn/shell-basics-practice";
 import { BashScriptingPractice } from "@/components/learn/bash-scripting-practice";
+import {
+  LinuxEssentialsChallengeCategory,
+  LinuxEssentialsChallengeProgress,
+  LinuxEssentialsChallengeProvider,
+  LinuxEssentialsChallengeSummary,
+} from "@/components/learn/linux-essentials-challenge-practice";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -39,6 +45,7 @@ import {
   createFilesystemLessonFs,
   createLearnerHomeFs,
 } from "@/lib/simulated-filesystem";
+import type { ChallengeCategoryId } from "@/lib/linux-essentials-challenge";
 import type {
   Lesson,
   LessonBlock,
@@ -64,7 +71,8 @@ function resolveTerminalFilesystem(
     preset === "searching-and-finding-files" ||
     preset === "text-processing" ||
     preset === "shell-basics" ||
-    preset === "bash-scripting"
+    preset === "bash-scripting" ||
+    preset === "linux-essentials-challenge"
   ) {
     return undefined;
   }
@@ -247,6 +255,23 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       if (block.id === "bash-scripting-practice") {
         return <BashScriptingPractice />;
       }
+      if (block.id === "linux-essentials-challenge-practice") {
+        const category = block.challengeCategory;
+        if (category === "progress") {
+          return <LinuxEssentialsChallengeProgress />;
+        }
+        if (category === "summary") {
+          return <LinuxEssentialsChallengeSummary />;
+        }
+        if (category) {
+          return (
+            <LinuxEssentialsChallengeCategory
+              categoryId={category as ChallengeCategoryId}
+            />
+          );
+        }
+        return null;
+      }
       return <FilesystemPractice />;
     case "panel":
       return (
@@ -311,7 +336,7 @@ type LessonContentProps = {
 };
 
 export function LessonContent({ lesson }: LessonContentProps) {
-  return (
+  const content = (
     <>
       {lesson.intro && lesson.intro.length > 0 ? (
         <section className="space-y-4" aria-label="Lesson introduction">
@@ -328,4 +353,14 @@ export function LessonContent({ lesson }: LessonContentProps) {
       ))}
     </>
   );
+
+  if (lesson.slug === "linux-essentials-challenge") {
+    return (
+      <LinuxEssentialsChallengeProvider>
+        {content}
+      </LinuxEssentialsChallengeProvider>
+    );
+  }
+
+  return content;
 }

@@ -25,7 +25,6 @@ export const bashScriptingLesson = {
     next: {
       label: "Linux Essentials Challenge",
       href: "/learn/essentials/linux-essentials-challenge",
-      unavailable: true,
     },
   },
   intro: [

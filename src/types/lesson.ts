@@ -52,7 +52,8 @@ export type LessonTerminalPreset =
   | "searching-and-finding-files"
   | "text-processing"
   | "shell-basics"
-  | "bash-scripting";
+  | "bash-scripting"
+  | "linux-essentials-challenge";
 
 export type LessonBlock =
   | {
@@ -142,7 +143,26 @@ export type LessonBlock =
         | "searching-and-finding-files-practice"
         | "text-processing-practice"
         | "shell-basics-practice"
-        | "bash-scripting-practice";
+        | "bash-scripting-practice"
+        | "linux-essentials-challenge-practice";
+      /**
+       * Which panel to render for the Linux Essentials Challenge exercise.
+       * Required when `id` is `linux-essentials-challenge-practice`.
+       */
+      challengeCategory?:
+        | "progress"
+        | "summary"
+        | "users-and-groups"
+        | "file-permissions"
+        | "ownership-and-sudo"
+        | "processes"
+        | "package-management"
+        | "environment-variables"
+        | "pipes-and-redirection"
+        | "searching-and-finding-files"
+        | "text-processing"
+        | "shell-basics"
+        | "bash-scripting";
     }
   | {
       type: "panel";
