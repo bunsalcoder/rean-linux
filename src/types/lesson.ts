@@ -51,7 +51,8 @@ export type LessonTerminalPreset =
   | "pipes-and-redirection"
   | "searching-and-finding-files"
   | "text-processing"
-  | "shell-basics";
+  | "shell-basics"
+  | "bash-scripting";
 
 export type LessonBlock =
   | {
@@ -140,7 +141,8 @@ export type LessonBlock =
         | "pipes-and-redirection-practice"
         | "searching-and-finding-files-practice"
         | "text-processing-practice"
-        | "shell-basics-practice";
+        | "shell-basics-practice"
+        | "bash-scripting-practice";
     }
   | {
       type: "panel";

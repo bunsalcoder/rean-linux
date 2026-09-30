@@ -12,6 +12,7 @@ import { pipesAndRedirectionLesson } from "@/content/lessons/essentials/pipes-an
 import { searchingAndFindingFilesLesson } from "@/content/lessons/essentials/searching-and-finding-files";
 import { textProcessingLesson } from "@/content/lessons/essentials/text-processing";
 import { shellBasicsLesson } from "@/content/lessons/essentials/shell-basics";
+import { bashScriptingLesson } from "@/content/lessons/essentials/bash-scripting";
 import { processesLesson } from "@/content/lessons/essentials/processes";
 import { usersAndGroupsLesson } from "@/content/lessons/essentials/users-and-groups";
 import type { Lesson, LessonLevel } from "@/types/lesson";
@@ -33,6 +34,7 @@ export const lessons = [
   searchingAndFindingFilesLesson,
   textProcessingLesson,
   shellBasicsLesson,
+  bashScriptingLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];
