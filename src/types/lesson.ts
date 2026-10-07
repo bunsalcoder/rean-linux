@@ -55,7 +55,8 @@ export type LessonTerminalPreset =
   | "bash-scripting"
   | "linux-essentials-challenge"
   | "system-services"
-  | "logs-and-journald";
+  | "logs-and-journald"
+  | "disk-usage-and-mounts";
 
 export type LessonBlock =
   | {
@@ -150,7 +151,9 @@ export type LessonBlock =
         | "system-services-practice"
         | "system-services-quiz"
         | "logs-and-journald-practice"
-        | "logs-and-journald-quiz";
+        | "logs-and-journald-quiz"
+        | "disk-usage-and-mounts-practice"
+        | "disk-usage-and-mounts-quiz";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.
