@@ -40,6 +40,8 @@ import {
 } from "@/components/learn/linux-essentials-challenge-practice";
 import { SystemServicesPractice } from "@/components/learn/system-services-practice";
 import { SystemServicesQuiz } from "@/components/learn/system-services-quiz";
+import { LogsAndJournaldPractice } from "@/components/learn/logs-and-journald-practice";
+import { LogsAndJournaldQuiz } from "@/components/learn/logs-and-journald-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -75,7 +77,8 @@ function resolveTerminalFilesystem(
     preset === "shell-basics" ||
     preset === "bash-scripting" ||
     preset === "linux-essentials-challenge" ||
-    preset === "system-services"
+    preset === "system-services" ||
+    preset === "logs-and-journald"
   ) {
     return undefined;
   }
@@ -211,6 +214,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           shellBasics={block.preset === "shell-basics"}
           bashScripting={block.preset === "bash-scripting"}
           services={block.preset === "system-services"}
+          journal={block.preset === "logs-and-journald"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -264,6 +268,12 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "system-services-quiz") {
         return <SystemServicesQuiz />;
+      }
+      if (block.id === "logs-and-journald-practice") {
+        return <LogsAndJournaldPractice />;
+      }
+      if (block.id === "logs-and-journald-quiz") {
+        return <LogsAndJournaldQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

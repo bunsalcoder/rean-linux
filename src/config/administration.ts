@@ -75,7 +75,8 @@ export const administrationLessons: readonly AdministrationLesson[] = [
       "Learn how to inspect system logs and understand common log messages.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/administration/logs-and-journald",
     topics: [
       "journald",
       "journalctl",
