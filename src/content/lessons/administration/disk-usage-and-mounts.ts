@@ -26,7 +26,6 @@ export const diskUsageAndMountsLesson = {
     next: {
       label: "Networking Fundamentals",
       href: "/learn/administration/networking-fundamentals",
-      unavailable: true,
     },
   },
   intro: [

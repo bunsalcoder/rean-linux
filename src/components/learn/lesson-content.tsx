@@ -44,6 +44,8 @@ import { LogsAndJournaldPractice } from "@/components/learn/logs-and-journald-pr
 import { LogsAndJournaldQuiz } from "@/components/learn/logs-and-journald-quiz";
 import { DiskUsageAndMountsPractice } from "@/components/learn/disk-usage-and-mounts-practice";
 import { DiskUsageAndMountsQuiz } from "@/components/learn/disk-usage-and-mounts-quiz";
+import { NetworkingFundamentalsPractice } from "@/components/learn/networking-fundamentals-practice";
+import { NetworkingFundamentalsQuiz } from "@/components/learn/networking-fundamentals-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -81,7 +83,8 @@ function resolveTerminalFilesystem(
     preset === "linux-essentials-challenge" ||
     preset === "system-services" ||
     preset === "logs-and-journald" ||
-    preset === "disk-usage-and-mounts"
+    preset === "disk-usage-and-mounts" ||
+    preset === "networking-fundamentals"
   ) {
     return undefined;
   }
@@ -219,6 +222,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           services={block.preset === "system-services"}
           journal={block.preset === "logs-and-journald"}
           diskUsage={block.preset === "disk-usage-and-mounts"}
+          networking={block.preset === "networking-fundamentals"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -284,6 +288,12 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "disk-usage-and-mounts-quiz") {
         return <DiskUsageAndMountsQuiz />;
+      }
+      if (block.id === "networking-fundamentals-practice") {
+        return <NetworkingFundamentalsPractice />;
+      }
+      if (block.id === "networking-fundamentals-quiz") {
+        return <NetworkingFundamentalsQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

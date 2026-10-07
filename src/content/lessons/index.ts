@@ -19,6 +19,7 @@ import { usersAndGroupsLesson } from "@/content/lessons/essentials/users-and-gro
 import { systemServicesLesson } from "@/content/lessons/administration/system-services";
 import { logsAndJournaldLesson } from "@/content/lessons/administration/logs-and-journald";
 import { diskUsageAndMountsLesson } from "@/content/lessons/administration/disk-usage-and-mounts";
+import { networkingFundamentalsLesson } from "@/content/lessons/administration/networking-fundamentals";
 import type { Lesson, LessonLevel } from "@/types/lesson";
 
 export const lessons = [
@@ -43,6 +44,7 @@ export const lessons = [
   systemServicesLesson,
   logsAndJournaldLesson,
   diskUsageAndMountsLesson,
+  networkingFundamentalsLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];
