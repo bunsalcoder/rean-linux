@@ -112,7 +112,8 @@ export const administrationLessons: readonly AdministrationLesson[] = [
       "Learn how to inspect disk usage and understand filesystem mounts.",
     duration: "20–25 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/administration/disk-usage-and-mounts",
     topics: ["df", "du", "mount", "umount", "fstab", "Mount points"],
   },
   {

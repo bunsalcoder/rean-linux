@@ -92,6 +92,12 @@ import {
   type SimulatedJournalState,
 } from "@/lib/simulate-logs-journald";
 import {
+  createInitialDiskState,
+  formatDiskUsagePrompt,
+  simulateDiskUsageMountsCommand,
+  type SimulatedDiskState,
+} from "@/lib/simulate-disk-usage-mounts";
+import {
   formatUsersIdentityPrompt,
   simulateUsersIdentityCommand,
 } from "@/lib/simulate-users-identity";
@@ -247,6 +253,18 @@ const DEFAULT_JOURNAL_SUGGESTIONS = [
   "help",
 ] as const;
 
+const DEFAULT_DISK_USAGE_SUGGESTIONS = [
+  "df -h",
+  "du -sh /home",
+  "du -h --max-depth=1 /var",
+  "du -ah /var",
+  "mount",
+  "findmnt",
+  "sudo mount /dev/sdb1 /data",
+  "sudo umount /data",
+  "help",
+] as const;
+
 type HistoryEntry = {
   command: string;
   output: readonly string[];
@@ -267,7 +285,7 @@ type TerminalSimulatorProps = {
   /**
    * Enable the in-memory filesystem command set (pwd/ls/cd/mkdir/...).
    * When omitted, the simpler Lesson 04 command set is used.
-   * Ignored when `identity`, `permissions`, `ownership`, `processes`, `packages`, `environment`, `pipes`, `searching`, `textProcessing`, `shellBasics`, `bashScripting`, `services`, or `journal` is true.
+   * Ignored when `identity`, `permissions`, `ownership`, `processes`, `packages`, `environment`, `pipes`, `searching`, `textProcessing`, `shellBasics`, `bashScripting`, `services`, `journal`, or `diskUsage` is true.
    */
   filesystem?: boolean | SimulatedFsState;
   /**
@@ -335,6 +353,11 @@ type TerminalSimulatorProps = {
    * Frontend-only simulated journal — never runs real journalctl or reads host logs.
    */
   journal?: boolean;
+  /**
+   * Enable the disk-usage/mounts command set (df / du / mount / umount / findmnt).
+   * Frontend-only simulated storage — never inspects host disks or runs real mounts.
+   */
+  diskUsage?: boolean;
   onFsChange?: (state: SimulatedFsState) => void;
   onPermissionsChange?: (state: SimulatedPermissionsState) => void;
   onOwnershipChange?: (state: SimulatedOwnershipState) => void;
@@ -348,6 +371,7 @@ type TerminalSimulatorProps = {
   onBashScriptingChange?: (state: SimulatedBashScriptState) => void;
   onServicesChange?: (state: SimulatedServicesState) => void;
   onJournalChange?: (state: SimulatedJournalState) => void;
+  onDiskUsageChange?: (state: SimulatedDiskState) => void;
   onCommand?: (command: string, state: SimulatedFsState) => void;
   /** Fires for every non-empty command in any simulator mode. */
   onCommandRun?: (command: string) => void;
@@ -436,6 +460,7 @@ export function TerminalSimulator({
   bashScripting = false,
   services = false,
   journal = false,
+  diskUsage = false,
   onFsChange,
   onPermissionsChange,
   onOwnershipChange,
@@ -449,6 +474,7 @@ export function TerminalSimulator({
   onBashScriptingChange,
   onServicesChange,
   onJournalChange,
+  onDiskUsageChange,
   onCommand,
   onCommandRun,
   suggestionsLabel = "Try a command",
@@ -476,7 +502,8 @@ export function TerminalSimulator({
     shellBasics ||
     bashScripting ||
     services ||
-    journal;
+    journal ||
+    diskUsage;
 
   const [fsState, setFsState] = useState<SimulatedFsState | null>(() =>
     specializedMode ? null : resolveInitialFs(filesystem),
@@ -525,6 +552,10 @@ export function TerminalSimulator({
     useState<SimulatedJournalState | null>(() =>
       journal ? createInitialJournalState() : null,
     );
+  const [diskUsageState, setDiskUsageState] =
+    useState<SimulatedDiskState | null>(() =>
+      diskUsage ? createInitialDiskState() : null,
+    );
   const fsRef = useRef(fsState);
   const permissionsRef = useRef(permissionsState);
   const ownershipRef = useRef(ownershipState);
@@ -538,6 +569,7 @@ export function TerminalSimulator({
   const bashScriptRef = useRef(bashScriptState);
   const servicesRef = useRef(servicesState);
   const journalRef = useRef(journalState);
+  const diskUsageRef = useRef(diskUsageState);
   const onFsChangeRef = useRef(onFsChange);
   const onPermissionsChangeRef = useRef(onPermissionsChange);
   const onOwnershipChangeRef = useRef(onOwnershipChange);
@@ -551,6 +583,7 @@ export function TerminalSimulator({
   const onBashScriptingChangeRef = useRef(onBashScriptingChange);
   const onServicesChangeRef = useRef(onServicesChange);
   const onJournalChangeRef = useRef(onJournalChange);
+  const onDiskUsageChangeRef = useRef(onDiskUsageChange);
   const onCommandRef = useRef(onCommand);
   const onCommandRunRef = useRef(onCommandRun);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -563,62 +596,66 @@ export function TerminalSimulator({
     suggestions ??
     (identity
       ? DEFAULT_IDENTITY_SUGGESTIONS
-      : journal
-        ? DEFAULT_JOURNAL_SUGGESTIONS
-        : services
-          ? DEFAULT_SERVICES_SUGGESTIONS
-          : bashScripting
-            ? DEFAULT_BASH_SCRIPTING_SUGGESTIONS
-            : shellBasics
-              ? DEFAULT_SHELL_BASICS_SUGGESTIONS
-              : textProcessing
-                ? DEFAULT_TEXT_PROCESSING_SUGGESTIONS
-                : searching
-                  ? DEFAULT_SEARCH_SUGGESTIONS
-                  : pipes
-                    ? DEFAULT_PIPES_SUGGESTIONS
-                    : environment
-                      ? DEFAULT_ENV_SUGGESTIONS
-                      : packages
-                        ? DEFAULT_PACKAGES_SUGGESTIONS
-                        : processes
-                          ? DEFAULT_PROCESSES_SUGGESTIONS
-                          : ownership
-                            ? DEFAULT_OWNERSHIP_SUGGESTIONS
-                            : permissions
-                              ? DEFAULT_PERMISSIONS_SUGGESTIONS
-                              : useFilesystem
-                                ? DEFAULT_FS_SUGGESTIONS
-                                : DEFAULT_SUGGESTIONS);
+      : diskUsage
+        ? DEFAULT_DISK_USAGE_SUGGESTIONS
+        : journal
+          ? DEFAULT_JOURNAL_SUGGESTIONS
+          : services
+            ? DEFAULT_SERVICES_SUGGESTIONS
+            : bashScripting
+              ? DEFAULT_BASH_SCRIPTING_SUGGESTIONS
+              : shellBasics
+                ? DEFAULT_SHELL_BASICS_SUGGESTIONS
+                : textProcessing
+                  ? DEFAULT_TEXT_PROCESSING_SUGGESTIONS
+                  : searching
+                    ? DEFAULT_SEARCH_SUGGESTIONS
+                    : pipes
+                      ? DEFAULT_PIPES_SUGGESTIONS
+                      : environment
+                        ? DEFAULT_ENV_SUGGESTIONS
+                        : packages
+                          ? DEFAULT_PACKAGES_SUGGESTIONS
+                          : processes
+                            ? DEFAULT_PROCESSES_SUGGESTIONS
+                            : ownership
+                              ? DEFAULT_OWNERSHIP_SUGGESTIONS
+                              : permissions
+                                ? DEFAULT_PERMISSIONS_SUGGESTIONS
+                                : useFilesystem
+                                  ? DEFAULT_FS_SUGGESTIONS
+                                  : DEFAULT_SUGGESTIONS);
   const prompt = identity
     ? formatUsersIdentityPrompt()
-    : journal
-      ? formatLogsJournaldPrompt()
-      : services
-        ? formatSystemServicesPrompt()
-        : bashScripting
-          ? formatBashScriptingPrompt(bashScriptState)
-          : shellBasics
-            ? formatShellBasicsPrompt(shellState?.cwd)
-            : textProcessing
-              ? formatTextProcessingPrompt(textState?.cwd)
-              : searching
-                ? formatSearchingAndFindingPrompt(searchState?.cwd)
-                : pipes
-                  ? formatPipesAndRedirectionPrompt(pipesState?.cwd)
-                  : environment
-                    ? formatEnvironmentVariablesPrompt()
-                    : packages
-                      ? formatPackageManagementPrompt()
-                      : processes
-                        ? formatProcessesPrompt()
-                        : ownership
-                          ? formatOwnershipSudoPrompt()
-                          : permissions
-                            ? formatFilePermissionsPrompt()
-                            : formatTerminalPrompt(
-                                fsState?.cwd ?? "/home/learner",
-                              );
+    : diskUsage
+      ? formatDiskUsagePrompt()
+      : journal
+        ? formatLogsJournaldPrompt()
+        : services
+          ? formatSystemServicesPrompt()
+          : bashScripting
+            ? formatBashScriptingPrompt(bashScriptState)
+            : shellBasics
+              ? formatShellBasicsPrompt(shellState?.cwd)
+              : textProcessing
+                ? formatTextProcessingPrompt(textState?.cwd)
+                : searching
+                  ? formatSearchingAndFindingPrompt(searchState?.cwd)
+                  : pipes
+                    ? formatPipesAndRedirectionPrompt(pipesState?.cwd)
+                    : environment
+                      ? formatEnvironmentVariablesPrompt()
+                      : packages
+                        ? formatPackageManagementPrompt()
+                        : processes
+                          ? formatProcessesPrompt()
+                          : ownership
+                            ? formatOwnershipSudoPrompt()
+                            : permissions
+                              ? formatFilePermissionsPrompt()
+                              : formatTerminalPrompt(
+                                  fsState?.cwd ?? "/home/learner",
+                                );
 
   useEffect(() => {
     onFsChangeRef.current = onFsChange;
@@ -673,6 +710,10 @@ export function TerminalSimulator({
   }, [onJournalChange]);
 
   useEffect(() => {
+    onDiskUsageChangeRef.current = onDiskUsageChange;
+  }, [onDiskUsageChange]);
+
+  useEffect(() => {
     onCommandRef.current = onCommand;
   }, [onCommand]);
 
@@ -695,31 +736,35 @@ export function TerminalSimulator({
             <span className="text-prompt select-none" aria-hidden="true">
               {identity
                 ? formatUsersIdentityPrompt()
-                : journal
-                  ? formatLogsJournaldPrompt()
-                  : services
-                    ? formatSystemServicesPrompt()
-                    : bashScripting
-                      ? formatBashScriptingPrompt()
-                      : shellBasics
-                        ? formatShellBasicsPrompt()
-                        : textProcessing
-                          ? formatTextProcessingPrompt()
-                          : searching
-                            ? formatSearchingAndFindingPrompt()
-                            : pipes
-                              ? formatPipesAndRedirectionPrompt()
-                              : environment
-                                ? formatEnvironmentVariablesPrompt()
-                                : packages
-                                  ? formatPackageManagementPrompt()
-                                  : processes
-                                    ? formatProcessesPrompt()
-                                    : ownership
-                                      ? formatOwnershipSudoPrompt()
-                                      : permissions
-                                        ? formatFilePermissionsPrompt()
-                                        : formatTerminalPrompt("/home/learner")}
+                : diskUsage
+                  ? formatDiskUsagePrompt()
+                  : journal
+                    ? formatLogsJournaldPrompt()
+                    : services
+                      ? formatSystemServicesPrompt()
+                      : bashScripting
+                        ? formatBashScriptingPrompt()
+                        : shellBasics
+                          ? formatShellBasicsPrompt()
+                          : textProcessing
+                            ? formatTextProcessingPrompt()
+                            : searching
+                              ? formatSearchingAndFindingPrompt()
+                              : pipes
+                                ? formatPipesAndRedirectionPrompt()
+                                : environment
+                                  ? formatEnvironmentVariablesPrompt()
+                                  : packages
+                                    ? formatPackageManagementPrompt()
+                                    : processes
+                                      ? formatProcessesPrompt()
+                                      : ownership
+                                        ? formatOwnershipSudoPrompt()
+                                        : permissions
+                                          ? formatFilePermissionsPrompt()
+                                          : formatTerminalPrompt(
+                                              "/home/learner",
+                                            )}
             </span>
             <span className="sr-only">Loading interactive terminal</span>
           </div>
@@ -743,35 +788,38 @@ export function TerminalSimulator({
     const currentBashScript = bashScriptRef.current;
     const currentServices = servicesRef.current;
     const currentJournal = journalRef.current;
+    const currentDiskUsage = diskUsageRef.current;
     const currentPrompt = identity
       ? formatUsersIdentityPrompt()
-      : journal
-        ? formatLogsJournaldPrompt()
-        : services
-          ? formatSystemServicesPrompt()
-          : bashScripting
-            ? formatBashScriptingPrompt(currentBashScript)
-            : shellBasics
-              ? formatShellBasicsPrompt(currentShell?.cwd)
-              : textProcessing
-                ? formatTextProcessingPrompt(currentText?.cwd)
-                : searching
-                  ? formatSearchingAndFindingPrompt(currentSearch?.cwd)
-                  : pipes
-                    ? formatPipesAndRedirectionPrompt(currentPipes?.cwd)
-                    : environment
-                      ? formatEnvironmentVariablesPrompt()
-                      : packages
-                        ? formatPackageManagementPrompt()
-                        : processes
-                          ? formatProcessesPrompt()
-                          : ownership
-                            ? formatOwnershipSudoPrompt()
-                            : permissions
-                              ? formatFilePermissionsPrompt()
-                              : formatTerminalPrompt(
-                                  currentFs?.cwd ?? "/home/learner",
-                                );
+      : diskUsage
+        ? formatDiskUsagePrompt()
+        : journal
+          ? formatLogsJournaldPrompt()
+          : services
+            ? formatSystemServicesPrompt()
+            : bashScripting
+              ? formatBashScriptingPrompt(currentBashScript)
+              : shellBasics
+                ? formatShellBasicsPrompt(currentShell?.cwd)
+                : textProcessing
+                  ? formatTextProcessingPrompt(currentText?.cwd)
+                  : searching
+                    ? formatSearchingAndFindingPrompt(currentSearch?.cwd)
+                    : pipes
+                      ? formatPipesAndRedirectionPrompt(currentPipes?.cwd)
+                      : environment
+                        ? formatEnvironmentVariablesPrompt()
+                        : packages
+                          ? formatPackageManagementPrompt()
+                          : processes
+                            ? formatProcessesPrompt()
+                            : ownership
+                              ? formatOwnershipSudoPrompt()
+                              : permissions
+                                ? formatFilePermissionsPrompt()
+                                : formatTerminalPrompt(
+                                    currentFs?.cwd ?? "/home/learner",
+                                  );
 
     if (trimmed) {
       setCommandHistory((prev) =>
@@ -853,6 +901,38 @@ export function TerminalSimulator({
       journalRef.current = state;
       setJournalState(state);
       onJournalChangeRef.current?.(state);
+
+      if (result.kind === "clear") {
+        setHistory([]);
+        notifyCommandRun();
+        return;
+      }
+
+      if (result.kind === "empty") {
+        setHistory((prev) => [
+          ...prev,
+          { command: "", output: [], prompt: currentPrompt },
+        ]);
+        notifyCommandRun();
+        return;
+      }
+
+      setHistory((prev) => [
+        ...prev,
+        { command: raw, output: result.lines, prompt: currentPrompt },
+      ]);
+      notifyCommandRun();
+      return;
+    }
+
+    if (diskUsage && currentDiskUsage) {
+      const { result, state } = simulateDiskUsageMountsCommand(
+        raw,
+        currentDiskUsage,
+      );
+      diskUsageRef.current = state;
+      setDiskUsageState(state);
+      onDiskUsageChangeRef.current?.(state);
 
       if (result.kind === "clear") {
         setHistory([]);
