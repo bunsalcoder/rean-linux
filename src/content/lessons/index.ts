@@ -16,6 +16,7 @@ import { bashScriptingLesson } from "@/content/lessons/essentials/bash-scripting
 import { linuxEssentialsChallengeLesson } from "@/content/lessons/essentials/linux-essentials-challenge";
 import { processesLesson } from "@/content/lessons/essentials/processes";
 import { usersAndGroupsLesson } from "@/content/lessons/essentials/users-and-groups";
+import { systemServicesLesson } from "@/content/lessons/administration/system-services";
 import type { Lesson, LessonLevel } from "@/types/lesson";
 
 export const lessons = [
@@ -37,6 +38,7 @@ export const lessons = [
   shellBasicsLesson,
   bashScriptingLesson,
   linuxEssentialsChallengeLesson,
+  systemServicesLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];

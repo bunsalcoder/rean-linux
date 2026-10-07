@@ -80,6 +80,12 @@ import {
   type SimulatedBashScriptState,
 } from "@/lib/simulate-bash-scripting";
 import {
+  createInitialServicesState,
+  formatSystemServicesPrompt,
+  simulateSystemServicesCommand,
+  type SimulatedServicesState,
+} from "@/lib/simulate-system-services";
+import {
   formatUsersIdentityPrompt,
   simulateUsersIdentityCommand,
 } from "@/lib/simulate-users-identity";
@@ -209,6 +215,19 @@ const DEFAULT_BASH_SCRIPTING_SUGGESTIONS = [
   { command: "help", label: "help" },
 ] as const;
 
+const DEFAULT_SERVICES_SUGGESTIONS = [
+  "systemctl status ssh",
+  "systemctl status nginx",
+  "sudo systemctl start nginx",
+  "sudo systemctl stop nginx",
+  "sudo systemctl restart nginx",
+  "sudo systemctl enable nginx",
+  "sudo systemctl disable nginx",
+  "systemctl is-active nginx",
+  "systemctl is-enabled nginx",
+  "help",
+] as const;
+
 type HistoryEntry = {
   command: string;
   output: readonly string[];
@@ -229,7 +248,7 @@ type TerminalSimulatorProps = {
   /**
    * Enable the in-memory filesystem command set (pwd/ls/cd/mkdir/...).
    * When omitted, the simpler Lesson 04 command set is used.
-   * Ignored when `identity`, `permissions`, `ownership`, `processes`, `packages`, `environment`, `pipes`, `searching`, `textProcessing`, `shellBasics`, or `bashScripting` is true.
+   * Ignored when `identity`, `permissions`, `ownership`, `processes`, `packages`, `environment`, `pipes`, `searching`, `textProcessing`, `shellBasics`, `bashScripting`, or `services` is true.
    */
   filesystem?: boolean | SimulatedFsState;
   /**
@@ -287,6 +306,11 @@ type TerminalSimulatorProps = {
    * Frontend-only simulated scripts — never executes a real shell.
    */
   bashScripting?: boolean;
+  /**
+   * Enable the system-services command set (systemctl status/start/stop/...).
+   * Frontend-only simulated services — never runs real systemctl or host services.
+   */
+  services?: boolean;
   onFsChange?: (state: SimulatedFsState) => void;
   onPermissionsChange?: (state: SimulatedPermissionsState) => void;
   onOwnershipChange?: (state: SimulatedOwnershipState) => void;
@@ -298,6 +322,7 @@ type TerminalSimulatorProps = {
   onTextProcessingChange?: (state: SimulatedTextState) => void;
   onShellBasicsChange?: (state: SimulatedShellState) => void;
   onBashScriptingChange?: (state: SimulatedBashScriptState) => void;
+  onServicesChange?: (state: SimulatedServicesState) => void;
   onCommand?: (command: string, state: SimulatedFsState) => void;
   /** Fires for every non-empty command in any simulator mode. */
   onCommandRun?: (command: string) => void;
@@ -384,6 +409,7 @@ export function TerminalSimulator({
   textProcessing = false,
   shellBasics = false,
   bashScripting = false,
+  services = false,
   onFsChange,
   onPermissionsChange,
   onOwnershipChange,
@@ -395,6 +421,7 @@ export function TerminalSimulator({
   onTextProcessingChange,
   onShellBasicsChange,
   onBashScriptingChange,
+  onServicesChange,
   onCommand,
   onCommandRun,
   suggestionsLabel = "Try a command",
@@ -420,7 +447,8 @@ export function TerminalSimulator({
     searching ||
     textProcessing ||
     shellBasics ||
-    bashScripting;
+    bashScripting ||
+    services;
 
   const [fsState, setFsState] = useState<SimulatedFsState | null>(() =>
     specializedMode ? null : resolveInitialFs(filesystem),
@@ -461,6 +489,10 @@ export function TerminalSimulator({
     useState<SimulatedBashScriptState | null>(() =>
       bashScripting ? createInitialBashScriptState() : null,
     );
+  const [servicesState, setServicesState] =
+    useState<SimulatedServicesState | null>(() =>
+      services ? createInitialServicesState() : null,
+    );
   const fsRef = useRef(fsState);
   const permissionsRef = useRef(permissionsState);
   const ownershipRef = useRef(ownershipState);
@@ -472,6 +504,7 @@ export function TerminalSimulator({
   const textRef = useRef(textState);
   const shellRef = useRef(shellState);
   const bashScriptRef = useRef(bashScriptState);
+  const servicesRef = useRef(servicesState);
   const onFsChangeRef = useRef(onFsChange);
   const onPermissionsChangeRef = useRef(onPermissionsChange);
   const onOwnershipChangeRef = useRef(onOwnershipChange);
@@ -483,6 +516,7 @@ export function TerminalSimulator({
   const onTextProcessingChangeRef = useRef(onTextProcessingChange);
   const onShellBasicsChangeRef = useRef(onShellBasicsChange);
   const onBashScriptingChangeRef = useRef(onBashScriptingChange);
+  const onServicesChangeRef = useRef(onServicesChange);
   const onCommandRef = useRef(onCommand);
   const onCommandRunRef = useRef(onCommandRun);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -495,52 +529,58 @@ export function TerminalSimulator({
     suggestions ??
     (identity
       ? DEFAULT_IDENTITY_SUGGESTIONS
-      : bashScripting
-        ? DEFAULT_BASH_SCRIPTING_SUGGESTIONS
-        : shellBasics
-          ? DEFAULT_SHELL_BASICS_SUGGESTIONS
-          : textProcessing
-            ? DEFAULT_TEXT_PROCESSING_SUGGESTIONS
-            : searching
-              ? DEFAULT_SEARCH_SUGGESTIONS
-              : pipes
-                ? DEFAULT_PIPES_SUGGESTIONS
-                : environment
-                  ? DEFAULT_ENV_SUGGESTIONS
-                  : packages
-                    ? DEFAULT_PACKAGES_SUGGESTIONS
-                    : processes
-                      ? DEFAULT_PROCESSES_SUGGESTIONS
-                      : ownership
-                        ? DEFAULT_OWNERSHIP_SUGGESTIONS
-                        : permissions
-                          ? DEFAULT_PERMISSIONS_SUGGESTIONS
-                          : useFilesystem
-                            ? DEFAULT_FS_SUGGESTIONS
-                            : DEFAULT_SUGGESTIONS);
+      : services
+        ? DEFAULT_SERVICES_SUGGESTIONS
+        : bashScripting
+          ? DEFAULT_BASH_SCRIPTING_SUGGESTIONS
+          : shellBasics
+            ? DEFAULT_SHELL_BASICS_SUGGESTIONS
+            : textProcessing
+              ? DEFAULT_TEXT_PROCESSING_SUGGESTIONS
+              : searching
+                ? DEFAULT_SEARCH_SUGGESTIONS
+                : pipes
+                  ? DEFAULT_PIPES_SUGGESTIONS
+                  : environment
+                    ? DEFAULT_ENV_SUGGESTIONS
+                    : packages
+                      ? DEFAULT_PACKAGES_SUGGESTIONS
+                      : processes
+                        ? DEFAULT_PROCESSES_SUGGESTIONS
+                        : ownership
+                          ? DEFAULT_OWNERSHIP_SUGGESTIONS
+                          : permissions
+                            ? DEFAULT_PERMISSIONS_SUGGESTIONS
+                            : useFilesystem
+                              ? DEFAULT_FS_SUGGESTIONS
+                              : DEFAULT_SUGGESTIONS);
   const prompt = identity
     ? formatUsersIdentityPrompt()
-    : bashScripting
-      ? formatBashScriptingPrompt(bashScriptState)
-      : shellBasics
-        ? formatShellBasicsPrompt(shellState?.cwd)
-        : textProcessing
-          ? formatTextProcessingPrompt(textState?.cwd)
-          : searching
-            ? formatSearchingAndFindingPrompt(searchState?.cwd)
-            : pipes
-              ? formatPipesAndRedirectionPrompt(pipesState?.cwd)
-              : environment
-                ? formatEnvironmentVariablesPrompt()
-                : packages
-                  ? formatPackageManagementPrompt()
-                  : processes
-                    ? formatProcessesPrompt()
-                    : ownership
-                      ? formatOwnershipSudoPrompt()
-                      : permissions
-                        ? formatFilePermissionsPrompt()
-                        : formatTerminalPrompt(fsState?.cwd ?? "/home/learner");
+    : services
+      ? formatSystemServicesPrompt()
+      : bashScripting
+        ? formatBashScriptingPrompt(bashScriptState)
+        : shellBasics
+          ? formatShellBasicsPrompt(shellState?.cwd)
+          : textProcessing
+            ? formatTextProcessingPrompt(textState?.cwd)
+            : searching
+              ? formatSearchingAndFindingPrompt(searchState?.cwd)
+              : pipes
+                ? formatPipesAndRedirectionPrompt(pipesState?.cwd)
+                : environment
+                  ? formatEnvironmentVariablesPrompt()
+                  : packages
+                    ? formatPackageManagementPrompt()
+                    : processes
+                      ? formatProcessesPrompt()
+                      : ownership
+                        ? formatOwnershipSudoPrompt()
+                        : permissions
+                          ? formatFilePermissionsPrompt()
+                          : formatTerminalPrompt(
+                              fsState?.cwd ?? "/home/learner",
+                            );
 
   useEffect(() => {
     onFsChangeRef.current = onFsChange;
@@ -587,6 +627,10 @@ export function TerminalSimulator({
   }, [onBashScriptingChange]);
 
   useEffect(() => {
+    onServicesChangeRef.current = onServicesChange;
+  }, [onServicesChange]);
+
+  useEffect(() => {
     onCommandRef.current = onCommand;
   }, [onCommand]);
 
@@ -609,27 +653,29 @@ export function TerminalSimulator({
             <span className="text-prompt select-none" aria-hidden="true">
               {identity
                 ? formatUsersIdentityPrompt()
-                : bashScripting
-                  ? formatBashScriptingPrompt()
-                  : shellBasics
-                    ? formatShellBasicsPrompt()
-                    : textProcessing
-                      ? formatTextProcessingPrompt()
-                      : searching
-                        ? formatSearchingAndFindingPrompt()
-                        : pipes
-                          ? formatPipesAndRedirectionPrompt()
-                          : environment
-                            ? formatEnvironmentVariablesPrompt()
-                            : packages
-                              ? formatPackageManagementPrompt()
-                              : processes
-                                ? formatProcessesPrompt()
-                                : ownership
-                                  ? formatOwnershipSudoPrompt()
-                                  : permissions
-                                    ? formatFilePermissionsPrompt()
-                                    : formatTerminalPrompt("/home/learner")}
+                : services
+                  ? formatSystemServicesPrompt()
+                  : bashScripting
+                    ? formatBashScriptingPrompt()
+                    : shellBasics
+                      ? formatShellBasicsPrompt()
+                      : textProcessing
+                        ? formatTextProcessingPrompt()
+                        : searching
+                          ? formatSearchingAndFindingPrompt()
+                          : pipes
+                            ? formatPipesAndRedirectionPrompt()
+                            : environment
+                              ? formatEnvironmentVariablesPrompt()
+                              : packages
+                                ? formatPackageManagementPrompt()
+                                : processes
+                                  ? formatProcessesPrompt()
+                                  : ownership
+                                    ? formatOwnershipSudoPrompt()
+                                    : permissions
+                                      ? formatFilePermissionsPrompt()
+                                      : formatTerminalPrompt("/home/learner")}
             </span>
             <span className="sr-only">Loading interactive terminal</span>
           </div>
@@ -651,31 +697,34 @@ export function TerminalSimulator({
     const currentText = textRef.current;
     const currentShell = shellRef.current;
     const currentBashScript = bashScriptRef.current;
+    const currentServices = servicesRef.current;
     const currentPrompt = identity
       ? formatUsersIdentityPrompt()
-      : bashScripting
-        ? formatBashScriptingPrompt(currentBashScript)
-        : shellBasics
-          ? formatShellBasicsPrompt(currentShell?.cwd)
-          : textProcessing
-            ? formatTextProcessingPrompt(currentText?.cwd)
-            : searching
-              ? formatSearchingAndFindingPrompt(currentSearch?.cwd)
-              : pipes
-                ? formatPipesAndRedirectionPrompt(currentPipes?.cwd)
-                : environment
-                  ? formatEnvironmentVariablesPrompt()
-                  : packages
-                    ? formatPackageManagementPrompt()
-                    : processes
-                      ? formatProcessesPrompt()
-                      : ownership
-                        ? formatOwnershipSudoPrompt()
-                        : permissions
-                          ? formatFilePermissionsPrompt()
-                          : formatTerminalPrompt(
-                              currentFs?.cwd ?? "/home/learner",
-                            );
+      : services
+        ? formatSystemServicesPrompt()
+        : bashScripting
+          ? formatBashScriptingPrompt(currentBashScript)
+          : shellBasics
+            ? formatShellBasicsPrompt(currentShell?.cwd)
+            : textProcessing
+              ? formatTextProcessingPrompt(currentText?.cwd)
+              : searching
+                ? formatSearchingAndFindingPrompt(currentSearch?.cwd)
+                : pipes
+                  ? formatPipesAndRedirectionPrompt(currentPipes?.cwd)
+                  : environment
+                    ? formatEnvironmentVariablesPrompt()
+                    : packages
+                      ? formatPackageManagementPrompt()
+                      : processes
+                        ? formatProcessesPrompt()
+                        : ownership
+                          ? formatOwnershipSudoPrompt()
+                          : permissions
+                            ? formatFilePermissionsPrompt()
+                            : formatTerminalPrompt(
+                                currentFs?.cwd ?? "/home/learner",
+                              );
 
     if (trimmed) {
       setCommandHistory((prev) =>
@@ -693,6 +742,38 @@ export function TerminalSimulator({
 
     if (identity) {
       const result = simulateUsersIdentityCommand(raw);
+
+      if (result.kind === "clear") {
+        setHistory([]);
+        notifyCommandRun();
+        return;
+      }
+
+      if (result.kind === "empty") {
+        setHistory((prev) => [
+          ...prev,
+          { command: "", output: [], prompt: currentPrompt },
+        ]);
+        notifyCommandRun();
+        return;
+      }
+
+      setHistory((prev) => [
+        ...prev,
+        { command: raw, output: result.lines, prompt: currentPrompt },
+      ]);
+      notifyCommandRun();
+      return;
+    }
+
+    if (services && currentServices) {
+      const { result, state } = simulateSystemServicesCommand(
+        raw,
+        currentServices,
+      );
+      servicesRef.current = state;
+      setServicesState(state);
+      onServicesChangeRef.current?.(state);
 
       if (result.kind === "clear") {
         setHistory([]);
