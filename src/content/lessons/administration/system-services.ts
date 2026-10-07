@@ -25,7 +25,6 @@ export const systemServicesLesson = {
     next: {
       label: "Logs and Journald",
       href: "/learn/administration/logs-and-journald",
-      unavailable: true,
     },
   },
   intro: [

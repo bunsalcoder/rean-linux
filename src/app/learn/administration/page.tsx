@@ -67,9 +67,9 @@ export default function AdministrationLearnPage() {
           Lessons
         </h2>
         <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed sm:text-[0.9375rem]">
-          Twelve lessons are planned for this stage. System Services and systemd
-          is ready now — the rest remain curriculum previews until they ship,
-          including the final challenge.
+          Twelve lessons are planned for this stage. System Services and Logs
+          and Journald are ready now — the rest remain curriculum previews
+          until they ship, including the final challenge.
         </p>
         <AdministrationLessonJourney />
       </section>
