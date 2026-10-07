@@ -53,7 +53,8 @@ export type LessonTerminalPreset =
   | "text-processing"
   | "shell-basics"
   | "bash-scripting"
-  | "linux-essentials-challenge";
+  | "linux-essentials-challenge"
+  | "system-services";
 
 export type LessonBlock =
   | {
@@ -144,7 +145,9 @@ export type LessonBlock =
         | "text-processing-practice"
         | "shell-basics-practice"
         | "bash-scripting-practice"
-        | "linux-essentials-challenge-practice";
+        | "linux-essentials-challenge-practice"
+        | "system-services-practice"
+        | "system-services-quiz";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.
@@ -183,7 +186,7 @@ export type LessonContentSection = {
   blocks: readonly LessonBlock[];
 };
 
-export type LessonLevel = "beginner" | "essentials";
+export type LessonLevel = "beginner" | "essentials" | "administration";
 
 /** Curriculum availability — no persisted learner progress. */
 export type LessonStatus = "available" | "completed" | "coming-soon";
