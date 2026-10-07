@@ -110,8 +110,7 @@ const PRACTICE_STEPS: readonly PracticeStep[] = [
       }
       const entries = filterJournalEntries({ unit: "nginx", priority: "err" });
       return (
-        entries.length > 0 &&
-        journalEntryContains(entries, "invalid directive")
+        entries.length > 0 && journalEntryContains(entries, "invalid directive")
       );
     },
   },

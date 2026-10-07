@@ -250,11 +250,7 @@ export const logsAndJournaldLesson = {
         },
         {
           type: "list",
-          items: [
-            '`"today"`',
-            '`"1 hour ago"`',
-            '`"30 minutes ago"`',
-          ],
+          items: ['`"today"`', '`"1 hour ago"`', '`"30 minutes ago"`'],
         },
         {
           type: "note",

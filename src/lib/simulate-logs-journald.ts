@@ -15,14 +15,7 @@ export const SIMULATED_NOW = {
 } as const;
 
 export type JournalPriority =
-  | "emerg"
-  | "alert"
-  | "crit"
-  | "err"
-  | "warning"
-  | "notice"
-  | "info"
-  | "debug";
+  "emerg" | "alert" | "crit" | "err" | "warning" | "notice" | "info" | "debug";
 
 export type JournalEntry = {
   /** Minutes since midnight on the simulated day. */
