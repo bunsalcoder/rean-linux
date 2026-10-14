@@ -25,7 +25,6 @@ export const networkingFundamentalsLesson = {
     next: {
       label: "Network Troubleshooting",
       href: "/learn/administration/network-troubleshooting",
-      unavailable: true,
     },
   },
   intro: [

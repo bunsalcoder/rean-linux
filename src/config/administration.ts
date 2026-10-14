@@ -135,7 +135,8 @@ export const administrationLessons: readonly AdministrationLesson[] = [
     description: "Learn how to diagnose common network connectivity problems.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/administration/network-troubleshooting",
     topics: ["ping", "traceroute", "DNS checks", "Connectivity", "ss", "curl"],
   },
   {
