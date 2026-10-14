@@ -147,7 +147,8 @@ export const administrationLessons: readonly AdministrationLesson[] = [
       "Understand SSH, remote connections, and basic key-based authentication.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/administration/ssh-and-remote-access",
     topics: [
       "SSH",
       "Remote login",

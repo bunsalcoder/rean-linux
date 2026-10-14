@@ -112,6 +112,14 @@ import {
   type SimulatedNetTroubleshootState,
 } from "@/lib/simulate-network-troubleshooting";
 import {
+  createInitialSshState,
+  formatSshPrompt,
+  isSshScenarioId,
+  simulateSshRemoteAccessCommand,
+  type SimulatedSshState,
+  type SshScenarioId,
+} from "@/lib/simulate-ssh-remote-access";
+import {
   formatUsersIdentityPrompt,
   simulateUsersIdentityCommand,
 } from "@/lib/simulate-users-identity";
@@ -301,6 +309,19 @@ const DEFAULT_NETWORK_TROUBLESHOOTING_SUGGESTIONS = [
   "help",
 ] as const;
 
+const DEFAULT_SSH_SUGGESTIONS = [
+  "ssh user@server",
+  "ssh bunsal@192.168.1.50",
+  "ssh -p 2222 user@server",
+  "ssh -v user@server",
+  "ssh-keygen -t ed25519",
+  "ssh-copy-id user@server",
+  "systemctl status ssh",
+  "ss -tuln",
+  "getent hosts server",
+  "help",
+] as const;
+
 type HistoryEntry = {
   command: string;
   output: readonly string[];
@@ -321,7 +342,7 @@ type TerminalSimulatorProps = {
   /**
    * Enable the in-memory filesystem command set (pwd/ls/cd/mkdir/...).
    * When omitted, the simpler Lesson 04 command set is used.
-   * Ignored when `identity`, `permissions`, `ownership`, `processes`, `packages`, `environment`, `pipes`, `searching`, `textProcessing`, `shellBasics`, `bashScripting`, `services`, `journal`, `diskUsage`, `networking`, or `networkTroubleshooting` is true.
+   * Ignored when `identity`, `permissions`, `ownership`, `processes`, `packages`, `environment`, `pipes`, `searching`, `textProcessing`, `shellBasics`, `bashScripting`, `services`, `journal`, `diskUsage`, `networking`, `networkTroubleshooting`, or `sshRemoteAccess` is true.
    */
   filesystem?: boolean | SimulatedFsState;
   /**
@@ -405,6 +426,12 @@ type TerminalSimulatorProps = {
    * Frontend-only simulated network — never inspects host interfaces or makes network requests.
    */
   networkTroubleshooting?: boolean | NetworkTroubleshootScenarioId;
+  /**
+   * Enable the SSH / remote-access command set with selectable scenarios.
+   * Pass a scenario id, or `true` for the healthy baseline.
+   * Frontend-only simulated SSH — never opens sockets or touches real keys.
+   */
+  sshRemoteAccess?: boolean | SshScenarioId;
   onFsChange?: (state: SimulatedFsState) => void;
   onPermissionsChange?: (state: SimulatedPermissionsState) => void;
   onOwnershipChange?: (state: SimulatedOwnershipState) => void;
@@ -423,6 +450,7 @@ type TerminalSimulatorProps = {
   onNetworkTroubleshootingChange?: (
     state: SimulatedNetTroubleshootState,
   ) => void;
+  onSshRemoteAccessChange?: (state: SimulatedSshState) => void;
   onCommand?: (command: string, state: SimulatedFsState) => void;
   /** Fires for every non-empty command in any simulator mode. */
   onCommandRun?: (command: string) => void;
@@ -470,6 +498,21 @@ function resolveInitialNetworkTroubleshoot(
     return createInitialNetworkTroubleshootState(networkTroubleshooting);
   }
   return createInitialNetworkTroubleshootState("healthy");
+}
+
+function resolveInitialSsh(
+  sshRemoteAccess: boolean | SshScenarioId | undefined,
+): SimulatedSshState | null {
+  if (!sshRemoteAccess) {
+    return null;
+  }
+  if (sshRemoteAccess === true) {
+    return createInitialSshState("healthy");
+  }
+  if (isSshScenarioId(sshRemoteAccess)) {
+    return createInitialSshState(sshRemoteAccess);
+  }
+  return createInitialSshState("healthy");
 }
 
 function TerminalShellFrame({
@@ -529,6 +572,7 @@ export function TerminalSimulator({
   diskUsage = false,
   networking = false,
   networkTroubleshooting = false,
+  sshRemoteAccess = false,
   onFsChange,
   onPermissionsChange,
   onOwnershipChange,
@@ -545,6 +589,7 @@ export function TerminalSimulator({
   onDiskUsageChange,
   onNetworkingChange,
   onNetworkTroubleshootingChange,
+  onSshRemoteAccessChange,
   onCommand,
   onCommandRun,
   suggestionsLabel = "Try a command",
@@ -575,7 +620,8 @@ export function TerminalSimulator({
     journal ||
     diskUsage ||
     networking ||
-    Boolean(networkTroubleshooting);
+    Boolean(networkTroubleshooting) ||
+    Boolean(sshRemoteAccess);
 
   const [fsState, setFsState] = useState<SimulatedFsState | null>(() =>
     specializedMode ? null : resolveInitialFs(filesystem),
@@ -636,6 +682,9 @@ export function TerminalSimulator({
     useState<SimulatedNetTroubleshootState | null>(() =>
       resolveInitialNetworkTroubleshoot(networkTroubleshooting),
     );
+  const [sshState, setSshState] = useState<SimulatedSshState | null>(() =>
+    resolveInitialSsh(sshRemoteAccess),
+  );
   const fsRef = useRef(fsState);
   const permissionsRef = useRef(permissionsState);
   const ownershipRef = useRef(ownershipState);
@@ -652,6 +701,7 @@ export function TerminalSimulator({
   const diskUsageRef = useRef(diskUsageState);
   const networkingRef = useRef(networkingState);
   const networkTroubleshootRef = useRef(networkTroubleshootState);
+  const sshRef = useRef(sshState);
   const onFsChangeRef = useRef(onFsChange);
   const onPermissionsChangeRef = useRef(onPermissionsChange);
   const onOwnershipChangeRef = useRef(onOwnershipChange);
@@ -670,6 +720,7 @@ export function TerminalSimulator({
   const onNetworkTroubleshootingChangeRef = useRef(
     onNetworkTroubleshootingChange,
   );
+  const onSshRemoteAccessChangeRef = useRef(onSshRemoteAccessChange);
   const onCommandRef = useRef(onCommand);
   const onCommandRunRef = useRef(onCommandRun);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -682,74 +733,78 @@ export function TerminalSimulator({
     suggestions ??
     (identity
       ? DEFAULT_IDENTITY_SUGGESTIONS
-      : networkTroubleshooting
-        ? DEFAULT_NETWORK_TROUBLESHOOTING_SUGGESTIONS
-        : networking
-          ? DEFAULT_NETWORKING_SUGGESTIONS
-          : diskUsage
-            ? DEFAULT_DISK_USAGE_SUGGESTIONS
-            : journal
-              ? DEFAULT_JOURNAL_SUGGESTIONS
-              : services
-                ? DEFAULT_SERVICES_SUGGESTIONS
-                : bashScripting
-                  ? DEFAULT_BASH_SCRIPTING_SUGGESTIONS
-                  : shellBasics
-                    ? DEFAULT_SHELL_BASICS_SUGGESTIONS
-                    : textProcessing
-                      ? DEFAULT_TEXT_PROCESSING_SUGGESTIONS
-                      : searching
-                        ? DEFAULT_SEARCH_SUGGESTIONS
-                        : pipes
-                          ? DEFAULT_PIPES_SUGGESTIONS
-                          : environment
-                            ? DEFAULT_ENV_SUGGESTIONS
-                            : packages
-                              ? DEFAULT_PACKAGES_SUGGESTIONS
-                              : processes
-                                ? DEFAULT_PROCESSES_SUGGESTIONS
-                                : ownership
-                                  ? DEFAULT_OWNERSHIP_SUGGESTIONS
-                                  : permissions
-                                    ? DEFAULT_PERMISSIONS_SUGGESTIONS
-                                    : useFilesystem
-                                      ? DEFAULT_FS_SUGGESTIONS
-                                      : DEFAULT_SUGGESTIONS);
+      : sshRemoteAccess
+        ? DEFAULT_SSH_SUGGESTIONS
+        : networkTroubleshooting
+          ? DEFAULT_NETWORK_TROUBLESHOOTING_SUGGESTIONS
+          : networking
+            ? DEFAULT_NETWORKING_SUGGESTIONS
+            : diskUsage
+              ? DEFAULT_DISK_USAGE_SUGGESTIONS
+              : journal
+                ? DEFAULT_JOURNAL_SUGGESTIONS
+                : services
+                  ? DEFAULT_SERVICES_SUGGESTIONS
+                  : bashScripting
+                    ? DEFAULT_BASH_SCRIPTING_SUGGESTIONS
+                    : shellBasics
+                      ? DEFAULT_SHELL_BASICS_SUGGESTIONS
+                      : textProcessing
+                        ? DEFAULT_TEXT_PROCESSING_SUGGESTIONS
+                        : searching
+                          ? DEFAULT_SEARCH_SUGGESTIONS
+                          : pipes
+                            ? DEFAULT_PIPES_SUGGESTIONS
+                            : environment
+                              ? DEFAULT_ENV_SUGGESTIONS
+                              : packages
+                                ? DEFAULT_PACKAGES_SUGGESTIONS
+                                : processes
+                                  ? DEFAULT_PROCESSES_SUGGESTIONS
+                                  : ownership
+                                    ? DEFAULT_OWNERSHIP_SUGGESTIONS
+                                    : permissions
+                                      ? DEFAULT_PERMISSIONS_SUGGESTIONS
+                                      : useFilesystem
+                                        ? DEFAULT_FS_SUGGESTIONS
+                                        : DEFAULT_SUGGESTIONS);
   const prompt = identity
     ? formatUsersIdentityPrompt()
-    : networkTroubleshooting
-      ? formatNetworkTroubleshootPrompt()
-      : networking
-        ? formatNetworkingPrompt()
-        : diskUsage
-          ? formatDiskUsagePrompt()
-          : journal
-            ? formatLogsJournaldPrompt()
-            : services
-              ? formatSystemServicesPrompt()
-              : bashScripting
-                ? formatBashScriptingPrompt(bashScriptState)
-                : shellBasics
-                  ? formatShellBasicsPrompt(shellState?.cwd)
-                  : textProcessing
-                    ? formatTextProcessingPrompt(textState?.cwd)
-                    : searching
-                      ? formatSearchingAndFindingPrompt(searchState?.cwd)
-                      : pipes
-                        ? formatPipesAndRedirectionPrompt(pipesState?.cwd)
-                        : environment
-                          ? formatEnvironmentVariablesPrompt()
-                          : packages
-                            ? formatPackageManagementPrompt()
-                            : processes
-                              ? formatProcessesPrompt()
-                              : ownership
-                                ? formatOwnershipSudoPrompt()
-                                : permissions
-                                  ? formatFilePermissionsPrompt()
-                                  : formatTerminalPrompt(
-                                      fsState?.cwd ?? "/home/learner",
-                                    );
+    : sshRemoteAccess
+      ? formatSshPrompt(sshState)
+      : networkTroubleshooting
+        ? formatNetworkTroubleshootPrompt()
+        : networking
+          ? formatNetworkingPrompt()
+          : diskUsage
+            ? formatDiskUsagePrompt()
+            : journal
+              ? formatLogsJournaldPrompt()
+              : services
+                ? formatSystemServicesPrompt()
+                : bashScripting
+                  ? formatBashScriptingPrompt(bashScriptState)
+                  : shellBasics
+                    ? formatShellBasicsPrompt(shellState?.cwd)
+                    : textProcessing
+                      ? formatTextProcessingPrompt(textState?.cwd)
+                      : searching
+                        ? formatSearchingAndFindingPrompt(searchState?.cwd)
+                        : pipes
+                          ? formatPipesAndRedirectionPrompt(pipesState?.cwd)
+                          : environment
+                            ? formatEnvironmentVariablesPrompt()
+                            : packages
+                              ? formatPackageManagementPrompt()
+                              : processes
+                                ? formatProcessesPrompt()
+                                : ownership
+                                  ? formatOwnershipSudoPrompt()
+                                  : permissions
+                                    ? formatFilePermissionsPrompt()
+                                    : formatTerminalPrompt(
+                                        fsState?.cwd ?? "/home/learner",
+                                      );
 
   useEffect(() => {
     onFsChangeRef.current = onFsChange;
@@ -816,6 +871,10 @@ export function TerminalSimulator({
   }, [onNetworkTroubleshootingChange]);
 
   useEffect(() => {
+    onSshRemoteAccessChangeRef.current = onSshRemoteAccessChange;
+  }, [onSshRemoteAccessChange]);
+
+  useEffect(() => {
     onCommandRef.current = onCommand;
   }, [onCommand]);
 
@@ -838,39 +897,41 @@ export function TerminalSimulator({
             <span className="text-prompt select-none" aria-hidden="true">
               {identity
                 ? formatUsersIdentityPrompt()
-                : networkTroubleshooting
-                  ? formatNetworkTroubleshootPrompt()
-                  : networking
-                    ? formatNetworkingPrompt()
-                    : diskUsage
-                      ? formatDiskUsagePrompt()
-                      : journal
-                        ? formatLogsJournaldPrompt()
-                        : services
-                          ? formatSystemServicesPrompt()
-                          : bashScripting
-                            ? formatBashScriptingPrompt()
-                            : shellBasics
-                              ? formatShellBasicsPrompt()
-                              : textProcessing
-                                ? formatTextProcessingPrompt()
-                                : searching
-                                  ? formatSearchingAndFindingPrompt()
-                                  : pipes
-                                    ? formatPipesAndRedirectionPrompt()
-                                    : environment
-                                      ? formatEnvironmentVariablesPrompt()
-                                      : packages
-                                        ? formatPackageManagementPrompt()
-                                        : processes
-                                          ? formatProcessesPrompt()
-                                          : ownership
-                                            ? formatOwnershipSudoPrompt()
-                                            : permissions
-                                              ? formatFilePermissionsPrompt()
-                                              : formatTerminalPrompt(
-                                                  "/home/learner",
-                                                )}
+                : sshRemoteAccess
+                  ? formatSshPrompt()
+                  : networkTroubleshooting
+                    ? formatNetworkTroubleshootPrompt()
+                    : networking
+                      ? formatNetworkingPrompt()
+                      : diskUsage
+                        ? formatDiskUsagePrompt()
+                        : journal
+                          ? formatLogsJournaldPrompt()
+                          : services
+                            ? formatSystemServicesPrompt()
+                            : bashScripting
+                              ? formatBashScriptingPrompt()
+                              : shellBasics
+                                ? formatShellBasicsPrompt()
+                                : textProcessing
+                                  ? formatTextProcessingPrompt()
+                                  : searching
+                                    ? formatSearchingAndFindingPrompt()
+                                    : pipes
+                                      ? formatPipesAndRedirectionPrompt()
+                                      : environment
+                                        ? formatEnvironmentVariablesPrompt()
+                                        : packages
+                                          ? formatPackageManagementPrompt()
+                                          : processes
+                                            ? formatProcessesPrompt()
+                                            : ownership
+                                              ? formatOwnershipSudoPrompt()
+                                              : permissions
+                                                ? formatFilePermissionsPrompt()
+                                                : formatTerminalPrompt(
+                                                    "/home/learner",
+                                                  )}
             </span>
             <span className="sr-only">Loading interactive terminal</span>
           </div>
@@ -897,41 +958,44 @@ export function TerminalSimulator({
     const currentDiskUsage = diskUsageRef.current;
     const currentNetworking = networkingRef.current;
     const currentNetworkTroubleshoot = networkTroubleshootRef.current;
+    const currentSsh = sshRef.current;
     const currentPrompt = identity
       ? formatUsersIdentityPrompt()
-      : networkTroubleshooting
-        ? formatNetworkTroubleshootPrompt()
-        : networking
-          ? formatNetworkingPrompt()
-          : diskUsage
-            ? formatDiskUsagePrompt()
-            : journal
-              ? formatLogsJournaldPrompt()
-              : services
-                ? formatSystemServicesPrompt()
-                : bashScripting
-                  ? formatBashScriptingPrompt(currentBashScript)
-                  : shellBasics
-                    ? formatShellBasicsPrompt(currentShell?.cwd)
-                    : textProcessing
-                      ? formatTextProcessingPrompt(currentText?.cwd)
-                      : searching
-                        ? formatSearchingAndFindingPrompt(currentSearch?.cwd)
-                        : pipes
-                          ? formatPipesAndRedirectionPrompt(currentPipes?.cwd)
-                          : environment
-                            ? formatEnvironmentVariablesPrompt()
-                            : packages
-                              ? formatPackageManagementPrompt()
-                              : processes
-                                ? formatProcessesPrompt()
-                                : ownership
-                                  ? formatOwnershipSudoPrompt()
-                                  : permissions
-                                    ? formatFilePermissionsPrompt()
-                                    : formatTerminalPrompt(
-                                        currentFs?.cwd ?? "/home/learner",
-                                      );
+      : sshRemoteAccess
+        ? formatSshPrompt(currentSsh)
+        : networkTroubleshooting
+          ? formatNetworkTroubleshootPrompt()
+          : networking
+            ? formatNetworkingPrompt()
+            : diskUsage
+              ? formatDiskUsagePrompt()
+              : journal
+                ? formatLogsJournaldPrompt()
+                : services
+                  ? formatSystemServicesPrompt()
+                  : bashScripting
+                    ? formatBashScriptingPrompt(currentBashScript)
+                    : shellBasics
+                      ? formatShellBasicsPrompt(currentShell?.cwd)
+                      : textProcessing
+                        ? formatTextProcessingPrompt(currentText?.cwd)
+                        : searching
+                          ? formatSearchingAndFindingPrompt(currentSearch?.cwd)
+                          : pipes
+                            ? formatPipesAndRedirectionPrompt(currentPipes?.cwd)
+                            : environment
+                              ? formatEnvironmentVariablesPrompt()
+                              : packages
+                                ? formatPackageManagementPrompt()
+                                : processes
+                                  ? formatProcessesPrompt()
+                                  : ownership
+                                    ? formatOwnershipSudoPrompt()
+                                    : permissions
+                                      ? formatFilePermissionsPrompt()
+                                      : formatTerminalPrompt(
+                                          currentFs?.cwd ?? "/home/learner",
+                                        );
 
     if (trimmed) {
       setCommandHistory((prev) =>
@@ -1045,6 +1109,35 @@ export function TerminalSimulator({
       diskUsageRef.current = state;
       setDiskUsageState(state);
       onDiskUsageChangeRef.current?.(state);
+
+      if (result.kind === "clear") {
+        setHistory([]);
+        notifyCommandRun();
+        return;
+      }
+
+      if (result.kind === "empty") {
+        setHistory((prev) => [
+          ...prev,
+          { command: "", output: [], prompt: currentPrompt },
+        ]);
+        notifyCommandRun();
+        return;
+      }
+
+      setHistory((prev) => [
+        ...prev,
+        { command: raw, output: result.lines, prompt: currentPrompt },
+      ]);
+      notifyCommandRun();
+      return;
+    }
+
+    if (sshRemoteAccess && currentSsh) {
+      const { result, state } = simulateSshRemoteAccessCommand(raw, currentSsh);
+      sshRef.current = state;
+      setSshState(state);
+      onSshRemoteAccessChangeRef.current?.(state);
 
       if (result.kind === "clear") {
         setHistory([]);

@@ -25,7 +25,6 @@ export const networkTroubleshootingLesson = {
     next: {
       label: "SSH and Remote Access",
       href: "/learn/administration/ssh-and-remote-access",
-      unavailable: true,
     },
   },
   intro: [
