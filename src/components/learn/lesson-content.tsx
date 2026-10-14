@@ -52,6 +52,9 @@ import { SshAndRemoteAccessPractice } from "@/components/learn/ssh-and-remote-ac
 import { SshAndRemoteAccessQuiz } from "@/components/learn/ssh-and-remote-access-quiz";
 import { FirewallBasicsPractice } from "@/components/learn/firewall-basics-practice";
 import { FirewallBasicsQuiz } from "@/components/learn/firewall-basics-quiz";
+import { CronExpressionExplainer } from "@/components/learn/cron-expression-explainer";
+import { ScheduledTasksPractice } from "@/components/learn/scheduled-tasks-practice";
+import { ScheduledTasksQuiz } from "@/components/learn/scheduled-tasks-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -93,7 +96,8 @@ function resolveTerminalFilesystem(
     preset === "networking-fundamentals" ||
     preset === "network-troubleshooting" ||
     preset === "ssh-and-remote-access" ||
-    preset === "firewall-basics"
+    preset === "firewall-basics" ||
+    preset === "scheduled-tasks"
   ) {
     return undefined;
   }
@@ -235,6 +239,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           networkTroubleshooting={block.preset === "network-troubleshooting"}
           sshRemoteAccess={block.preset === "ssh-and-remote-access"}
           firewallBasics={block.preset === "firewall-basics"}
+          scheduledTasks={block.preset === "scheduled-tasks"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -324,6 +329,15 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "firewall-basics-quiz") {
         return <FirewallBasicsQuiz />;
+      }
+      if (block.id === "scheduled-tasks-cron-explainer") {
+        return <CronExpressionExplainer />;
+      }
+      if (block.id === "scheduled-tasks-practice") {
+        return <ScheduledTasksPractice />;
+      }
+      if (block.id === "scheduled-tasks-quiz") {
+        return <ScheduledTasksQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

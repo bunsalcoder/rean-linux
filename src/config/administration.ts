@@ -183,7 +183,8 @@ export const administrationLessons: readonly AdministrationLesson[] = [
     description: "Understand cron jobs and systemd timers.",
     duration: "20–25 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/administration/scheduled-tasks",
     topics: ["cron", "crontab", "systemd timers", "Scheduling", "Automation"],
   },
   {

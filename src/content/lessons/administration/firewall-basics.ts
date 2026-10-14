@@ -25,7 +25,6 @@ export const firewallBasicsLesson = {
     next: {
       label: "Scheduled Tasks",
       href: "/learn/administration/scheduled-tasks",
-      unavailable: true,
     },
   },
   intro: [
@@ -493,7 +492,7 @@ export const firewallBasicsLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next you will study scheduled tasks — cron jobs and systemd timers for recurring administration work. That lesson is not published yet.",
+          text: "Next: [Scheduled Tasks](/learn/administration/scheduled-tasks) — cron jobs, crontab management, and one-time scheduling with at.",
         },
       ],
     },
