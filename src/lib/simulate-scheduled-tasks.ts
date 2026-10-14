@@ -137,7 +137,7 @@ const HELP_OUTPUT = [
   "  crontab -l                        List the current user's crontab",
   "  crontab -e                        Open the simulated crontab editor help",
   "  crontab -r                        Remove the current user's crontab",
-  "  crontab-add \"EXPR COMMAND\"        Add a crontab entry (educational)",
+  '  crontab-add "EXPR COMMAND"        Add a crontab entry (educational)',
   "  crontab-remove N                  Remove entry number N (educational)",
   "  systemctl status cron             Show cron service status",
   "  systemctl start cron              Start the simulated cron service",
@@ -150,7 +150,7 @@ const HELP_OUTPUT = [
   "",
   "Examples:",
   "  crontab -l",
-  "  crontab-add \"0 0 * * * /usr/local/bin/backup.sh\"",
+  '  crontab-add "0 0 * * * /usr/local/bin/backup.sh"',
   "  systemctl status cron",
   "  journalctl -u cron -n 10",
   "  atq",
@@ -467,7 +467,9 @@ export function resetScheduledTasksState(
 export function getScheduledTasksScenario(
   id: ScheduledTasksScenarioId,
 ): ScheduledTasksScenarioMeta {
-  const match = SCHEDULED_TASKS_SCENARIOS.find((scenario) => scenario.id === id);
+  const match = SCHEDULED_TASKS_SCENARIOS.find(
+    (scenario) => scenario.id === id,
+  );
   if (!match) {
     return SCHEDULED_TASKS_SCENARIOS[0]!;
   }
@@ -500,9 +502,7 @@ export function hasCronSchedule(
   expression: string,
 ): boolean {
   const normalized = expression.trim().replace(/\s+/g, " ");
-  return state.crontab.some(
-    (job) => formatCronExpression(job) === normalized,
-  );
+  return state.crontab.some((job) => formatCronExpression(job) === normalized);
 }
 
 export function findFailingJobIds(
@@ -524,15 +524,10 @@ export function findFailingJobIds(
 /* -------------------------------------------------------------------------- */
 
 export type CronFieldName =
-  | "minute"
-  | "hour"
-  | "dayOfMonth"
-  | "month"
-  | "dayOfWeek";
+  "minute" | "hour" | "dayOfMonth" | "month" | "dayOfWeek";
 
 export type CronFieldParse =
-  | { ok: true; description: string }
-  | { ok: false; error: string };
+  { ok: true; description: string } | { ok: false; error: string };
 
 export type CronParseResult =
   | {
@@ -604,10 +599,7 @@ const FIELD_ORDER: readonly CronFieldName[] = [
   "dayOfWeek",
 ] as const;
 
-function resolveNamedValue(
-  raw: string,
-  field: CronFieldName,
-): number | null {
+function resolveNamedValue(raw: string, field: CronFieldName): number | null {
   const meta = FIELD_META[field];
   const lower = raw.toLowerCase();
   if (meta.names && lower in meta.names) {
@@ -659,10 +651,7 @@ function describeSingleValue(value: number, field: CronFieldName): string {
   return `day ${value}`;
 }
 
-function parseFieldToken(
-  token: string,
-  field: CronFieldName,
-): CronFieldParse {
+function parseFieldToken(token: string, field: CronFieldName): CronFieldParse {
   const meta = FIELD_META[field];
   const trimmed = token.trim();
   if (!trimmed) {
@@ -676,7 +665,11 @@ function parseFieldToken(
   // step: */N or range/step or list with steps handled per segment
   if (trimmed.includes("/")) {
     const [base, stepRaw] = trimmed.split("/");
-    if (base === undefined || stepRaw === undefined || trimmed.split("/").length !== 2) {
+    if (
+      base === undefined ||
+      stepRaw === undefined ||
+      trimmed.split("/").length !== 2
+    ) {
       return {
         ok: false,
         error: `Invalid step syntax in ${meta.label} (use */N or A-B/N)`,
@@ -922,8 +915,7 @@ export function parseCronExpression(input: string): CronParseResult {
     fieldDescriptions[name] = parsed.description;
   }
 
-  const bothDayFields =
-    fields.dayOfMonth !== "*" && fields.dayOfWeek !== "*";
+  const bothDayFields = fields.dayOfMonth !== "*" && fields.dayOfWeek !== "*";
 
   return {
     ok: true,
@@ -1031,9 +1023,7 @@ function formatJournalLines(
       );
     }
     if (entry.note) {
-      lines.push(
-        `${entry.timestamp} rean-linux CRON[1]: note: ${entry.note}`,
-      );
+      lines.push(`${entry.timestamp} rean-linux CRON[1]: note: ${entry.note}`);
     }
   }
 
@@ -1052,15 +1042,16 @@ function formatAtQueue(state: SimulatedScheduledTasksState): string[] {
     return ["no at jobs for " + state.currentUser];
   }
   return state.atJobs.map(
-    (job) =>
-      `${job.queueId}\t${job.schedule} a ${job.user}`,
+    (job) => `${job.queueId}\t${job.schedule} a ${job.user}`,
   );
 }
 
-function parseCrontabAddArgument(raw: string): {
-  ok: true;
-  job: CronJobEntry;
-} | { ok: false; error: string } {
+function parseCrontabAddArgument(raw: string):
+  | {
+      ok: true;
+      job: CronJobEntry;
+    }
+  | { ok: false; error: string } {
   const match = raw.match(/^crontab-add\s+(.+)$/i);
   if (!match || !match[1]) {
     return {
@@ -1194,7 +1185,9 @@ export function simulateScheduledTasksCommand(
       return {
         result: {
           kind: "output",
-          lines: ["Usage: crontab-remove N  (1-based entry number from crontab -l)"],
+          lines: [
+            "Usage: crontab-remove N  (1-based entry number from crontab -l)",
+          ],
         },
         state: nextState,
       };
@@ -1215,9 +1208,7 @@ export function simulateScheduledTasksCommand(
     return {
       result: {
         kind: "output",
-        lines: [
-          `removed: ${formatCronExpression(removed)} ${removed.command}`,
-        ],
+        lines: [`removed: ${formatCronExpression(removed)} ${removed.command}`],
       },
       state: nextState,
     };

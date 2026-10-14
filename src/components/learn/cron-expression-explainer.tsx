@@ -31,9 +31,12 @@ export function CronExpressionExplainer() {
         </h3>
         <p className="text-muted-foreground text-sm">
           Inspect or construct a standard five-field cron expression. This
-          educational parser supports <code className="bg-muted rounded px-1.5 py-0.5 font-mono text-[0.875em]">*</code>, numbers, ranges, lists, and
-          steps — it does not claim full compatibility with every cron
-          implementation.
+          educational parser supports{" "}
+          <code className="bg-muted rounded px-1.5 py-0.5 font-mono text-[0.875em]">
+            *
+          </code>
+          , numbers, ranges, lists, and steps — it does not claim full
+          compatibility with every cron implementation.
         </p>
       </div>
 
@@ -102,10 +105,11 @@ export function CronExpressionExplainer() {
                 </tr>
               </thead>
               <tbody>
-                {(
-                  Object.keys(FIELD_LABELS) as CronFieldName[]
-                ).map((field) => (
-                  <tr key={field} className="border-border border-b last:border-0">
+                {(Object.keys(FIELD_LABELS) as CronFieldName[]).map((field) => (
+                  <tr
+                    key={field}
+                    className="border-border border-b last:border-0"
+                  >
                     <td className="text-muted-foreground py-2 pr-3 align-top">
                       {FIELD_LABELS[field]}
                     </td>

@@ -16,7 +16,8 @@ type QuizQuestion = {
 const QUESTIONS: readonly QuizQuestion[] = [
   {
     id: "q1",
-    prompt: "In a standard five-field cron expression, what is the correct order?",
+    prompt:
+      "In a standard five-field cron expression, what is the correct order?",
     options: [
       {
         key: "A",

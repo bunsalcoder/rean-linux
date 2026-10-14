@@ -174,7 +174,7 @@ const EXERCISES: readonly PracticeExercise[] = [
     correct: "A",
     requireState: (state) => hasCronSchedule(state, "*/15 * * * *"),
     stateHint:
-      'Add `*/15 * * * *` with crontab-add and verify with crontab -l before answering.',
+      "Add `*/15 * * * *` with crontab-add and verify with crontab -l before answering.",
     feedbackCorrect:
       "Correct. `*/15` in the minute field means every 15 minutes.",
     feedbackIncorrect:

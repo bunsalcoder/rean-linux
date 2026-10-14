@@ -226,16 +226,13 @@ export const scheduledTasksLesson = {
             ["`crontab -l`", "List the current user's crontab"],
             ["`crontab -e`", "Open the simulated editor help"],
             ["`crontab -r`", "Remove the current user's crontab"],
-            [
-              '`crontab-add "…"`',
-              "Educational helper to add an entry safely",
-            ],
+            ['`crontab-add "…"`', "Educational helper to add an entry safely"],
             ["`crontab-remove N`", "Educational helper to remove entry N"],
           ],
         },
         {
           type: "code",
-          code: "crontab -l\ncrontab -e\ncrontab-add \"0 0 * * * /usr/local/bin/daily-task.sh\"\ncrontab -l",
+          code: 'crontab -l\ncrontab -e\ncrontab-add "0 0 * * * /usr/local/bin/daily-task.sh"\ncrontab -l',
           title: "List, learn the editor flow, then add an entry (simulated)",
         },
         {
