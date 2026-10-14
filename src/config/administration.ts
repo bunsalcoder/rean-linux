@@ -165,7 +165,8 @@ export const administrationLessons: readonly AdministrationLesson[] = [
     description: "Learn firewall concepts, rules, and basic traffic filtering.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/administration/firewall-basics",
     topics: [
       "Firewalls",
       "Inbound rules",

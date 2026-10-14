@@ -25,7 +25,6 @@ export const sshAndRemoteAccessLesson = {
     next: {
       label: "Firewall Basics",
       href: "/learn/administration/firewall-basics",
-      unavailable: true,
     },
   },
   intro: [
@@ -546,7 +545,7 @@ export const sshAndRemoteAccessLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next you will study firewall basics — how hosts decide which inbound traffic (including SSH) is allowed. That lesson is not published yet.",
+          text: "Next: [Firewall Basics](/learn/administration/firewall-basics) — how hosts decide which inbound traffic (including SSH) is allowed.",
         },
       ],
     },

@@ -50,6 +50,8 @@ import { NetworkTroubleshootingPractice } from "@/components/learn/network-troub
 import { NetworkTroubleshootingQuiz } from "@/components/learn/network-troubleshooting-quiz";
 import { SshAndRemoteAccessPractice } from "@/components/learn/ssh-and-remote-access-practice";
 import { SshAndRemoteAccessQuiz } from "@/components/learn/ssh-and-remote-access-quiz";
+import { FirewallBasicsPractice } from "@/components/learn/firewall-basics-practice";
+import { FirewallBasicsQuiz } from "@/components/learn/firewall-basics-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -90,7 +92,8 @@ function resolveTerminalFilesystem(
     preset === "disk-usage-and-mounts" ||
     preset === "networking-fundamentals" ||
     preset === "network-troubleshooting" ||
-    preset === "ssh-and-remote-access"
+    preset === "ssh-and-remote-access" ||
+    preset === "firewall-basics"
   ) {
     return undefined;
   }
@@ -231,6 +234,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           networking={block.preset === "networking-fundamentals"}
           networkTroubleshooting={block.preset === "network-troubleshooting"}
           sshRemoteAccess={block.preset === "ssh-and-remote-access"}
+          firewallBasics={block.preset === "firewall-basics"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -314,6 +318,12 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "ssh-and-remote-access-quiz") {
         return <SshAndRemoteAccessQuiz />;
+      }
+      if (block.id === "firewall-basics-practice") {
+        return <FirewallBasicsPractice />;
+      }
+      if (block.id === "firewall-basics-quiz") {
+        return <FirewallBasicsQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

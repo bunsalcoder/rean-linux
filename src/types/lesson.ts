@@ -59,7 +59,8 @@ export type LessonTerminalPreset =
   | "disk-usage-and-mounts"
   | "networking-fundamentals"
   | "network-troubleshooting"
-  | "ssh-and-remote-access";
+  | "ssh-and-remote-access"
+  | "firewall-basics";
 
 export type LessonBlock =
   | {
@@ -162,7 +163,9 @@ export type LessonBlock =
         | "network-troubleshooting-practice"
         | "network-troubleshooting-quiz"
         | "ssh-and-remote-access-practice"
-        | "ssh-and-remote-access-quiz";
+        | "ssh-and-remote-access-quiz"
+        | "firewall-basics-practice"
+        | "firewall-basics-quiz";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.
