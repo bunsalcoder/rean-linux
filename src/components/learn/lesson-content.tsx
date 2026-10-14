@@ -46,6 +46,8 @@ import { DiskUsageAndMountsPractice } from "@/components/learn/disk-usage-and-mo
 import { DiskUsageAndMountsQuiz } from "@/components/learn/disk-usage-and-mounts-quiz";
 import { NetworkingFundamentalsPractice } from "@/components/learn/networking-fundamentals-practice";
 import { NetworkingFundamentalsQuiz } from "@/components/learn/networking-fundamentals-quiz";
+import { NetworkTroubleshootingPractice } from "@/components/learn/network-troubleshooting-practice";
+import { NetworkTroubleshootingQuiz } from "@/components/learn/network-troubleshooting-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -84,7 +86,8 @@ function resolveTerminalFilesystem(
     preset === "system-services" ||
     preset === "logs-and-journald" ||
     preset === "disk-usage-and-mounts" ||
-    preset === "networking-fundamentals"
+    preset === "networking-fundamentals" ||
+    preset === "network-troubleshooting"
   ) {
     return undefined;
   }
@@ -223,6 +226,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           journal={block.preset === "logs-and-journald"}
           diskUsage={block.preset === "disk-usage-and-mounts"}
           networking={block.preset === "networking-fundamentals"}
+          networkTroubleshooting={block.preset === "network-troubleshooting"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -294,6 +298,12 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "networking-fundamentals-quiz") {
         return <NetworkingFundamentalsQuiz />;
+      }
+      if (block.id === "network-troubleshooting-practice") {
+        return <NetworkTroubleshootingPractice />;
+      }
+      if (block.id === "network-troubleshooting-quiz") {
+        return <NetworkTroubleshootingQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;
