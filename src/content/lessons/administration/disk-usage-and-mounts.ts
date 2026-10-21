@@ -19,9 +19,8 @@ export const diskUsageAndMountsLesson = {
   ],
   navigation: {
     previous: {
-      label: "Storage and Filesystems",
-      href: "/learn/administration/storage-and-filesystems",
-      unavailable: true,
+      label: "Logs and Journald",
+      href: "/learn/administration/logs-and-journald",
     },
     next: {
       label: "Networking Fundamentals",
@@ -31,7 +30,7 @@ export const diskUsageAndMountsLesson = {
   intro: [
     {
       type: "paragraph",
-      text: "In [Storage and Filesystems](/learn/administration/storage-and-filesystems) you met disks, partitions, and filesystems. This lesson focuses on the everyday questions administrators ask next: **how much space is left**, **what is using it**, and **how mounts connect filesystems to directories** — all in a safe simulated terminal.",
+      text: "Storage administration starts with everyday questions: **how much space is left**, **what is using it**, and **how mounts connect filesystems to directories**. Practice those skills here in a safe simulated terminal. A deeper Storage and Filesystems lesson remains on the curriculum roadmap.",
     },
   ],
   sections: [
@@ -295,7 +294,7 @@ export const diskUsageAndMountsLesson = {
       blocks: [
         {
           type: "paragraph",
-          text: "From the previous storage lesson, devices map to mount points:",
+          text: "Block devices map to directories through mount points:",
         },
         {
           type: "code",
@@ -360,13 +359,30 @@ export const diskUsageAndMountsLesson = {
           text: "In this lesson, `findmnt` is informational — use it to read the mount table, not to change mounts.",
         },
         {
+          type: "paragraph",
+          text: "`df` and `findmnt` only show **mounted** filesystems. To inventory block devices that are still unmounted, use `lsblk`:",
+        },
+        {
+          type: "code",
+          code: "lsblk",
+          language: "bash",
+          title: "command",
+        },
+        {
+          type: "code",
+          code: "NAME       SIZE FSTYPE MOUNTPOINT\nsda1       20G  ext4   /\nsda2       70G  ext4   /home\nsdb1       50G  ext4",
+          language: "text",
+          title: "example (sdb1 present but unmounted)",
+        },
+        {
           type: "terminal",
           preset: "disk-usage-and-mounts",
           suggestions: [
             { command: "mount", label: "mount" },
             { command: "findmnt", label: "findmnt" },
+            { command: "lsblk", label: "lsblk" },
           ],
-          suggestionsLabel: "Inspect mounts",
+          suggestionsLabel: "Inspect mounts and devices",
         },
       ],
     },

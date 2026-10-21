@@ -315,6 +315,7 @@ const DEFAULT_DISK_USAGE_SUGGESTIONS = [
   "du -ah /var",
   "mount",
   "findmnt",
+  "lsblk",
   "sudo mount /dev/sdb1 /data",
   "sudo umount /data",
   "help",

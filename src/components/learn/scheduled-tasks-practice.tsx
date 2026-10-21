@@ -355,7 +355,9 @@ export function ScheduledTasksPractice() {
   const [showHint, setShowHint] = useState(false);
   const [ranRelevant, setRanRelevant] = useState(false);
   const [terminalKey, setTerminalKey] = useState(0);
-  const [stateReady, setStateReady] = useState(true);
+  const [stateReady, setStateReady] = useState(
+    () => !EXERCISES[0]?.requireState,
+  );
   const [completed, setCompleted] = useState<ReadonlySet<string>>(
     () => new Set(),
   );
@@ -603,6 +605,7 @@ export function ScheduledTasksPractice() {
               (scheduledRef.current
                 ? exercise.requireState(scheduledRef.current)
                 : false);
+            setStateReady(stateOk);
             if (selected === exercise.correct && stateOk) {
               setCompleted((prev) => new Set(prev).add(exercise.id));
             }

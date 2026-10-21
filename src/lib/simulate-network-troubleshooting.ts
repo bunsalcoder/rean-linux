@@ -529,17 +529,27 @@ function handleGetent(
     };
   }
 
-  if (!canReachExternal(nextState) || !nextState.dnsWorks) {
-    const lines = ["getent: example.com: Name or service not known"];
-    if (canReachExternal(nextState) && !nextState.dnsWorks) {
-      lines.push(
-        "Note: successful IP connectivity does not guarantee DNS works.",
-      );
-    }
+  if (!canReachExternal(nextState)) {
     return {
       result: {
         kind: "output",
-        lines,
+        lines: [
+          "getent: example.com: Temporary failure in name resolution",
+          "Note: off-LAN lookups need a working default route — this looks like a routing problem, not DNS alone.",
+        ],
+      },
+      state: nextState,
+    };
+  }
+
+  if (!nextState.dnsWorks) {
+    return {
+      result: {
+        kind: "output",
+        lines: [
+          "getent: example.com: Name or service not known",
+          "Note: successful IP connectivity does not guarantee DNS works.",
+        ],
       },
       state: nextState,
     };

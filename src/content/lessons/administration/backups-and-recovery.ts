@@ -507,7 +507,7 @@ export const backupsAndRecoveryLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next you will face the **Linux Administration Challenge** — applying Stage 03 skills together. That lesson is not published yet.",
+          text: "Next you will face the **[Linux Administration Challenge](/learn/administration/challenge)** — applying Stage 03 skills together across simulated incidents.",
         },
       ],
     },
