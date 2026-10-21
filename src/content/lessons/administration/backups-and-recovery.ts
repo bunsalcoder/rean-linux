@@ -25,7 +25,6 @@ export const backupsAndRecoveryLesson = {
     next: {
       label: "Linux Administration Challenge",
       href: "/learn/administration/challenge",
-      unavailable: true,
     },
   },
   intro: [
