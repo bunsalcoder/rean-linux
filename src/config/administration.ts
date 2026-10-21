@@ -195,7 +195,8 @@ export const administrationLessons: readonly AdministrationLesson[] = [
       "Learn how to monitor CPU, memory, processes, and system resources.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/administration/system-monitoring",
     topics: ["CPU", "Memory", "top", "htop", "free", "Resource usage"],
   },
   {

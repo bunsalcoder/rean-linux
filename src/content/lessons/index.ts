@@ -24,6 +24,7 @@ import { networkTroubleshootingLesson } from "@/content/lessons/administration/n
 import { sshAndRemoteAccessLesson } from "@/content/lessons/administration/ssh-and-remote-access";
 import { firewallBasicsLesson } from "@/content/lessons/administration/firewall-basics";
 import { scheduledTasksLesson } from "@/content/lessons/administration/scheduled-tasks";
+import { systemMonitoringLesson } from "@/content/lessons/administration/system-monitoring";
 import type { Lesson, LessonLevel } from "@/types/lesson";
 
 export const lessons = [
@@ -53,6 +54,7 @@ export const lessons = [
   sshAndRemoteAccessLesson,
   firewallBasicsLesson,
   scheduledTasksLesson,
+  systemMonitoringLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];
