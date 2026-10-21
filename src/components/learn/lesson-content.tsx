@@ -58,6 +58,9 @@ import { ScheduledTasksQuiz } from "@/components/learn/scheduled-tasks-quiz";
 import { SystemMonitoringDashboard } from "@/components/learn/system-monitoring-dashboard";
 import { SystemMonitoringPractice } from "@/components/learn/system-monitoring-practice";
 import { SystemMonitoringQuiz } from "@/components/learn/system-monitoring-quiz";
+import { BackupsAndRecoveryWorkflow } from "@/components/learn/backups-and-recovery-workflow";
+import { BackupsAndRecoveryPractice } from "@/components/learn/backups-and-recovery-practice";
+import { BackupsAndRecoveryQuiz } from "@/components/learn/backups-and-recovery-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -101,7 +104,8 @@ function resolveTerminalFilesystem(
     preset === "ssh-and-remote-access" ||
     preset === "firewall-basics" ||
     preset === "scheduled-tasks" ||
-    preset === "system-monitoring"
+    preset === "system-monitoring" ||
+    preset === "backups-and-recovery"
   ) {
     return undefined;
   }
@@ -245,6 +249,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           firewallBasics={block.preset === "firewall-basics"}
           scheduledTasks={block.preset === "scheduled-tasks"}
           systemMonitoring={block.preset === "system-monitoring"}
+          backupsAndRecovery={block.preset === "backups-and-recovery"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -352,6 +357,15 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "system-monitoring-quiz") {
         return <SystemMonitoringQuiz />;
+      }
+      if (block.id === "backups-and-recovery-workflow") {
+        return <BackupsAndRecoveryWorkflow />;
+      }
+      if (block.id === "backups-and-recovery-practice") {
+        return <BackupsAndRecoveryPractice />;
+      }
+      if (block.id === "backups-and-recovery-quiz") {
+        return <BackupsAndRecoveryQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

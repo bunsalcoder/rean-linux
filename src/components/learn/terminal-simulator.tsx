@@ -144,6 +144,15 @@ import {
   type SystemMonitoringScenarioId,
 } from "@/lib/simulate-system-monitoring";
 import {
+  cloneBackupState,
+  createInitialBackupState,
+  formatBackupPrompt,
+  isBackupScenarioId,
+  simulateBackupsAndRecoveryCommand,
+  type BackupScenarioId,
+  type SimulatedBackupState,
+} from "@/lib/simulate-backups-and-recovery";
+import {
   formatUsersIdentityPrompt,
   simulateUsersIdentityCommand,
 } from "@/lib/simulate-users-identity";
@@ -378,6 +387,16 @@ const DEFAULT_SYSTEM_MONITORING_SUGGESTIONS = [
   "help",
 ] as const;
 
+const DEFAULT_BACKUPS_SUGGESTIONS = [
+  "ls -lh documents",
+  "tar -cvf /backups/docs-backup.tar documents/",
+  "tar -tvf /backups/docs-backup.tar",
+  "tar -czvf /backups/docs-backup.tar.gz documents/",
+  "ls -lh /backups",
+  "df -h",
+  "help",
+] as const;
+
 type HistoryEntry = {
   command: string;
   output: readonly string[];
@@ -398,7 +417,7 @@ type TerminalSimulatorProps = {
   /**
    * Enable the in-memory filesystem command set (pwd/ls/cd/mkdir/...).
    * When omitted, the simpler Lesson 04 command set is used.
-   * Ignored when `identity`, `permissions`, `ownership`, `processes`, `packages`, `environment`, `pipes`, `searching`, `textProcessing`, `shellBasics`, `bashScripting`, `services`, `journal`, `diskUsage`, `networking`, `networkTroubleshooting`, `sshRemoteAccess`, `firewallBasics`, `scheduledTasks`, or `systemMonitoring` is true.
+   * Ignored when `identity`, `permissions`, `ownership`, `processes`, `packages`, `environment`, `pipes`, `searching`, `textProcessing`, `shellBasics`, `bashScripting`, `services`, `journal`, `diskUsage`, `networking`, `networkTroubleshooting`, `sshRemoteAccess`, `firewallBasics`, `scheduledTasks`, `systemMonitoring`, or `backupsAndRecovery` is true.
    */
   filesystem?: boolean | SimulatedFsState;
   /**
@@ -506,6 +525,12 @@ type TerminalSimulatorProps = {
    * Frontend-only simulated metrics — never reads host CPU/memory/processes.
    */
   systemMonitoring?: boolean | SystemMonitoringScenarioId;
+  /**
+   * Enable the backups-and-recovery command set.
+   * Pass a scenario id, `true` for the healthy baseline, or a prepared state.
+   * Frontend-only simulated archives — never runs real tar/gzip or writes host files.
+   */
+  backupsAndRecovery?: boolean | BackupScenarioId | SimulatedBackupState;
   onFsChange?: (state: SimulatedFsState) => void;
   onPermissionsChange?: (state: SimulatedPermissionsState) => void;
   onOwnershipChange?: (state: SimulatedOwnershipState) => void;
@@ -528,6 +553,7 @@ type TerminalSimulatorProps = {
   onFirewallBasicsChange?: (state: SimulatedFirewallState) => void;
   onScheduledTasksChange?: (state: SimulatedScheduledTasksState) => void;
   onSystemMonitoringChange?: (state: SimulatedSystemMonitoringState) => void;
+  onBackupsAndRecoveryChange?: (state: SimulatedBackupState) => void;
   onCommand?: (command: string, state: SimulatedFsState) => void;
   /** Fires for every non-empty command in any simulator mode. */
   onCommandRun?: (command: string) => void;
@@ -637,6 +663,25 @@ function resolveInitialSystemMonitoring(
   return createInitialSystemMonitoringState("healthy");
 }
 
+function resolveInitialBackups(
+  backupsAndRecovery:
+    boolean | BackupScenarioId | SimulatedBackupState | undefined,
+): SimulatedBackupState | null {
+  if (!backupsAndRecovery) {
+    return null;
+  }
+  if (backupsAndRecovery === true) {
+    return createInitialBackupState("healthy");
+  }
+  if (typeof backupsAndRecovery === "string") {
+    if (isBackupScenarioId(backupsAndRecovery)) {
+      return createInitialBackupState(backupsAndRecovery);
+    }
+    return createInitialBackupState("healthy");
+  }
+  return cloneBackupState(backupsAndRecovery);
+}
+
 function TerminalShellFrame({
   title,
   className,
@@ -698,6 +743,7 @@ export function TerminalSimulator({
   firewallBasics = false,
   scheduledTasks = false,
   systemMonitoring = false,
+  backupsAndRecovery = false,
   onFsChange,
   onPermissionsChange,
   onOwnershipChange,
@@ -718,6 +764,7 @@ export function TerminalSimulator({
   onFirewallBasicsChange,
   onScheduledTasksChange,
   onSystemMonitoringChange,
+  onBackupsAndRecoveryChange,
   onCommand,
   onCommandRun,
   suggestionsLabel = "Try a command",
@@ -752,7 +799,8 @@ export function TerminalSimulator({
     Boolean(sshRemoteAccess) ||
     Boolean(firewallBasics) ||
     Boolean(scheduledTasks) ||
-    Boolean(systemMonitoring);
+    Boolean(systemMonitoring) ||
+    Boolean(backupsAndRecovery);
 
   const [fsState, setFsState] = useState<SimulatedFsState | null>(() =>
     specializedMode ? null : resolveInitialFs(filesystem),
@@ -828,6 +876,9 @@ export function TerminalSimulator({
     useState<SimulatedSystemMonitoringState | null>(() =>
       resolveInitialSystemMonitoring(systemMonitoring),
     );
+  const [backupsState, setBackupsState] = useState<SimulatedBackupState | null>(
+    () => resolveInitialBackups(backupsAndRecovery),
+  );
   const fsRef = useRef(fsState);
   const permissionsRef = useRef(permissionsState);
   const ownershipRef = useRef(ownershipState);
@@ -848,6 +899,7 @@ export function TerminalSimulator({
   const firewallRef = useRef(firewallState);
   const scheduledTasksRef = useRef(scheduledTasksState);
   const systemMonitoringRef = useRef(systemMonitoringState);
+  const backupsRef = useRef(backupsState);
   const onFsChangeRef = useRef(onFsChange);
   const onPermissionsChangeRef = useRef(onPermissionsChange);
   const onOwnershipChangeRef = useRef(onOwnershipChange);
@@ -870,6 +922,7 @@ export function TerminalSimulator({
   const onFirewallBasicsChangeRef = useRef(onFirewallBasicsChange);
   const onScheduledTasksChangeRef = useRef(onScheduledTasksChange);
   const onSystemMonitoringChangeRef = useRef(onSystemMonitoringChange);
+  const onBackupsAndRecoveryChangeRef = useRef(onBackupsAndRecoveryChange);
   const onCommandRef = useRef(onCommand);
   const onCommandRunRef = useRef(onCommandRun);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -882,94 +935,98 @@ export function TerminalSimulator({
     suggestions ??
     (identity
       ? DEFAULT_IDENTITY_SUGGESTIONS
-      : systemMonitoring
-        ? DEFAULT_SYSTEM_MONITORING_SUGGESTIONS
-        : scheduledTasks
-          ? DEFAULT_SCHEDULED_TASKS_SUGGESTIONS
-          : firewallBasics
-            ? DEFAULT_FIREWALL_SUGGESTIONS
-            : sshRemoteAccess
-              ? DEFAULT_SSH_SUGGESTIONS
-              : networkTroubleshooting
-                ? DEFAULT_NETWORK_TROUBLESHOOTING_SUGGESTIONS
-                : networking
-                  ? DEFAULT_NETWORKING_SUGGESTIONS
-                  : diskUsage
-                    ? DEFAULT_DISK_USAGE_SUGGESTIONS
-                    : journal
-                      ? DEFAULT_JOURNAL_SUGGESTIONS
-                      : services
-                        ? DEFAULT_SERVICES_SUGGESTIONS
-                        : bashScripting
-                          ? DEFAULT_BASH_SCRIPTING_SUGGESTIONS
-                          : shellBasics
-                            ? DEFAULT_SHELL_BASICS_SUGGESTIONS
-                            : textProcessing
-                              ? DEFAULT_TEXT_PROCESSING_SUGGESTIONS
-                              : searching
-                                ? DEFAULT_SEARCH_SUGGESTIONS
-                                : pipes
-                                  ? DEFAULT_PIPES_SUGGESTIONS
-                                  : environment
-                                    ? DEFAULT_ENV_SUGGESTIONS
-                                    : packages
-                                      ? DEFAULT_PACKAGES_SUGGESTIONS
-                                      : processes
-                                        ? DEFAULT_PROCESSES_SUGGESTIONS
-                                        : ownership
-                                          ? DEFAULT_OWNERSHIP_SUGGESTIONS
-                                          : permissions
-                                            ? DEFAULT_PERMISSIONS_SUGGESTIONS
-                                            : useFilesystem
-                                              ? DEFAULT_FS_SUGGESTIONS
-                                              : DEFAULT_SUGGESTIONS);
+      : backupsAndRecovery
+        ? DEFAULT_BACKUPS_SUGGESTIONS
+        : systemMonitoring
+          ? DEFAULT_SYSTEM_MONITORING_SUGGESTIONS
+          : scheduledTasks
+            ? DEFAULT_SCHEDULED_TASKS_SUGGESTIONS
+            : firewallBasics
+              ? DEFAULT_FIREWALL_SUGGESTIONS
+              : sshRemoteAccess
+                ? DEFAULT_SSH_SUGGESTIONS
+                : networkTroubleshooting
+                  ? DEFAULT_NETWORK_TROUBLESHOOTING_SUGGESTIONS
+                  : networking
+                    ? DEFAULT_NETWORKING_SUGGESTIONS
+                    : diskUsage
+                      ? DEFAULT_DISK_USAGE_SUGGESTIONS
+                      : journal
+                        ? DEFAULT_JOURNAL_SUGGESTIONS
+                        : services
+                          ? DEFAULT_SERVICES_SUGGESTIONS
+                          : bashScripting
+                            ? DEFAULT_BASH_SCRIPTING_SUGGESTIONS
+                            : shellBasics
+                              ? DEFAULT_SHELL_BASICS_SUGGESTIONS
+                              : textProcessing
+                                ? DEFAULT_TEXT_PROCESSING_SUGGESTIONS
+                                : searching
+                                  ? DEFAULT_SEARCH_SUGGESTIONS
+                                  : pipes
+                                    ? DEFAULT_PIPES_SUGGESTIONS
+                                    : environment
+                                      ? DEFAULT_ENV_SUGGESTIONS
+                                      : packages
+                                        ? DEFAULT_PACKAGES_SUGGESTIONS
+                                        : processes
+                                          ? DEFAULT_PROCESSES_SUGGESTIONS
+                                          : ownership
+                                            ? DEFAULT_OWNERSHIP_SUGGESTIONS
+                                            : permissions
+                                              ? DEFAULT_PERMISSIONS_SUGGESTIONS
+                                              : useFilesystem
+                                                ? DEFAULT_FS_SUGGESTIONS
+                                                : DEFAULT_SUGGESTIONS);
   const prompt = identity
     ? formatUsersIdentityPrompt()
-    : systemMonitoring
-      ? formatSystemMonitoringPrompt()
-      : scheduledTasks
-        ? formatScheduledTasksPrompt()
-        : firewallBasics
-          ? formatFirewallPrompt()
-          : sshRemoteAccess
-            ? formatSshPrompt(sshState)
-            : networkTroubleshooting
-              ? formatNetworkTroubleshootPrompt()
-              : networking
-                ? formatNetworkingPrompt()
-                : diskUsage
-                  ? formatDiskUsagePrompt()
-                  : journal
-                    ? formatLogsJournaldPrompt()
-                    : services
-                      ? formatSystemServicesPrompt()
-                      : bashScripting
-                        ? formatBashScriptingPrompt(bashScriptState)
-                        : shellBasics
-                          ? formatShellBasicsPrompt(shellState?.cwd)
-                          : textProcessing
-                            ? formatTextProcessingPrompt(textState?.cwd)
-                            : searching
-                              ? formatSearchingAndFindingPrompt(
-                                  searchState?.cwd,
-                                )
-                              : pipes
-                                ? formatPipesAndRedirectionPrompt(
-                                    pipesState?.cwd,
+    : backupsAndRecovery
+      ? formatBackupPrompt(backupsState?.cwd)
+      : systemMonitoring
+        ? formatSystemMonitoringPrompt()
+        : scheduledTasks
+          ? formatScheduledTasksPrompt()
+          : firewallBasics
+            ? formatFirewallPrompt()
+            : sshRemoteAccess
+              ? formatSshPrompt(sshState)
+              : networkTroubleshooting
+                ? formatNetworkTroubleshootPrompt()
+                : networking
+                  ? formatNetworkingPrompt()
+                  : diskUsage
+                    ? formatDiskUsagePrompt()
+                    : journal
+                      ? formatLogsJournaldPrompt()
+                      : services
+                        ? formatSystemServicesPrompt()
+                        : bashScripting
+                          ? formatBashScriptingPrompt(bashScriptState)
+                          : shellBasics
+                            ? formatShellBasicsPrompt(shellState?.cwd)
+                            : textProcessing
+                              ? formatTextProcessingPrompt(textState?.cwd)
+                              : searching
+                                ? formatSearchingAndFindingPrompt(
+                                    searchState?.cwd,
                                   )
-                                : environment
-                                  ? formatEnvironmentVariablesPrompt()
-                                  : packages
-                                    ? formatPackageManagementPrompt()
-                                    : processes
-                                      ? formatProcessesPrompt()
-                                      : ownership
-                                        ? formatOwnershipSudoPrompt()
-                                        : permissions
-                                          ? formatFilePermissionsPrompt()
-                                          : formatTerminalPrompt(
-                                              fsState?.cwd ?? "/home/learner",
-                                            );
+                                : pipes
+                                  ? formatPipesAndRedirectionPrompt(
+                                      pipesState?.cwd,
+                                    )
+                                  : environment
+                                    ? formatEnvironmentVariablesPrompt()
+                                    : packages
+                                      ? formatPackageManagementPrompt()
+                                      : processes
+                                        ? formatProcessesPrompt()
+                                        : ownership
+                                          ? formatOwnershipSudoPrompt()
+                                          : permissions
+                                            ? formatFilePermissionsPrompt()
+                                            : formatTerminalPrompt(
+                                                fsState?.cwd ?? "/home/learner",
+                                              );
 
   useEffect(() => {
     onFsChangeRef.current = onFsChange;
@@ -1052,6 +1109,10 @@ export function TerminalSimulator({
   }, [onSystemMonitoringChange]);
 
   useEffect(() => {
+    onBackupsAndRecoveryChangeRef.current = onBackupsAndRecoveryChange;
+  }, [onBackupsAndRecoveryChange]);
+
+  useEffect(() => {
     onCommandRef.current = onCommand;
   }, [onCommand]);
 
@@ -1074,47 +1135,49 @@ export function TerminalSimulator({
             <span className="text-prompt select-none" aria-hidden="true">
               {identity
                 ? formatUsersIdentityPrompt()
-                : systemMonitoring
-                  ? formatSystemMonitoringPrompt()
-                  : scheduledTasks
-                    ? formatScheduledTasksPrompt()
-                    : firewallBasics
-                      ? formatFirewallPrompt()
-                      : sshRemoteAccess
-                        ? formatSshPrompt()
-                        : networkTroubleshooting
-                          ? formatNetworkTroubleshootPrompt()
-                          : networking
-                            ? formatNetworkingPrompt()
-                            : diskUsage
-                              ? formatDiskUsagePrompt()
-                              : journal
-                                ? formatLogsJournaldPrompt()
-                                : services
-                                  ? formatSystemServicesPrompt()
-                                  : bashScripting
-                                    ? formatBashScriptingPrompt()
-                                    : shellBasics
-                                      ? formatShellBasicsPrompt()
-                                      : textProcessing
-                                        ? formatTextProcessingPrompt()
-                                        : searching
-                                          ? formatSearchingAndFindingPrompt()
-                                          : pipes
-                                            ? formatPipesAndRedirectionPrompt()
-                                            : environment
-                                              ? formatEnvironmentVariablesPrompt()
-                                              : packages
-                                                ? formatPackageManagementPrompt()
-                                                : processes
-                                                  ? formatProcessesPrompt()
-                                                  : ownership
-                                                    ? formatOwnershipSudoPrompt()
-                                                    : permissions
-                                                      ? formatFilePermissionsPrompt()
-                                                      : formatTerminalPrompt(
-                                                          "/home/learner",
-                                                        )}
+                : backupsAndRecovery
+                  ? formatBackupPrompt()
+                  : systemMonitoring
+                    ? formatSystemMonitoringPrompt()
+                    : scheduledTasks
+                      ? formatScheduledTasksPrompt()
+                      : firewallBasics
+                        ? formatFirewallPrompt()
+                        : sshRemoteAccess
+                          ? formatSshPrompt()
+                          : networkTroubleshooting
+                            ? formatNetworkTroubleshootPrompt()
+                            : networking
+                              ? formatNetworkingPrompt()
+                              : diskUsage
+                                ? formatDiskUsagePrompt()
+                                : journal
+                                  ? formatLogsJournaldPrompt()
+                                  : services
+                                    ? formatSystemServicesPrompt()
+                                    : bashScripting
+                                      ? formatBashScriptingPrompt()
+                                      : shellBasics
+                                        ? formatShellBasicsPrompt()
+                                        : textProcessing
+                                          ? formatTextProcessingPrompt()
+                                          : searching
+                                            ? formatSearchingAndFindingPrompt()
+                                            : pipes
+                                              ? formatPipesAndRedirectionPrompt()
+                                              : environment
+                                                ? formatEnvironmentVariablesPrompt()
+                                                : packages
+                                                  ? formatPackageManagementPrompt()
+                                                  : processes
+                                                    ? formatProcessesPrompt()
+                                                    : ownership
+                                                      ? formatOwnershipSudoPrompt()
+                                                      : permissions
+                                                        ? formatFilePermissionsPrompt()
+                                                        : formatTerminalPrompt(
+                                                            "/home/learner",
+                                                          )}
             </span>
             <span className="sr-only">Loading interactive terminal</span>
           </div>
@@ -1145,54 +1208,57 @@ export function TerminalSimulator({
     const currentFirewall = firewallRef.current;
     const currentScheduledTasks = scheduledTasksRef.current;
     const currentSystemMonitoring = systemMonitoringRef.current;
+    const currentBackups = backupsRef.current;
     const currentPrompt = identity
       ? formatUsersIdentityPrompt()
-      : systemMonitoring
-        ? formatSystemMonitoringPrompt()
-        : scheduledTasks
-          ? formatScheduledTasksPrompt()
-          : firewallBasics
-            ? formatFirewallPrompt()
-            : sshRemoteAccess
-              ? formatSshPrompt(currentSsh)
-              : networkTroubleshooting
-                ? formatNetworkTroubleshootPrompt()
-                : networking
-                  ? formatNetworkingPrompt()
-                  : diskUsage
-                    ? formatDiskUsagePrompt()
-                    : journal
-                      ? formatLogsJournaldPrompt()
-                      : services
-                        ? formatSystemServicesPrompt()
-                        : bashScripting
-                          ? formatBashScriptingPrompt(currentBashScript)
-                          : shellBasics
-                            ? formatShellBasicsPrompt(currentShell?.cwd)
-                            : textProcessing
-                              ? formatTextProcessingPrompt(currentText?.cwd)
-                              : searching
-                                ? formatSearchingAndFindingPrompt(
-                                    currentSearch?.cwd,
-                                  )
-                                : pipes
-                                  ? formatPipesAndRedirectionPrompt(
-                                      currentPipes?.cwd,
+      : backupsAndRecovery
+        ? formatBackupPrompt(currentBackups?.cwd)
+        : systemMonitoring
+          ? formatSystemMonitoringPrompt()
+          : scheduledTasks
+            ? formatScheduledTasksPrompt()
+            : firewallBasics
+              ? formatFirewallPrompt()
+              : sshRemoteAccess
+                ? formatSshPrompt(currentSsh)
+                : networkTroubleshooting
+                  ? formatNetworkTroubleshootPrompt()
+                  : networking
+                    ? formatNetworkingPrompt()
+                    : diskUsage
+                      ? formatDiskUsagePrompt()
+                      : journal
+                        ? formatLogsJournaldPrompt()
+                        : services
+                          ? formatSystemServicesPrompt()
+                          : bashScripting
+                            ? formatBashScriptingPrompt(currentBashScript)
+                            : shellBasics
+                              ? formatShellBasicsPrompt(currentShell?.cwd)
+                              : textProcessing
+                                ? formatTextProcessingPrompt(currentText?.cwd)
+                                : searching
+                                  ? formatSearchingAndFindingPrompt(
+                                      currentSearch?.cwd,
                                     )
-                                  : environment
-                                    ? formatEnvironmentVariablesPrompt()
-                                    : packages
-                                      ? formatPackageManagementPrompt()
-                                      : processes
-                                        ? formatProcessesPrompt()
-                                        : ownership
-                                          ? formatOwnershipSudoPrompt()
-                                          : permissions
-                                            ? formatFilePermissionsPrompt()
-                                            : formatTerminalPrompt(
-                                                currentFs?.cwd ??
-                                                  "/home/learner",
-                                              );
+                                  : pipes
+                                    ? formatPipesAndRedirectionPrompt(
+                                        currentPipes?.cwd,
+                                      )
+                                    : environment
+                                      ? formatEnvironmentVariablesPrompt()
+                                      : packages
+                                        ? formatPackageManagementPrompt()
+                                        : processes
+                                          ? formatProcessesPrompt()
+                                          : ownership
+                                            ? formatOwnershipSudoPrompt()
+                                            : permissions
+                                              ? formatFilePermissionsPrompt()
+                                              : formatTerminalPrompt(
+                                                  currentFs?.cwd ??
+                                                    "/home/learner",
+                                                );
 
     if (trimmed) {
       setCommandHistory((prev) =>
@@ -1338,6 +1404,38 @@ export function TerminalSimulator({
       systemMonitoringRef.current = state;
       setSystemMonitoringState(state);
       onSystemMonitoringChangeRef.current?.(state);
+
+      if (result.kind === "clear") {
+        setHistory([]);
+        notifyCommandRun();
+        return;
+      }
+
+      if (result.kind === "empty") {
+        setHistory((prev) => [
+          ...prev,
+          { command: "", output: [], prompt: currentPrompt },
+        ]);
+        notifyCommandRun();
+        return;
+      }
+
+      setHistory((prev) => [
+        ...prev,
+        { command: raw, output: result.lines, prompt: currentPrompt },
+      ]);
+      notifyCommandRun();
+      return;
+    }
+
+    if (backupsAndRecovery && currentBackups) {
+      const { result, state } = simulateBackupsAndRecoveryCommand(
+        raw,
+        currentBackups,
+      );
+      backupsRef.current = state;
+      setBackupsState(state);
+      onBackupsAndRecoveryChangeRef.current?.(state);
 
       if (result.kind === "clear") {
         setHistory([]);

@@ -207,13 +207,15 @@ export const administrationLessons: readonly AdministrationLesson[] = [
       "Understand backup strategies, recovery planning, and data protection.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/administration/backups-and-recovery",
     topics: [
       "Backup strategies",
       "Recovery planning",
-      "Snapshots",
+      "tar and gzip",
       "Data protection",
       "Restore basics",
+      "Verification",
     ],
   },
   {
