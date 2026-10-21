@@ -222,10 +222,12 @@ export const administrationLessons: readonly AdministrationLesson[] = [
     number: 12,
     slug: "challenge",
     title: "Linux Administration Challenge",
-    description: "A future hands-on challenge covering the entire stage.",
+    description:
+      "Diagnose and resolve simulated incidents covering the entire Linux Administration stage.",
     duration: "40–50 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/administration/challenge",
     topics: [
       "Services",
       "Logs",

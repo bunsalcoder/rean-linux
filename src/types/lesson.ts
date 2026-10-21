@@ -63,7 +63,8 @@ export type LessonTerminalPreset =
   | "firewall-basics"
   | "scheduled-tasks"
   | "system-monitoring"
-  | "backups-and-recovery";
+  | "backups-and-recovery"
+  | "linux-administration-challenge";
 
 export type LessonBlock =
   | {
@@ -177,7 +178,8 @@ export type LessonBlock =
         | "system-monitoring-quiz"
         | "backups-and-recovery-workflow"
         | "backups-and-recovery-practice"
-        | "backups-and-recovery-quiz";
+        | "backups-and-recovery-quiz"
+        | "linux-administration-challenge-practice";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.
@@ -196,6 +198,24 @@ export type LessonBlock =
         | "text-processing"
         | "shell-basics"
         | "bash-scripting";
+      /**
+       * Which panel to render for the Linux Administration Challenge exercise.
+       * Required when `id` is `linux-administration-challenge-practice`.
+       */
+      adminChallengePanel?:
+        | "progress"
+        | "summary"
+        | "service-outage"
+        | "log-investigation"
+        | "storage-inspection"
+        | "disk-space"
+        | "network-route"
+        | "dns-investigation"
+        | "ssh-access"
+        | "firewall-block"
+        | "cron-failure"
+        | "high-cpu"
+        | "file-recovery";
     }
   | {
       type: "panel";

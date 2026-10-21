@@ -67,9 +67,9 @@ export default function AdministrationLearnPage() {
           Lessons
         </h2>
         <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed sm:text-[0.9375rem]">
-          Twelve lessons are planned for this stage. Lessons through Backups and
-          Recovery are ready now — the final challenge remains a curriculum
-          preview until it ships.
+          Twelve lessons make up this stage, including the Linux Administration
+          Challenge capstone. Storage and Filesystems remains a curriculum
+          preview until that lesson ships.
         </p>
         <AdministrationLessonJourney />
       </section>

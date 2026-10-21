@@ -38,6 +38,12 @@ import {
   LinuxEssentialsChallengeProvider,
   LinuxEssentialsChallengeSummary,
 } from "@/components/learn/linux-essentials-challenge-practice";
+import {
+  LinuxAdministrationChallengeIncident,
+  LinuxAdministrationChallengeProgress,
+  LinuxAdministrationChallengeProvider,
+  LinuxAdministrationChallengeSummary,
+} from "@/components/learn/linux-administration-challenge-practice";
 import { SystemServicesPractice } from "@/components/learn/system-services-practice";
 import { SystemServicesQuiz } from "@/components/learn/system-services-quiz";
 import { LogsAndJournaldPractice } from "@/components/learn/logs-and-journald-practice";
@@ -69,6 +75,7 @@ import {
   createLearnerHomeFs,
 } from "@/lib/simulated-filesystem";
 import type { ChallengeCategoryId } from "@/lib/linux-essentials-challenge";
+import type { AdminIncidentId } from "@/lib/linux-administration-challenge";
 import type {
   Lesson,
   LessonBlock,
@@ -105,7 +112,8 @@ function resolveTerminalFilesystem(
     preset === "firewall-basics" ||
     preset === "scheduled-tasks" ||
     preset === "system-monitoring" ||
-    preset === "backups-and-recovery"
+    preset === "backups-and-recovery" ||
+    preset === "linux-administration-challenge"
   ) {
     return undefined;
   }
@@ -384,6 +392,23 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
         }
         return null;
       }
+      if (block.id === "linux-administration-challenge-practice") {
+        const panel = block.adminChallengePanel;
+        if (panel === "progress") {
+          return <LinuxAdministrationChallengeProgress />;
+        }
+        if (panel === "summary") {
+          return <LinuxAdministrationChallengeSummary />;
+        }
+        if (panel) {
+          return (
+            <LinuxAdministrationChallengeIncident
+              incidentId={panel as AdminIncidentId}
+            />
+          );
+        }
+        return null;
+      }
       return <FilesystemPractice />;
     case "panel":
       return (
@@ -471,6 +496,14 @@ export function LessonContent({ lesson }: LessonContentProps) {
       <LinuxEssentialsChallengeProvider>
         {content}
       </LinuxEssentialsChallengeProvider>
+    );
+  }
+
+  if (lesson.slug === "challenge" && lesson.level === "administration") {
+    return (
+      <LinuxAdministrationChallengeProvider>
+        {content}
+      </LinuxAdministrationChallengeProvider>
     );
   }
 
