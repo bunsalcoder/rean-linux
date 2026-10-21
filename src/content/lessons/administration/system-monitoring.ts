@@ -26,7 +26,6 @@ export const systemMonitoringLesson = {
     next: {
       label: "Backups and Recovery",
       href: "/learn/administration/backups-and-recovery",
-      unavailable: true,
     },
   },
   intro: [
@@ -470,7 +469,7 @@ export const systemMonitoringLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next you will study **Backups and Recovery** — protecting data and planning restores. That lesson is not published yet.",
+          text: "Next: [Backups and Recovery](/learn/administration/backups-and-recovery) — protecting data, verifying archives, and practicing safe restores.",
         },
       ],
     },
