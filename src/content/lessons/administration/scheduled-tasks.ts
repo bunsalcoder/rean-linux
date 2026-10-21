@@ -25,7 +25,6 @@ export const scheduledTasksLesson = {
     next: {
       label: "System Monitoring and Resource Usage",
       href: "/learn/administration/system-monitoring",
-      unavailable: true,
     },
   },
   intro: [
@@ -463,7 +462,7 @@ export const scheduledTasksLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next you will study system monitoring and resource usage — watching CPU, memory, and processes. That lesson is not published yet.",
+          text: "Next: [System Monitoring and Resource Usage](/learn/administration/system-monitoring) — watching CPU, memory, load, and processes safely in a simulated lab.",
         },
       ],
     },

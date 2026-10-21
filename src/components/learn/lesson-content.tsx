@@ -55,6 +55,9 @@ import { FirewallBasicsQuiz } from "@/components/learn/firewall-basics-quiz";
 import { CronExpressionExplainer } from "@/components/learn/cron-expression-explainer";
 import { ScheduledTasksPractice } from "@/components/learn/scheduled-tasks-practice";
 import { ScheduledTasksQuiz } from "@/components/learn/scheduled-tasks-quiz";
+import { SystemMonitoringDashboard } from "@/components/learn/system-monitoring-dashboard";
+import { SystemMonitoringPractice } from "@/components/learn/system-monitoring-practice";
+import { SystemMonitoringQuiz } from "@/components/learn/system-monitoring-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -97,7 +100,8 @@ function resolveTerminalFilesystem(
     preset === "network-troubleshooting" ||
     preset === "ssh-and-remote-access" ||
     preset === "firewall-basics" ||
-    preset === "scheduled-tasks"
+    preset === "scheduled-tasks" ||
+    preset === "system-monitoring"
   ) {
     return undefined;
   }
@@ -240,6 +244,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           sshRemoteAccess={block.preset === "ssh-and-remote-access"}
           firewallBasics={block.preset === "firewall-basics"}
           scheduledTasks={block.preset === "scheduled-tasks"}
+          systemMonitoring={block.preset === "system-monitoring"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -338,6 +343,15 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "scheduled-tasks-quiz") {
         return <ScheduledTasksQuiz />;
+      }
+      if (block.id === "system-monitoring-dashboard") {
+        return <SystemMonitoringDashboard />;
+      }
+      if (block.id === "system-monitoring-practice") {
+        return <SystemMonitoringPractice />;
+      }
+      if (block.id === "system-monitoring-quiz") {
+        return <SystemMonitoringQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

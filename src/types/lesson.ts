@@ -61,7 +61,8 @@ export type LessonTerminalPreset =
   | "network-troubleshooting"
   | "ssh-and-remote-access"
   | "firewall-basics"
-  | "scheduled-tasks";
+  | "scheduled-tasks"
+  | "system-monitoring";
 
 export type LessonBlock =
   | {
@@ -169,7 +170,10 @@ export type LessonBlock =
         | "firewall-basics-quiz"
         | "scheduled-tasks-cron-explainer"
         | "scheduled-tasks-practice"
-        | "scheduled-tasks-quiz";
+        | "scheduled-tasks-quiz"
+        | "system-monitoring-dashboard"
+        | "system-monitoring-practice"
+        | "system-monitoring-quiz";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.
