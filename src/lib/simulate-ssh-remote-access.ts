@@ -1137,7 +1137,14 @@ export function simulateSshRemoteAccessCommand(
     };
   }
 
-  if (state.awaitingHostKeyConfirm) {
+  const hostKeyReply = trimmed.toLowerCase();
+  const isHostKeyMeta =
+    hostKeyReply === "help" ||
+    hostKeyReply === "?" ||
+    hostKeyReply === "clear" ||
+    hostKeyReply === "cls";
+
+  if (state.awaitingHostKeyConfirm && !isHostKeyMeta) {
     return handleHostKeyConfirm(trimmed, state);
   }
 
@@ -1154,12 +1161,14 @@ export function simulateSshRemoteAccessCommand(
 
   switch (command) {
     case "help":
+    case "?":
       return {
         result: { kind: "output", lines: HELP_OUTPUT },
         state: cloneSshState(state),
       };
 
     case "clear":
+    case "cls":
       return {
         result: { kind: "clear" },
         state: cloneSshState(state),

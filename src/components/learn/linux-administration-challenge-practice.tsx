@@ -44,6 +44,7 @@ type IncidentStats = {
 type AdminChallengeContextValue = {
   completed: ReadonlySet<AdminIncidentId>;
   completeIncident: (id: AdminIncidentId) => void;
+  uncompleteIncident: (id: AdminIncidentId) => void;
   completedCount: number;
   percentComplete: number;
   allComplete: boolean;
@@ -106,6 +107,17 @@ export function LinuxAdministrationChallengeProvider({
     });
   }, []);
 
+  const uncompleteIncident = useCallback((id: AdminIncidentId) => {
+    setCompleted((prev) => {
+      if (!prev.has(id)) {
+        return prev;
+      }
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  }, []);
+
   const recordAttempt = useCallback((id: AdminIncidentId) => {
     setStats((prev) => ({
       ...prev,
@@ -152,6 +164,7 @@ export function LinuxAdministrationChallengeProvider({
     return {
       completed,
       completeIncident,
+      uncompleteIncident,
       completedCount,
       percentComplete: Math.round(
         (completedCount / TOTAL_ADMIN_INCIDENTS) * 100,
@@ -166,6 +179,7 @@ export function LinuxAdministrationChallengeProvider({
   }, [
     completed,
     completeIncident,
+    uncompleteIncident,
     stats,
     recordAttempt,
     revealHint,
@@ -251,8 +265,14 @@ function resolveBackupsProp(incident: AdminIncident) {
 }
 
 function IncidentPanel({ incident }: { incident: AdminIncident }) {
-  const { completed, completeIncident, stats, recordAttempt, revealHint } =
-    useAdminChallenge();
+  const {
+    completed,
+    completeIncident,
+    uncompleteIncident,
+    stats,
+    recordAttempt,
+    revealHint,
+  } = useAdminChallenge();
 
   const [selected, setSelected] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -297,6 +317,7 @@ function IncidentPanel({ incident }: { incident: AdminIncident }) {
   }
 
   function resetIncident() {
+    uncompleteIncident(incident.id);
     setSelected(null);
     setSubmitted(false);
     setFeedback(null);

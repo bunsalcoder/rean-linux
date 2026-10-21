@@ -23,9 +23,8 @@ export const logsAndJournaldLesson = {
       href: "/learn/administration/system-services",
     },
     next: {
-      label: "Storage and Filesystems",
-      href: "/learn/administration/storage-and-filesystems",
-      unavailable: true,
+      label: "Disk Usage and Mounts",
+      href: "/learn/administration/disk-usage-and-mounts",
     },
   },
   intro: [

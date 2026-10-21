@@ -8,12 +8,14 @@ export function AdministrationTip() {
         id="administration-tip-heading"
         className="font-heading text-base font-semibold tracking-tight sm:text-lg"
       >
-        Coming soon
+        Getting started
       </h2>
       <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed sm:text-[0.9375rem]">
-        This stage curriculum is planned and ready to preview. Lessons will
-        unlock as they ship. Finish Linux Essentials first if you are still
-        building confidence with users, permissions, processes, and the shell.
+        Start with System Services and systemd, then continue through logs,
+        disks, networking, and the remaining administration topics. Storage and
+        Filesystems stays on the roadmap as a preview. Finish Linux Essentials
+        first if you are still building confidence with users, permissions,
+        processes, and the shell.
       </p>
     </aside>
   );

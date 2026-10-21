@@ -217,7 +217,7 @@ export const ADMIN_INCIDENTS: readonly AdminIncident[] = [
       },
     ],
     correctAnswer: "A",
-    validate: (ctx) => ctx.selectedAnswer === "A",
+    validate: (ctx) => ctx.selectedAnswer === "A" && ctx.journal !== null,
   },
   {
     id: "storage-inspection",
@@ -229,21 +229,21 @@ export const ADMIN_INCIDENTS: readonly AdminIncident[] = [
     report:
       "Capacity planning needs a spare block device for a new data volume. Inspect simulated disks and identify which device is free and what filesystem it already has.",
     objectives: [
-      "List mounts and filesystems with df/findmnt/mount",
+      "Compare mounted filesystems with the full block-device inventory",
       "Identify the unmounted spare device and its filesystem type",
       "Choose the conclusion that matches the inventory",
     ],
     hint1:
-      "Compare mounted filesystems with devices that still have no mount point.",
+      "Mounted views (`df`/`findmnt`) hide spare disks — list block devices too.",
     hint2:
-      "Use `df -h`, `findmnt`, and `mount` — look for `/dev/sdb1` and its filesystem type.",
+      "Run `lsblk` and compare with `df -h` or `findmnt` — look for `/dev/sdb1` and its FSTYPE.",
     successExplanation:
       "/dev/sdb1 is an unmounted ext4 volume — the spare data disk — while /dev/sda1 and /dev/sda2 are already mounted on / and /home.",
     terminalMode: "diskUsage",
     suggestions: [
+      { command: "lsblk", label: "lsblk" },
       { command: "df -h", label: "df -h" },
       { command: "findmnt", label: "findmnt" },
-      { command: "mount", label: "mount" },
       { command: "help", label: "help" },
     ],
     options: [
@@ -265,7 +265,7 @@ export const ADMIN_INCIDENTS: readonly AdminIncident[] = [
       },
     ],
     correctAnswer: "A",
-    validate: (ctx) => ctx.selectedAnswer === "A",
+    validate: (ctx) => ctx.selectedAnswer === "A" && ctx.diskUsage !== null,
   },
   {
     id: "disk-space",
@@ -335,8 +335,8 @@ export const ADMIN_INCIDENTS: readonly AdminIncident[] = [
     ],
     validate: (ctx) =>
       ctx.uiFixed &&
-      (ctx.networkTroubleshooting === null ||
-        ctx.networkTroubleshooting.hasDefaultRoute === true),
+      ctx.networkTroubleshooting !== null &&
+      ctx.networkTroubleshooting.hasDefaultRoute === true,
   },
   {
     id: "dns-investigation",

@@ -396,7 +396,9 @@ export function BackupsAndRecoveryPractice() {
   const [submitted, setSubmitted] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [ranRelevant, setRanRelevant] = useState(false);
-  const [stateReady, setStateReady] = useState(true);
+  const [stateReady, setStateReady] = useState(
+    () => !EXERCISES[0]?.requireState,
+  );
   const [completed, setCompleted] = useState<ReadonlySet<string>>(
     () => new Set(),
   );
@@ -615,6 +617,7 @@ export function BackupsAndRecoveryPractice() {
               (backupRef.current
                 ? exercise.requireState(backupRef.current)
                 : false);
+            setStateReady(stateOk);
             if (selected === exercise.correct && stateOk) {
               setCompleted((prev) => new Set(prev).add(exercise.id));
             }

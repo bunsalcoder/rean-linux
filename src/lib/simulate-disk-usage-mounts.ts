@@ -57,6 +57,7 @@ const HELP_OUTPUT = [
   "  du -ah PATH                       Include files as well as directories",
   "  mount                             List mounted filesystems",
   "  findmnt                           Structured mount table",
+  "  lsblk                             List block devices (incl. unmounted)",
   "  mount DEVICE MOUNTPOINT           Mount a simulated filesystem",
   "  sudo mount DEVICE MOUNTPOINT      Mount with sudo",
   "  umount MOUNTPOINT                 Unmount a simulated filesystem",
@@ -68,6 +69,7 @@ const HELP_OUTPUT = [
   "  du -sh /home",
   "  du -h --max-depth=1 /var",
   "  findmnt",
+  "  lsblk",
   "  sudo mount /dev/sdb1 /data",
   "  sudo umount /data",
 ] as const;
@@ -568,6 +570,19 @@ function formatFindmnt(state: SimulatedDiskState): string[] {
   return [header, ...rows];
 }
 
+/** List every simulated block device, including unmounted spare volumes. */
+function formatLsblk(state: SimulatedDiskState): string[] {
+  const header = "NAME       SIZE FSTYPE MOUNTPOINT";
+  const rows = state.devices.map((d) => {
+    const name = padRight(d.name.replace(/^\/dev\//, ""), 10);
+    const size = padRight(d.size, 4);
+    const fstype = padRight(d.filesystem, 6);
+    const mount = d.mountPoint ?? "";
+    return `${name} ${size} ${fstype} ${mount}`.trimEnd();
+  });
+  return [header, ...rows];
+}
+
 function handleMount(
   tokens: string[],
   state: SimulatedDiskState,
@@ -832,6 +847,24 @@ export function simulateDiskUsageMountsCommand(
       }
       return {
         result: { kind: "output", lines: formatFindmnt(state) },
+        state: cloneDiskState(state),
+      };
+
+    case "lsblk":
+      if (commandTokens.length > 1) {
+        return {
+          result: {
+            kind: "output",
+            lines: [
+              "lsblk: options are not supported in this learning terminal.",
+              "Try: lsblk",
+            ],
+          },
+          state: cloneDiskState(state),
+        };
+      }
+      return {
+        result: { kind: "output", lines: formatLsblk(state) },
         state: cloneDiskState(state),
       };
 
