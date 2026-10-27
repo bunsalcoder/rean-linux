@@ -53,7 +53,9 @@ function stageCtaLabel(level: LearningLevel) {
     case "completed":
       return "Review this stage";
     case "available":
-      return level.slug === "essentials" || level.slug === "administration"
+      return level.slug === "essentials" ||
+        level.slug === "administration" ||
+        level.slug === "security"
         ? "Explore the curriculum"
         : "Begin this path";
 

@@ -37,6 +37,7 @@ const NODE_STYLES = [
   "border-primary/40 bg-background text-primary",
   "border-primary/50 bg-accent text-primary",
   "border-primary/70 bg-primary/10 text-primary",
+  "border-primary bg-primary/20 text-primary",
   "border-primary bg-primary text-primary-foreground",
 ] as const;
 
