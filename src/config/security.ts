@@ -91,7 +91,8 @@ export const securityLessons: readonly SecurityLesson[] = [
       "Go beyond basic modes to special bits and access-control lists.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/security/permissions-and-acls",
     topics: [
       "Special bits",
       "ACLs",

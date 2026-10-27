@@ -26,7 +26,6 @@ export const securityAccessControlLesson = {
     next: {
       label: "Advanced File Permissions and ACLs",
       href: "/learn/security/permissions-and-acls",
-      unavailable: true,
     },
   },
   intro: [
@@ -477,7 +476,7 @@ export const securityAccessControlLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: Advanced File Permissions and ACLs — special bits and access-control lists in more depth (coming soon).",
+          text: "Next: [Advanced File Permissions and ACLs](/learn/security/permissions-and-acls) — special bits and access-control lists in more depth.",
         },
       ],
     },
