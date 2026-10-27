@@ -3,6 +3,7 @@ import {
   Boxes,
   FolderTree,
   Server,
+  Shield,
   Terminal,
   type LucideIcon,
 } from "lucide-react";
@@ -13,6 +14,7 @@ export const LEARNING_LEVEL_SLUGS = [
   "beginner",
   "essentials",
   "administration",
+  "security",
   "power-user",
   "devops",
 ] as const;
@@ -87,8 +89,27 @@ export const learningLevels: readonly LearningLevel[] = [
     lessonCount: 12,
   },
   {
-    slug: "power-user",
+    slug: "security",
     indicator: "04",
+    title: "Linux Security and Hardening",
+    label: "Up next",
+    description:
+      "Develop practical knowledge of Linux security, permissions, authentication, privilege management, system hardening, and security auditing.",
+    topics: [
+      "Access control",
+      "Hardening",
+      "SSH & firewalls",
+      "Auditing",
+      "Incident response",
+    ],
+    icon: Shield,
+    status: "available",
+    difficulty: "Advanced",
+    lessonCount: 12,
+  },
+  {
+    slug: "power-user",
+    indicator: "05",
     title: "Linux Power User",
     label: "Coming soon",
     description:
@@ -100,7 +121,7 @@ export const learningLevels: readonly LearningLevel[] = [
   },
   {
     slug: "devops",
-    indicator: "05",
+    indicator: "06",
     title: "Linux & DevOps",
     label: "Coming soon",
     description:

@@ -732,15 +732,14 @@ export function LinuxAdministrationChallengeSummary() {
             </p>
           )}
           <p className="mt-2">
-            Next step: return to the{" "}
+            Next step: preview{" "}
             <Link
-              href="/learn"
+              href="/learn/security"
               className="text-primary font-medium underline-offset-2 hover:underline"
             >
-              learning path
-            </Link>{" "}
-            overview. Later stages remain curriculum previews until they ship —
-            there is no unfinished Stage 04 route to open yet.
+              Stage 04 — Linux Security and Hardening
+            </Link>
+            . Lessons there remain curriculum previews until they ship.
           </p>
         </Callout>
       ) : (

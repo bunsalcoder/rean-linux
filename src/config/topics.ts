@@ -116,9 +116,16 @@ export const linuxTopics: readonly LinuxTopic[] = [
   {
     id: "security",
     title: "Security",
-    description: "Understand the fundamentals of securing Linux systems.",
+    description:
+      "Develop practical knowledge of Linux security, hardening, and auditing.",
     icon: Shield,
-    topics: ["Permissions", "SSH security", "Firewall", "Updates", "Hardening"],
+    topics: [
+      "Access control",
+      "SSH hardening",
+      "Firewalls",
+      "Updates",
+      "Incident response",
+    ],
     href: "/learn/security",
   },
   {

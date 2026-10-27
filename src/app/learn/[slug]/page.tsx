@@ -15,6 +15,7 @@ const DEDICATED_LEARN_SLUGS = new Set([
   "beginner",
   "essentials",
   "administration",
+  "security",
 ]);
 
 const LEARN_PAGE_SLUGS = Array.from(

@@ -33,8 +33,8 @@ export const linuxAdministrationChallengeLesson = {
       href: "/learn/administration/backups-and-recovery",
     },
     next: {
-      label: "Finish Linux Administration",
-      href: "/learn",
+      label: "Continue to Linux Security and Hardening",
+      href: "/learn/security",
       emphasis: "finish",
     },
   },
