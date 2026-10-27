@@ -67,6 +67,12 @@ import { SystemMonitoringQuiz } from "@/components/learn/system-monitoring-quiz"
 import { BackupsAndRecoveryWorkflow } from "@/components/learn/backups-and-recovery-workflow";
 import { BackupsAndRecoveryPractice } from "@/components/learn/backups-and-recovery-practice";
 import { BackupsAndRecoveryQuiz } from "@/components/learn/backups-and-recovery-quiz";
+import { SecurityAccessControlAssessment } from "@/components/learn/security-access-control-assessment";
+import { SecurityAccessControlPractice } from "@/components/learn/security-access-control-practice";
+import {
+  SecurityAccessControlKnowledgeCheck,
+  SecurityAccessControlQuiz,
+} from "@/components/learn/security-access-control-quiz";
 import { SecurityFundamentalsAssessment } from "@/components/learn/security-fundamentals-assessment";
 import { SecurityFundamentalsPractice } from "@/components/learn/security-fundamentals-practice";
 import { SecurityFundamentalsQuiz } from "@/components/learn/security-fundamentals-quiz";
@@ -117,7 +123,8 @@ function resolveTerminalFilesystem(
     preset === "system-monitoring" ||
     preset === "backups-and-recovery" ||
     preset === "linux-administration-challenge" ||
-    preset === "security-fundamentals"
+    preset === "security-fundamentals" ||
+    preset === "security-access-control"
   ) {
     return undefined;
   }
@@ -263,6 +270,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           systemMonitoring={block.preset === "system-monitoring"}
           backupsAndRecovery={block.preset === "backups-and-recovery"}
           securityFundamentals={block.preset === "security-fundamentals"}
+          securityAccessControl={block.preset === "security-access-control"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -388,6 +396,18 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "security-fundamentals-quiz") {
         return <SecurityFundamentalsQuiz />;
+      }
+      if (block.id === "security-access-control-assessment") {
+        return <SecurityAccessControlAssessment />;
+      }
+      if (block.id === "security-access-control-practice") {
+        return <SecurityAccessControlPractice />;
+      }
+      if (block.id === "security-access-control-knowledge-check") {
+        return <SecurityAccessControlKnowledgeCheck />;
+      }
+      if (block.id === "security-access-control-quiz") {
+        return <SecurityAccessControlQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

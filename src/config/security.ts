@@ -73,7 +73,8 @@ export const securityLessons: readonly SecurityLesson[] = [
       "Review users, groups, and access decisions with a security-focused lens.",
     duration: "20–25 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/security/access-control",
     topics: [
       "Users",
       "Groups",

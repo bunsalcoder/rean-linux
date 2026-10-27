@@ -25,7 +25,6 @@ export const securityFundamentalsLesson = {
     next: {
       label: "Users, Groups, and Access Control Review",
       href: "/learn/security/access-control",
-      unavailable: true,
     },
   },
   intro: [
@@ -530,7 +529,7 @@ export const securityFundamentalsLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: Users, Groups, and Access Control Review — a security-focused revisit of identity and access decisions (coming soon).",
+          text: "Next: [Users, Groups, and Access Control Review](/learn/security/access-control) — a security-focused revisit of identity and access decisions.",
         },
       ],
     },

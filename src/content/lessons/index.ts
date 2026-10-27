@@ -27,6 +27,7 @@ import { scheduledTasksLesson } from "@/content/lessons/administration/scheduled
 import { systemMonitoringLesson } from "@/content/lessons/administration/system-monitoring";
 import { backupsAndRecoveryLesson } from "@/content/lessons/administration/backups-and-recovery";
 import { linuxAdministrationChallengeLesson } from "@/content/lessons/administration/challenge";
+import { securityAccessControlLesson } from "@/content/lessons/security/access-control";
 import { securityFundamentalsLesson } from "@/content/lessons/security/fundamentals";
 import type { Lesson, LessonLevel } from "@/types/lesson";
 
@@ -61,6 +62,7 @@ export const lessons = [
   backupsAndRecoveryLesson,
   linuxAdministrationChallengeLesson,
   securityFundamentalsLesson,
+  securityAccessControlLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];
