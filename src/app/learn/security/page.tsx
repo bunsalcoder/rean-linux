@@ -64,9 +64,9 @@ export default function SecurityLearnPage() {
           Lessons
         </h2>
         <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed sm:text-[0.9375rem]">
-          Twelve lessons are planned for this stage. All lessons are coming soon
-          — including the final challenge, which stays locked until the stage
-          content ships.
+          Twelve lessons make up this stage. Linux Security Fundamentals is
+          available now; later lessons and the final challenge stay locked until
+          they ship.
         </p>
         <SecurityLessonJourney />
       </section>

@@ -67,6 +67,9 @@ import { SystemMonitoringQuiz } from "@/components/learn/system-monitoring-quiz"
 import { BackupsAndRecoveryWorkflow } from "@/components/learn/backups-and-recovery-workflow";
 import { BackupsAndRecoveryPractice } from "@/components/learn/backups-and-recovery-practice";
 import { BackupsAndRecoveryQuiz } from "@/components/learn/backups-and-recovery-quiz";
+import { SecurityFundamentalsAssessment } from "@/components/learn/security-fundamentals-assessment";
+import { SecurityFundamentalsPractice } from "@/components/learn/security-fundamentals-practice";
+import { SecurityFundamentalsQuiz } from "@/components/learn/security-fundamentals-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -113,7 +116,8 @@ function resolveTerminalFilesystem(
     preset === "scheduled-tasks" ||
     preset === "system-monitoring" ||
     preset === "backups-and-recovery" ||
-    preset === "linux-administration-challenge"
+    preset === "linux-administration-challenge" ||
+    preset === "security-fundamentals"
   ) {
     return undefined;
   }
@@ -258,6 +262,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           scheduledTasks={block.preset === "scheduled-tasks"}
           systemMonitoring={block.preset === "system-monitoring"}
           backupsAndRecovery={block.preset === "backups-and-recovery"}
+          securityFundamentals={block.preset === "security-fundamentals"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -374,6 +379,15 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "backups-and-recovery-quiz") {
         return <BackupsAndRecoveryQuiz />;
+      }
+      if (block.id === "security-fundamentals-assessment") {
+        return <SecurityFundamentalsAssessment />;
+      }
+      if (block.id === "security-fundamentals-practice") {
+        return <SecurityFundamentalsPractice />;
+      }
+      if (block.id === "security-fundamentals-quiz") {
+        return <SecurityFundamentalsQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

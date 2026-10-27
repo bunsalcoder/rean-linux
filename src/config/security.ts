@@ -55,7 +55,8 @@ export const securityLessons: readonly SecurityLesson[] = [
       "Understand confidentiality, integrity, availability, least privilege, and defense in depth.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/security/fundamentals",
     topics: [
       "CIA triad",
       "Least privilege",
