@@ -76,6 +76,12 @@ import {
 import { SecurityFundamentalsAssessment } from "@/components/learn/security-fundamentals-assessment";
 import { SecurityFundamentalsPractice } from "@/components/learn/security-fundamentals-practice";
 import { SecurityFundamentalsQuiz } from "@/components/learn/security-fundamentals-quiz";
+import { SecurityPermissionsAclsAssessment } from "@/components/learn/security-permissions-acls-assessment";
+import { SecurityPermissionsAclsPractice } from "@/components/learn/security-permissions-acls-practice";
+import {
+  SecurityPermissionsAclsKnowledgeCheck,
+  SecurityPermissionsAclsQuiz,
+} from "@/components/learn/security-permissions-acls-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -124,7 +130,8 @@ function resolveTerminalFilesystem(
     preset === "backups-and-recovery" ||
     preset === "linux-administration-challenge" ||
     preset === "security-fundamentals" ||
-    preset === "security-access-control"
+    preset === "security-access-control" ||
+    preset === "security-permissions-acls"
   ) {
     return undefined;
   }
@@ -271,6 +278,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           backupsAndRecovery={block.preset === "backups-and-recovery"}
           securityFundamentals={block.preset === "security-fundamentals"}
           securityAccessControl={block.preset === "security-access-control"}
+          securityPermissionsAcls={block.preset === "security-permissions-acls"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -408,6 +416,18 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "security-access-control-quiz") {
         return <SecurityAccessControlQuiz />;
+      }
+      if (block.id === "security-permissions-acls-assessment") {
+        return <SecurityPermissionsAclsAssessment />;
+      }
+      if (block.id === "security-permissions-acls-practice") {
+        return <SecurityPermissionsAclsPractice />;
+      }
+      if (block.id === "security-permissions-acls-knowledge-check") {
+        return <SecurityPermissionsAclsKnowledgeCheck />;
+      }
+      if (block.id === "security-permissions-acls-quiz") {
+        return <SecurityPermissionsAclsQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;
