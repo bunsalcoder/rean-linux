@@ -64,7 +64,8 @@ export type LessonTerminalPreset =
   | "scheduled-tasks"
   | "system-monitoring"
   | "backups-and-recovery"
-  | "linux-administration-challenge";
+  | "linux-administration-challenge"
+  | "security-fundamentals";
 
 export type LessonBlock =
   | {
@@ -179,7 +180,10 @@ export type LessonBlock =
         | "backups-and-recovery-workflow"
         | "backups-and-recovery-practice"
         | "backups-and-recovery-quiz"
-        | "linux-administration-challenge-practice";
+        | "linux-administration-challenge-practice"
+        | "security-fundamentals-assessment"
+        | "security-fundamentals-practice"
+        | "security-fundamentals-quiz";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.
@@ -236,7 +240,8 @@ export type LessonContentSection = {
   blocks: readonly LessonBlock[];
 };
 
-export type LessonLevel = "beginner" | "essentials" | "administration";
+export type LessonLevel =
+  "beginner" | "essentials" | "administration" | "security";
 
 /** Curriculum availability — no persisted learner progress. */
 export type LessonStatus = "available" | "completed" | "coming-soon";
