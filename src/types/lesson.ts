@@ -67,7 +67,8 @@ export type LessonTerminalPreset =
   | "linux-administration-challenge"
   | "security-fundamentals"
   | "security-access-control"
-  | "security-permissions-acls";
+  | "security-permissions-acls"
+  | "security-privilege-management";
 
 export type LessonBlock =
   | {
@@ -193,7 +194,11 @@ export type LessonBlock =
         | "security-permissions-acls-assessment"
         | "security-permissions-acls-practice"
         | "security-permissions-acls-knowledge-check"
-        | "security-permissions-acls-quiz";
+        | "security-permissions-acls-quiz"
+        | "security-privilege-management-assessment"
+        | "security-privilege-management-practice"
+        | "security-privilege-management-knowledge-check"
+        | "security-privilege-management-quiz";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.

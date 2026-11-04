@@ -109,7 +109,8 @@ export const securityLessons: readonly SecurityLesson[] = [
       "Understand sudo policies and how privileged operations should be controlled.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/security/privilege-management",
     topics: [
       "sudo",
       "sudoers",
