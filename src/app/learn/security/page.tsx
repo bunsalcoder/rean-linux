@@ -64,9 +64,9 @@ export default function SecurityLearnPage() {
           Lessons
         </h2>
         <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed sm:text-[0.9375rem]">
-          Twelve lessons make up this stage. Fundamentals through SSH Security
-          Hardening are available now; later lessons and the final challenge
-          stay locked until they ship.
+          Twelve lessons make up this stage. Fundamentals through Security
+          Auditing are available now; later lessons and the final challenge stay
+          locked until they ship.
         </p>
         <SecurityLessonJourney />
       </section>
