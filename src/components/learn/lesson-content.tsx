@@ -82,6 +82,18 @@ import {
   SecurityPermissionsAclsKnowledgeCheck,
   SecurityPermissionsAclsQuiz,
 } from "@/components/learn/security-permissions-acls-quiz";
+import { SecurityPrivilegeManagementAssessment } from "@/components/learn/security-privilege-management-assessment";
+import { SecurityPrivilegeManagementPractice } from "@/components/learn/security-privilege-management-practice";
+import {
+  SecurityPrivilegeManagementKnowledgeCheck,
+  SecurityPrivilegeManagementQuiz,
+} from "@/components/learn/security-privilege-management-quiz";
+import { SecuritySshHardeningAssessment } from "@/components/learn/security-ssh-hardening-assessment";
+import { SecuritySshHardeningPractice } from "@/components/learn/security-ssh-hardening-practice";
+import {
+  SecuritySshHardeningKnowledgeCheck,
+  SecuritySshHardeningQuiz,
+} from "@/components/learn/security-ssh-hardening-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -131,7 +143,9 @@ function resolveTerminalFilesystem(
     preset === "linux-administration-challenge" ||
     preset === "security-fundamentals" ||
     preset === "security-access-control" ||
-    preset === "security-permissions-acls"
+    preset === "security-permissions-acls" ||
+    preset === "security-privilege-management" ||
+    preset === "security-ssh-hardening"
   ) {
     return undefined;
   }
@@ -279,6 +293,10 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           securityFundamentals={block.preset === "security-fundamentals"}
           securityAccessControl={block.preset === "security-access-control"}
           securityPermissionsAcls={block.preset === "security-permissions-acls"}
+          securityPrivilegeManagement={
+            block.preset === "security-privilege-management"
+          }
+          securitySshHardening={block.preset === "security-ssh-hardening"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -428,6 +446,30 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "security-permissions-acls-quiz") {
         return <SecurityPermissionsAclsQuiz />;
+      }
+      if (block.id === "security-privilege-management-assessment") {
+        return <SecurityPrivilegeManagementAssessment />;
+      }
+      if (block.id === "security-privilege-management-practice") {
+        return <SecurityPrivilegeManagementPractice />;
+      }
+      if (block.id === "security-privilege-management-knowledge-check") {
+        return <SecurityPrivilegeManagementKnowledgeCheck />;
+      }
+      if (block.id === "security-privilege-management-quiz") {
+        return <SecurityPrivilegeManagementQuiz />;
+      }
+      if (block.id === "security-ssh-hardening-assessment") {
+        return <SecuritySshHardeningAssessment />;
+      }
+      if (block.id === "security-ssh-hardening-practice") {
+        return <SecuritySshHardeningPractice />;
+      }
+      if (block.id === "security-ssh-hardening-knowledge-check") {
+        return <SecuritySshHardeningKnowledgeCheck />;
+      }
+      if (block.id === "security-ssh-hardening-quiz") {
+        return <SecuritySshHardeningQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

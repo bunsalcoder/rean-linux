@@ -25,7 +25,6 @@ export const securityPermissionsAndAclsLesson = {
     next: {
       label: "sudo and Privilege Management",
       href: "/learn/security/privilege-management",
-      unavailable: true,
     },
   },
   intro: [
@@ -542,7 +541,7 @@ export const securityPermissionsAndAclsLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: sudo and Privilege Management — controlling elevated operations with least privilege (coming soon).",
+          text: "Next: [sudo and Privilege Management](/learn/security/privilege-management) — controlling elevated operations with least privilege.",
         },
       ],
     },
