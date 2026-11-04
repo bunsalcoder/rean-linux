@@ -34,6 +34,7 @@ import { securityPrivilegeManagementLesson } from "@/content/lessons/security/pr
 import { securityFirewallHardeningLesson } from "@/content/lessons/security/firewall-hardening";
 import { securitySshHardeningLesson } from "@/content/lessons/security/ssh-hardening";
 import { securityUpdatesLesson } from "@/content/lessons/security/security-updates";
+import { securityAuditingLesson } from "@/content/lessons/security/security-auditing";
 import type { Lesson, LessonLevel } from "@/types/lesson";
 
 export const lessons = [
@@ -73,6 +74,7 @@ export const lessons = [
   securitySshHardeningLesson,
   securityFirewallHardeningLesson,
   securityUpdatesLesson,
+  securityAuditingLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];

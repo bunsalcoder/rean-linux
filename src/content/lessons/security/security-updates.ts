@@ -26,7 +26,6 @@ export const securityUpdatesLesson = {
     next: {
       label: "Linux Security Auditing",
       href: "/learn/security/security-auditing",
-      unavailable: true,
     },
   },
   intro: [
@@ -583,7 +582,7 @@ export const securityUpdatesLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: [Linux Security Auditing](/learn/security/security-auditing) — inspect security-related logs and build review habits after you patch (coming soon).",
+          text: "Next: [Linux Security Auditing](/learn/security/security-auditing) — systematically audit a Linux host's accounts, permissions, SSH, network exposure, packages, logs, and backup readiness.",
         },
       ],
     },
