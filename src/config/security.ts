@@ -145,7 +145,8 @@ export const securityLessons: readonly SecurityLesson[] = [
       "Reduce network exposure with deliberate firewall and service-facing decisions.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/security/firewall-hardening",
     topics: [
       "Network exposure",
       "Firewall policy",

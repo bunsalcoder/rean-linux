@@ -25,7 +25,6 @@ export const securitySshHardeningLesson = {
     next: {
       label: "Firewall Hardening and Network Exposure",
       href: "/learn/security/firewall-hardening",
-      unavailable: true,
     },
   },
   intro: [
@@ -440,7 +439,7 @@ export const securitySshHardeningLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: Firewall Hardening and Network Exposure — reducing network exposure with deliberate firewall and service-facing decisions (coming soon).",
+          text: "Next: [Firewall Hardening and Network Exposure](/learn/security/firewall-hardening) — reducing network exposure with deliberate firewall and service-facing decisions.",
         },
       ],
     },
