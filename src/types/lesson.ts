@@ -70,7 +70,8 @@ export type LessonTerminalPreset =
   | "security-permissions-acls"
   | "security-privilege-management"
   | "security-ssh-hardening"
-  | "security-firewall-hardening";
+  | "security-firewall-hardening"
+  | "security-updates";
 
 export type LessonBlock =
   | {
@@ -208,7 +209,12 @@ export type LessonBlock =
         | "security-firewall-hardening-assessment"
         | "security-firewall-hardening-practice"
         | "security-firewall-hardening-knowledge-check"
-        | "security-firewall-hardening-quiz";
+        | "security-firewall-hardening-quiz"
+        | "security-updates-dashboard"
+        | "security-updates-assessment"
+        | "security-updates-practice"
+        | "security-updates-knowledge-check"
+        | "security-updates-quiz";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.

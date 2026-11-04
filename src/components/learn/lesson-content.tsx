@@ -100,6 +100,13 @@ import {
   SecuritySshHardeningKnowledgeCheck,
   SecuritySshHardeningQuiz,
 } from "@/components/learn/security-ssh-hardening-quiz";
+import { SecurityUpdatesAssessment } from "@/components/learn/security-updates-assessment";
+import { SecurityUpdatesDashboard } from "@/components/learn/security-updates-dashboard";
+import { SecurityUpdatesPractice } from "@/components/learn/security-updates-practice";
+import {
+  SecurityUpdatesKnowledgeCheck,
+  SecurityUpdatesQuiz,
+} from "@/components/learn/security-updates-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -152,7 +159,8 @@ function resolveTerminalFilesystem(
     preset === "security-permissions-acls" ||
     preset === "security-privilege-management" ||
     preset === "security-ssh-hardening" ||
-    preset === "security-firewall-hardening"
+    preset === "security-firewall-hardening" ||
+    preset === "security-updates"
   ) {
     return undefined;
   }
@@ -307,6 +315,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           securityFirewallHardening={
             block.preset === "security-firewall-hardening"
           }
+          securityUpdates={block.preset === "security-updates"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -492,6 +501,21 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "security-firewall-hardening-quiz") {
         return <SecurityFirewallHardeningQuiz />;
+      }
+      if (block.id === "security-updates-dashboard") {
+        return <SecurityUpdatesDashboard />;
+      }
+      if (block.id === "security-updates-assessment") {
+        return <SecurityUpdatesAssessment />;
+      }
+      if (block.id === "security-updates-practice") {
+        return <SecurityUpdatesPractice />;
+      }
+      if (block.id === "security-updates-knowledge-check") {
+        return <SecurityUpdatesKnowledgeCheck />;
+      }
+      if (block.id === "security-updates-quiz") {
+        return <SecurityUpdatesQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

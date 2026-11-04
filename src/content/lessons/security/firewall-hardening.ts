@@ -26,7 +26,6 @@ export const securityFirewallHardeningLesson = {
     next: {
       label: "Security Updates and Vulnerability Management",
       href: "/learn/security/security-updates",
-      unavailable: true,
     },
   },
   intro: [
