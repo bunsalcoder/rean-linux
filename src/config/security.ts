@@ -163,7 +163,8 @@ export const securityLessons: readonly SecurityLesson[] = [
       "Understand why updates matter and how vulnerability remediation fits operations.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/security/security-updates",
     topics: [
       "Security updates",
       "Vulnerabilities",
