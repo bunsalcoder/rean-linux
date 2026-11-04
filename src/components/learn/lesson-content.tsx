@@ -88,6 +88,12 @@ import {
   SecurityPrivilegeManagementKnowledgeCheck,
   SecurityPrivilegeManagementQuiz,
 } from "@/components/learn/security-privilege-management-quiz";
+import { SecuritySshHardeningAssessment } from "@/components/learn/security-ssh-hardening-assessment";
+import { SecuritySshHardeningPractice } from "@/components/learn/security-ssh-hardening-practice";
+import {
+  SecuritySshHardeningKnowledgeCheck,
+  SecuritySshHardeningQuiz,
+} from "@/components/learn/security-ssh-hardening-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -138,7 +144,8 @@ function resolveTerminalFilesystem(
     preset === "security-fundamentals" ||
     preset === "security-access-control" ||
     preset === "security-permissions-acls" ||
-    preset === "security-privilege-management"
+    preset === "security-privilege-management" ||
+    preset === "security-ssh-hardening"
   ) {
     return undefined;
   }
@@ -289,6 +296,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           securityPrivilegeManagement={
             block.preset === "security-privilege-management"
           }
+          securitySshHardening={block.preset === "security-ssh-hardening"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -450,6 +458,18 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "security-privilege-management-quiz") {
         return <SecurityPrivilegeManagementQuiz />;
+      }
+      if (block.id === "security-ssh-hardening-assessment") {
+        return <SecuritySshHardeningAssessment />;
+      }
+      if (block.id === "security-ssh-hardening-practice") {
+        return <SecuritySshHardeningPractice />;
+      }
+      if (block.id === "security-ssh-hardening-knowledge-check") {
+        return <SecuritySshHardeningKnowledgeCheck />;
+      }
+      if (block.id === "security-ssh-hardening-quiz") {
+        return <SecuritySshHardeningQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

@@ -25,7 +25,6 @@ export const securityPrivilegeManagementLesson = {
     next: {
       label: "SSH Security Hardening",
       href: "/learn/security/ssh-hardening",
-      unavailable: true,
     },
   },
   intro: [
@@ -338,7 +337,7 @@ export const securityPrivilegeManagementLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: SSH Security Hardening — reducing remote-access risk with deliberate sshd and authentication choices (coming soon).",
+          text: "Next: [SSH Security Hardening](/learn/security/ssh-hardening) — reducing remote-access risk with deliberate sshd and authentication choices.",
         },
       ],
     },

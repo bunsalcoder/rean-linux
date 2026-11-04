@@ -127,7 +127,8 @@ export const securityLessons: readonly SecurityLesson[] = [
       "Recognize SSH risks and apply practical remote-access hardening choices.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/security/ssh-hardening",
     topics: [
       "SSH hardening",
       "Key authentication",
