@@ -238,7 +238,8 @@ export type LessonBlock =
         | "security-incident-response-assessment"
         | "security-incident-response-practice"
         | "security-incident-response-knowledge-check"
-        | "security-incident-response-quiz";
+        | "security-incident-response-quiz"
+        | "linux-security-challenge-practice";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.
@@ -275,6 +276,25 @@ export type LessonBlock =
         | "cron-failure"
         | "high-cpu"
         | "file-recovery";
+      /**
+       * Which panel to render for the Linux Security Challenge exercise.
+       * Required when `id` is `linux-security-challenge-practice`.
+       */
+      securityChallengePanel?:
+        | "progress"
+        | "summary"
+        | "fundamentals"
+        | "access-control"
+        | "permissions-acls"
+        | "privilege-management"
+        | "ssh-hardening"
+        | "firewall-network"
+        | "security-updates"
+        | "security-auditing"
+        | "authentication-pam"
+        | "mandatory-access-control"
+        | "incident-response"
+        | "final-assessment";
     }
   | {
       type: "panel";

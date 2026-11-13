@@ -18,9 +18,9 @@ export async function generateMetadata({
   params,
 }: BeginnerLessonPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const lesson = getLessonBySlug(slug);
+  const lesson = getLessonBySlug(slug, "beginner");
 
-  if (!lesson || lesson.level !== "beginner") {
+  if (!lesson) {
     return { title: "Lesson" };
   }
 
@@ -34,9 +34,9 @@ export default async function BeginnerLessonPage({
   params,
 }: BeginnerLessonPageProps) {
   const { slug } = await params;
-  const lesson = getLessonBySlug(slug);
+  const lesson = getLessonBySlug(slug, "beginner");
 
-  if (!lesson || lesson.level !== "beginner") {
+  if (!lesson) {
     notFound();
   }
 

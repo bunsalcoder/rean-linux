@@ -253,7 +253,8 @@ export const securityLessons: readonly SecurityLesson[] = [
       "Apply Stage 04 security and hardening concepts in a final simulated challenge.",
     duration: "40–50 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/security/challenge",
     topics: [
       "Access control",
       "Privileges",
