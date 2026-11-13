@@ -25,7 +25,6 @@ export const securityAuthenticationAndPamLesson = {
     next: {
       label: "Mandatory Access Control: AppArmor and SELinux",
       href: "/learn/security/mandatory-access-control",
-      unavailable: true,
     },
   },
   intro: [
@@ -554,7 +553,7 @@ export const securityAuthenticationAndPamLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: [Mandatory Access Control: AppArmor and SELinux](/learn/security/mandatory-access-control) — distinguish discretionary access control from mandatory access control (coming soon).",
+          text: "Next: [Mandatory Access Control: AppArmor and SELinux](/learn/security/mandatory-access-control) — distinguish discretionary access control from mandatory access control with AppArmor and SELinux.",
         },
       ],
     },

@@ -215,7 +215,8 @@ export const securityLessons: readonly SecurityLesson[] = [
       "Distinguish discretionary access control from mandatory access control.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/security/mandatory-access-control",
     topics: [
       "DAC vs MAC",
       "AppArmor",

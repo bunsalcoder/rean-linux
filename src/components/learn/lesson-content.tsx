@@ -121,6 +121,13 @@ import {
   SecurityAuthenticationPamKnowledgeCheck,
   SecurityAuthenticationPamQuiz,
 } from "@/components/learn/security-authentication-pam-quiz";
+import { SecurityMandatoryAccessControlAssessment } from "@/components/learn/security-mandatory-access-control-assessment";
+import { SecurityMandatoryAccessControlExplorer } from "@/components/learn/security-mandatory-access-control-explorer";
+import { SecurityMandatoryAccessControlPractice } from "@/components/learn/security-mandatory-access-control-practice";
+import {
+  SecurityMandatoryAccessControlKnowledgeCheck,
+  SecurityMandatoryAccessControlQuiz,
+} from "@/components/learn/security-mandatory-access-control-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -176,7 +183,8 @@ function resolveTerminalFilesystem(
     preset === "security-firewall-hardening" ||
     preset === "security-updates" ||
     preset === "security-auditing" ||
-    preset === "security-authentication-pam"
+    preset === "security-authentication-pam" ||
+    preset === "security-mandatory-access-control"
   ) {
     return undefined;
   }
@@ -335,6 +343,9 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           securityAuditing={block.preset === "security-auditing"}
           securityAuthenticationPam={
             block.preset === "security-authentication-pam"
+          }
+          securityMandatoryAccessControl={
+            block.preset === "security-mandatory-access-control"
           }
           filesystem={resolveTerminalFilesystem(
             block.preset,
@@ -566,6 +577,21 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "security-authentication-pam-quiz") {
         return <SecurityAuthenticationPamQuiz />;
+      }
+      if (block.id === "security-mandatory-access-control-explorer") {
+        return <SecurityMandatoryAccessControlExplorer />;
+      }
+      if (block.id === "security-mandatory-access-control-assessment") {
+        return <SecurityMandatoryAccessControlAssessment />;
+      }
+      if (block.id === "security-mandatory-access-control-practice") {
+        return <SecurityMandatoryAccessControlPractice />;
+      }
+      if (block.id === "security-mandatory-access-control-knowledge-check") {
+        return <SecurityMandatoryAccessControlKnowledgeCheck />;
+      }
+      if (block.id === "security-mandatory-access-control-quiz") {
+        return <SecurityMandatoryAccessControlQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;
