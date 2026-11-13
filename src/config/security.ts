@@ -203,7 +203,8 @@ export const securityLessons: readonly SecurityLesson[] = [
       "Learn authentication concepts and how PAM shapes login and access flow.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/security/authentication-and-pam",
     topics: ["Authentication", "PAM", "Login flow", "Modules", "Access policy"],
   },
   {

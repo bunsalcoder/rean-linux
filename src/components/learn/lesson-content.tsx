@@ -114,6 +114,13 @@ import {
   SecurityAuditingKnowledgeCheck,
   SecurityAuditingQuiz,
 } from "@/components/learn/security-auditing-quiz";
+import { SecurityAuthenticationPamAssessment } from "@/components/learn/security-authentication-pam-assessment";
+import { SecurityAuthenticationPamExplorer } from "@/components/learn/security-authentication-pam-explorer";
+import { SecurityAuthenticationPamPractice } from "@/components/learn/security-authentication-pam-practice";
+import {
+  SecurityAuthenticationPamKnowledgeCheck,
+  SecurityAuthenticationPamQuiz,
+} from "@/components/learn/security-authentication-pam-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -168,7 +175,8 @@ function resolveTerminalFilesystem(
     preset === "security-ssh-hardening" ||
     preset === "security-firewall-hardening" ||
     preset === "security-updates" ||
-    preset === "security-auditing"
+    preset === "security-auditing" ||
+    preset === "security-authentication-pam"
   ) {
     return undefined;
   }
@@ -325,6 +333,9 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           }
           securityUpdates={block.preset === "security-updates"}
           securityAuditing={block.preset === "security-auditing"}
+          securityAuthenticationPam={
+            block.preset === "security-authentication-pam"
+          }
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -540,6 +551,21 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "security-auditing-quiz") {
         return <SecurityAuditingQuiz />;
+      }
+      if (block.id === "security-authentication-pam-explorer") {
+        return <SecurityAuthenticationPamExplorer />;
+      }
+      if (block.id === "security-authentication-pam-assessment") {
+        return <SecurityAuthenticationPamAssessment />;
+      }
+      if (block.id === "security-authentication-pam-practice") {
+        return <SecurityAuthenticationPamPractice />;
+      }
+      if (block.id === "security-authentication-pam-knowledge-check") {
+        return <SecurityAuthenticationPamKnowledgeCheck />;
+      }
+      if (block.id === "security-authentication-pam-quiz") {
+        return <SecurityAuthenticationPamQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;
