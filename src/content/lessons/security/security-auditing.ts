@@ -19,11 +19,11 @@ export const securityAuditingLesson = {
   ],
   navigation: {
     previous: {
-      label: "Security Updates",
+      label: "Security Updates and Vulnerability Management",
       href: "/learn/security/security-updates",
     },
     next: {
-      label: "Authentication and PAM",
+      label: "Authentication and PAM Fundamentals",
       href: "/learn/security/authentication-and-pam",
     },
   },
@@ -249,7 +249,7 @@ export const securityAuditingLesson = {
           items: [
             "Use `apt list --upgradable` to find packages with available updates",
             "Use `apt show PACKAGE` to see version details and advisory information",
-            "The fictional advisory **DEMO-AUDIT-2026-001** describes a critical OpenSSH remote code execution — the same pattern from the Security Updates lesson",
+            "The fictional advisory **DEMO-AUDIT-2026-001** describes a critical OpenSSH issue — the same *kind* of teaching advisory as **DEMO-2026-001** in Security Updates (this lab uses its own demo ID)",
             "Verify that critical packages are at their fixed versions",
             "Track outstanding package debt just like you track outstanding findings",
           ],

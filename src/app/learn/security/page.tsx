@@ -64,9 +64,9 @@ export default function SecurityLearnPage() {
           Lessons
         </h2>
         <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-relaxed sm:text-[0.9375rem]">
-          Twelve lessons make up this stage. Fundamentals through Mandatory
-          Access Control are available now; Incident Response and the final
-          challenge stay locked until they ship.
+          Twelve lessons make up this stage — from security fundamentals through
+          the final Linux Security Challenge. Work through them in order for the
+          strongest progression.
         </p>
         <SecurityLessonJourney />
       </section>

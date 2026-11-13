@@ -30,7 +30,7 @@ export const securityIncidentResponseLesson = {
   intro: [
     {
       type: "paragraph",
-      text: "After [Mandatory Access Control](/learn/security/mandatory-access-control) and [Linux Security Auditing](/learn/security/security-auditing), this lesson focuses on what happens when something already looks wrong: **incident response**. You will practice a safe, evidence-based workflow on the fictional host **rean-ir** — investigate, contain, recover, and document — without touching your real system.",
+      text: "After [Mandatory Access Control](/learn/security/mandatory-access-control), this lesson focuses on what happens when something already looks wrong: **incident response**. Skills from [Linux Security Auditing](/learn/security/security-auditing) still matter for reading evidence. You will practice a safe, evidence-based workflow on the fictional host **rean-ir** — investigate, contain, recover, and document — without touching your real system.",
     },
     {
       type: "callout",

@@ -436,7 +436,7 @@ export const securityFirewallHardeningLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: Security Updates and Vulnerability Management — why patching and remediation reduce risk after you shrink exposure (coming soon).",
+          text: "Next: Security Updates and Vulnerability Management — why patching and remediation reduce risk after you shrink exposure.",
         },
       ],
     },

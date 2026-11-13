@@ -501,11 +501,11 @@ function formatId(user: string, state: SimulatedSecurityState): string[] {
   if (user === "contractor") {
     if (state.contractorInSudo) {
       return [
-        "uid=1005(contractor) gid=1005(contractor) groups=1005(contractor),27(sudo)",
+        "uid=1002(contractor) gid=1002(contractor) groups=1002(contractor),27(sudo)",
       ];
     }
     return [
-      "uid=1005(contractor) gid=1005(contractor) groups=1005(contractor)",
+      "uid=1002(contractor) gid=1002(contractor) groups=1002(contractor)",
     ];
   }
   if (user === "root") {
