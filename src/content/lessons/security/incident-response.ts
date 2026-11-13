@@ -25,7 +25,6 @@ export const securityIncidentResponseLesson = {
     next: {
       label: "Linux Security Challenge",
       href: "/learn/security/challenge",
-      unavailable: true,
     },
   },
   intro: [
@@ -465,7 +464,7 @@ export const securityIncidentResponseLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: [Linux Security Challenge](/learn/security/challenge) — apply Stage 04 security and hardening concepts in a final simulated challenge (coming soon).",
+          text: "Next: [Linux Security Challenge](/learn/security/challenge) — apply Stage 04 security and hardening concepts in a final simulated challenge.",
         },
       ],
     },

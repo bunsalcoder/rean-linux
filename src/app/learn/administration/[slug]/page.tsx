@@ -18,9 +18,9 @@ export async function generateMetadata({
   params,
 }: AdministrationLessonPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const lesson = getLessonBySlug(slug);
+  const lesson = getLessonBySlug(slug, "administration");
 
-  if (!lesson || lesson.level !== "administration") {
+  if (!lesson) {
     return { title: "Lesson" };
   }
 
@@ -34,9 +34,9 @@ export default async function AdministrationLessonPage({
   params,
 }: AdministrationLessonPageProps) {
   const { slug } = await params;
-  const lesson = getLessonBySlug(slug);
+  const lesson = getLessonBySlug(slug, "administration");
 
-  if (!lesson || lesson.level !== "administration") {
+  if (!lesson) {
     notFound();
   }
 

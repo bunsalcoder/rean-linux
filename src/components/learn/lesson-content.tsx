@@ -44,6 +44,12 @@ import {
   LinuxAdministrationChallengeProvider,
   LinuxAdministrationChallengeSummary,
 } from "@/components/learn/linux-administration-challenge-practice";
+import {
+  LinuxSecurityChallengeCategory,
+  LinuxSecurityChallengeProgress,
+  LinuxSecurityChallengeProvider,
+  LinuxSecurityChallengeSummary,
+} from "@/components/learn/linux-security-challenge-practice";
 import { SystemServicesPractice } from "@/components/learn/system-services-practice";
 import { SystemServicesQuiz } from "@/components/learn/system-services-quiz";
 import { LogsAndJournaldPractice } from "@/components/learn/logs-and-journald-practice";
@@ -144,6 +150,7 @@ import {
 } from "@/lib/simulated-filesystem";
 import type { ChallengeCategoryId } from "@/lib/linux-essentials-challenge";
 import type { AdminIncidentId } from "@/lib/linux-administration-challenge";
+import type { SecurityChallengeCategoryId } from "@/lib/linux-security-challenge";
 import type {
   Lesson,
   LessonBlock,
@@ -653,6 +660,23 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
         }
         return null;
       }
+      if (block.id === "linux-security-challenge-practice") {
+        const panel = block.securityChallengePanel;
+        if (panel === "progress") {
+          return <LinuxSecurityChallengeProgress />;
+        }
+        if (panel === "summary") {
+          return <LinuxSecurityChallengeSummary />;
+        }
+        if (panel) {
+          return (
+            <LinuxSecurityChallengeCategory
+              categoryId={panel as SecurityChallengeCategoryId}
+            />
+          );
+        }
+        return null;
+      }
       return <FilesystemPractice />;
     case "panel":
       return (
@@ -748,6 +772,12 @@ export function LessonContent({ lesson }: LessonContentProps) {
       <LinuxAdministrationChallengeProvider>
         {content}
       </LinuxAdministrationChallengeProvider>
+    );
+  }
+
+  if (lesson.slug === "challenge" && lesson.level === "security") {
+    return (
+      <LinuxSecurityChallengeProvider>{content}</LinuxSecurityChallengeProvider>
     );
   }
 

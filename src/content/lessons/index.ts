@@ -38,6 +38,7 @@ import { securityAuditingLesson } from "@/content/lessons/security/security-audi
 import { securityAuthenticationAndPamLesson } from "@/content/lessons/security/authentication-and-pam";
 import { securityMandatoryAccessControlLesson } from "@/content/lessons/security/mandatory-access-control";
 import { securityIncidentResponseLesson } from "@/content/lessons/security/incident-response";
+import { securityChallengeLesson } from "@/content/lessons/security/challenge";
 import type { Lesson, LessonLevel } from "@/types/lesson";
 
 export const lessons = [
@@ -81,16 +82,25 @@ export const lessons = [
   securityAuthenticationAndPamLesson,
   securityMandatoryAccessControlLesson,
   securityIncidentResponseLesson,
+  securityChallengeLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];
 
-const lessonsBySlug = new Map<string, Lesson>(
-  lessons.map((lesson) => [lesson.slug, lesson]),
+const lessonsByLevelAndSlug = new Map<string, Lesson>(
+  lessons.map((lesson) => [`${lesson.level}:${lesson.slug}`, lesson]),
 );
 
-export function getLessonBySlug(slug: string): Lesson | undefined {
-  return lessonsBySlug.get(slug);
+/** Prefer `level` when the same slug exists in more than one stage (e.g. `challenge`). */
+export function getLessonBySlug(
+  slug: string,
+  level?: LessonLevel,
+): Lesson | undefined {
+  if (level) {
+    return lessonsByLevelAndSlug.get(`${level}:${slug}`);
+  }
+  const matches = lessons.filter((lesson) => lesson.slug === slug);
+  return matches.length === 1 ? matches[0] : undefined;
 }
 
 export function getLessonsByLevel(level: LessonLevel): readonly Lesson[] {
