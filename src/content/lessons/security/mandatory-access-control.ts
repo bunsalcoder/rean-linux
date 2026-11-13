@@ -26,7 +26,6 @@ export const securityMandatoryAccessControlLesson = {
     next: {
       label: "Linux Security Incident Response",
       href: "/learn/security/incident-response",
-      unavailable: true,
     },
   },
   intro: [
@@ -441,7 +440,7 @@ export const securityMandatoryAccessControlLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: [Linux Security Incident Response](/learn/security/incident-response) — follow a safe, evidence-based workflow when something looks wrong (coming soon).",
+          text: "Next: [Linux Security Incident Response](/learn/security/incident-response) — follow a safe, evidence-based workflow when something looks wrong.",
         },
       ],
     },

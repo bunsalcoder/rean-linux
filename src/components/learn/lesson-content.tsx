@@ -128,6 +128,13 @@ import {
   SecurityMandatoryAccessControlKnowledgeCheck,
   SecurityMandatoryAccessControlQuiz,
 } from "@/components/learn/security-mandatory-access-control-quiz";
+import { SecurityIncidentResponseAssessment } from "@/components/learn/security-incident-response-assessment";
+import { SecurityIncidentResponsePractice } from "@/components/learn/security-incident-response-practice";
+import {
+  SecurityIncidentResponseKnowledgeCheck,
+  SecurityIncidentResponseQuiz,
+} from "@/components/learn/security-incident-response-quiz";
+import { SecurityIncidentResponseWorkspace } from "@/components/learn/security-incident-response-workspace";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -184,7 +191,8 @@ function resolveTerminalFilesystem(
     preset === "security-updates" ||
     preset === "security-auditing" ||
     preset === "security-authentication-pam" ||
-    preset === "security-mandatory-access-control"
+    preset === "security-mandatory-access-control" ||
+    preset === "security-incident-response"
   ) {
     return undefined;
   }
@@ -346,6 +354,9 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           }
           securityMandatoryAccessControl={
             block.preset === "security-mandatory-access-control"
+          }
+          securityIncidentResponse={
+            block.preset === "security-incident-response"
           }
           filesystem={resolveTerminalFilesystem(
             block.preset,
@@ -592,6 +603,21 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "security-mandatory-access-control-quiz") {
         return <SecurityMandatoryAccessControlQuiz />;
+      }
+      if (block.id === "security-incident-response-workspace") {
+        return <SecurityIncidentResponseWorkspace />;
+      }
+      if (block.id === "security-incident-response-assessment") {
+        return <SecurityIncidentResponseAssessment />;
+      }
+      if (block.id === "security-incident-response-practice") {
+        return <SecurityIncidentResponsePractice />;
+      }
+      if (block.id === "security-incident-response-knowledge-check") {
+        return <SecurityIncidentResponseKnowledgeCheck />;
+      }
+      if (block.id === "security-incident-response-quiz") {
+        return <SecurityIncidentResponseQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;
