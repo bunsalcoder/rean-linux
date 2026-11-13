@@ -74,7 +74,8 @@ export type LessonTerminalPreset =
   | "security-updates"
   | "security-auditing"
   | "security-authentication-pam"
-  | "security-mandatory-access-control";
+  | "security-mandatory-access-control"
+  | "security-incident-response";
 
 export type LessonBlock =
   | {
@@ -232,7 +233,12 @@ export type LessonBlock =
         | "security-mandatory-access-control-assessment"
         | "security-mandatory-access-control-practice"
         | "security-mandatory-access-control-knowledge-check"
-        | "security-mandatory-access-control-quiz";
+        | "security-mandatory-access-control-quiz"
+        | "security-incident-response-workspace"
+        | "security-incident-response-assessment"
+        | "security-incident-response-practice"
+        | "security-incident-response-knowledge-check"
+        | "security-incident-response-quiz";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.

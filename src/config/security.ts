@@ -231,15 +231,18 @@ export const securityLessons: readonly SecurityLesson[] = [
     title: "Linux Security Incident Response",
     description:
       "Follow a safe, evidence-based workflow when something looks wrong.",
-    duration: "25–30 min",
+    duration: "30–40 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
+    href: "/learn/security/incident-response",
     topics: [
       "Incident response",
       "Evidence",
       "Containment",
       "Safe workflow",
       "Post-incident review",
+      "Recovery",
+      "Incident reporting",
     ],
   },
   {
