@@ -450,7 +450,9 @@ function TaskWorkspace({ task }: { task: SecurityChallengeTask }) {
     setFeedback({
       kind: "retry",
       message:
-        "Not quite. Re-check the evidence and the security principle involved, then try again.",
+        nextAttempts >= 2
+          ? "Not quite. Re-check the simulated evidence carefully — or use Show hint if you are stuck."
+          : "Not quite. Re-check the evidence and the security principle involved, then try again.",
     });
   }
 
@@ -731,12 +733,23 @@ export function LinuxSecurityChallengeCategory({
   const category = getSecurityChallengeCategory(categoryId);
   const tasks = getTasksForSecurityCategory(categoryId);
   const [activeIndex, setActiveIndex] = useState(0);
+  const requiresSequence = categoryId === "final-assessment";
 
   if (!category) {
     return null;
   }
 
-  const activeTask = tasks[Math.min(activeIndex, tasks.length - 1)];
+  function isTaskUnlocked(index: number): boolean {
+    if (!requiresSequence || index <= 0) {
+      return true;
+    }
+    return tasks.slice(0, index).every((task) => completed.has(task.id));
+  }
+
+  const safeIndex = Math.min(activeIndex, Math.max(tasks.length - 1, 0));
+  const activeTask = tasks[safeIndex];
+  const nextUnlocked =
+    safeIndex < tasks.length - 1 && isTaskUnlocked(safeIndex + 1);
 
   return (
     <div key={`${categoryId}-${resetEpoch}`} className="space-y-4">
@@ -747,16 +760,35 @@ export function LinuxSecurityChallengeCategory({
         </p>
       </div>
 
+      {requiresSequence ? (
+        <p className="text-muted-foreground text-xs">
+          Complete these final tasks in order — later steps depend on the shared
+          fictional host state from earlier remediations.
+        </p>
+      ) : null}
+
       <div className="flex flex-wrap gap-2">
         {tasks.map((task, index) => {
           const done = completed.has(task.id);
+          const unlocked = isTaskUnlocked(index);
           return (
             <Button
               key={task.id}
               type="button"
               size="sm"
-              variant={index === activeIndex ? "default" : "outline"}
-              onClick={() => setActiveIndex(index)}
+              variant={index === safeIndex ? "default" : "outline"}
+              disabled={!unlocked}
+              aria-disabled={!unlocked}
+              title={
+                unlocked
+                  ? undefined
+                  : "Complete the previous final-assessment task first"
+              }
+              onClick={() => {
+                if (unlocked) {
+                  setActiveIndex(index);
+                }
+              }}
             >
               {index + 1}
               {done ? " ✓" : ""}
@@ -765,13 +797,15 @@ export function LinuxSecurityChallengeCategory({
         })}
       </div>
 
-      {activeTask ? <TaskWorkspace task={activeTask} /> : null}
+      {activeTask ? (
+        <TaskWorkspace key={activeTask.id} task={activeTask} />
+      ) : null}
 
       <div className="flex flex-wrap gap-2">
         <Button
           type="button"
           variant="outline"
-          disabled={activeIndex <= 0}
+          disabled={safeIndex <= 0}
           onClick={() => setActiveIndex((value) => Math.max(0, value - 1))}
         >
           Previous task
@@ -779,7 +813,7 @@ export function LinuxSecurityChallengeCategory({
         <Button
           type="button"
           variant="outline"
-          disabled={activeIndex >= tasks.length - 1}
+          disabled={!nextUnlocked}
           onClick={() =>
             setActiveIndex((value) => Math.min(tasks.length - 1, value + 1))
           }
@@ -809,7 +843,6 @@ export function LinuxSecurityChallengeSummary() {
     correct,
     completedCount,
     correctCount,
-    incorrectTaskCount,
     percentComplete,
     totalScore,
     maxScore,
@@ -854,13 +887,17 @@ export function LinuxSecurityChallengeSummary() {
     .sort((a, b) => b.ratio - a.ratio)
     .slice(0, 3);
   const weakest = [...categoryRows]
-    .filter((row) => row.done > 0 || allComplete)
+    .filter(
+      (row) =>
+        row.ratio < 1 && (row.done > 0 || (allComplete && row.total > 0)),
+    )
     .sort((a, b) => a.ratio - b.ratio)
     .slice(0, 3);
 
   const reviewTasks = Object.values(SECURITY_CHALLENGE_TASKS).filter((task) => {
     if (!completed.has(task.id)) {
-      return true;
+      // Mid-run: avoid flooding the list with every unfinished task.
+      return allComplete;
     }
     const item = stats[task.id];
     return !item.correct || taskNeedsReview(item.attempts, item.hintsUsed);
@@ -956,9 +993,12 @@ export function LinuxSecurityChallengeSummary() {
           <p>
             You assessed the fictional host {SECURITY_CHALLENGE_HOST} across
             Stage 04 security topics. Score {totalScore} of {maxScore} (
-            {percentComplete}% tasks completed; {incorrectTaskCount} tasks were
-            marked without a correct solution in-session if any). This is a
-            learning exercise — not a certification.
+            {correctCount}/{TOTAL_SECURITY_CHALLENGE_TASKS} tasks correct ·{" "}
+            {percentComplete}% complete
+            {totalIncorrectAttempts > 0
+              ? ` · ${totalIncorrectAttempts} incorrect attempt${totalIncorrectAttempts === 1 ? "" : "s"}`
+              : ""}
+            ). This is a learning exercise — not a certification.
           </p>
           <p className="mt-2">
             Final integrated assessment:{" "}

@@ -45,7 +45,7 @@ export const securityChallengeLesson = {
   intro: [
     {
       type: "paragraph",
-      text: `This is the final lesson of **Linux Security and Hardening**. You will assess the fictional host **${SECURITY_CHALLENGE_HOST}** — identify findings, prioritize risk, choose remediations, and verify posture. This is not a memorization quiz and not a real server.`,
+      text: `This is the final lesson of **Linux Security and Hardening**. You will assess the fictional host **${SECURITY_CHALLENGE_HOST}** — identify findings, prioritize risk, choose remediations, and verify posture. **${SECURITY_CHALLENGE_HOST}** synthesizes scenarios from earlier Stage 04 labs; hostnames, demo advisory IDs, and exact UIDs may differ from per-lesson hosts such as rean-audit or rean-ir. This is not a memorization quiz and not a real server.`,
     },
   ],
   sections: [

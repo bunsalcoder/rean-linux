@@ -829,7 +829,12 @@ export const SECURITY_CHALLENGE_TASKS: Record<
     explanation:
       "contractor is listed in the sudo group. Contractor accounts should rarely hold standing admin rights; bunsal as a named admin is expected on this teaching host.",
     answerKind: "text",
-    acceptedAnswers: ["contractor"],
+    acceptedAnswers: [
+      "contractor",
+      "the contractor",
+      "contractor account",
+      "user contractor",
+    ],
     basePoints: 10,
   },
   "access-2": {
@@ -1157,6 +1162,30 @@ export const SECURITY_CHALLENGE_TASKS: Record<
       "5432/tcp allow",
       "[ 4] 5432/tcp",
     ],
+    validate: (ctx) => {
+      const answer = normalizeText(ctx.textAnswer);
+      if (!answer) {
+        return false;
+      }
+      const exactAccepted = [
+        "5432/tcp",
+        "5432",
+        "allow 5432",
+        "5432/tcp allow",
+        "[ 4] 5432/tcp",
+      ];
+      if (
+        exactAccepted.some((accepted) => normalizeText(accepted) === answer)
+      ) {
+        return true;
+      }
+      // Accept pasted UFW status lines that clearly identify 5432/tcp allow.
+      return (
+        /\b5432(?:\/tcp)?\b/.test(answer) &&
+        /\ballow\b/.test(answer) &&
+        !/\bdeny\b/.test(answer)
+      );
+    },
     basePoints: 10,
   },
   "fw-3": {
