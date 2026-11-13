@@ -25,7 +25,6 @@ export const securityAuditingLesson = {
     next: {
       label: "Authentication and PAM",
       href: "/learn/security/authentication-and-pam",
-      unavailable: true,
     },
   },
   intro: [
@@ -469,7 +468,7 @@ export const securityAuditingLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: [Authentication and PAM](/learn/security/authentication-and-pam) — learn authentication concepts and how PAM shapes login and access flow (coming soon).",
+          text: "Next: [Authentication and PAM](/learn/security/authentication-and-pam) — learn authentication concepts and how PAM shapes login and access flow.",
         },
       ],
     },
