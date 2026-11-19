@@ -76,7 +76,8 @@ export type LessonTerminalPreset =
   | "security-authentication-pam"
   | "security-mandatory-access-control"
   | "security-incident-response"
-  | "performance-fundamentals";
+  | "performance-fundamentals"
+  | "cpu-monitoring";
 
 export type LessonBlock =
   | {
@@ -245,7 +246,13 @@ export type LessonBlock =
         | "performance-fundamentals-practice"
         | "performance-fundamentals-assessment"
         | "performance-fundamentals-knowledge-check"
-        | "performance-fundamentals-quiz";
+        | "performance-fundamentals-quiz"
+        | "cpu-monitoring-dashboard"
+        | "cpu-monitoring-practice"
+        | "cpu-monitoring-process-lab"
+        | "cpu-monitoring-assessment"
+        | "cpu-monitoring-knowledge-check"
+        | "cpu-monitoring-quiz";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.

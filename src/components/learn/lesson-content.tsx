@@ -148,6 +148,14 @@ import {
   PerformanceFundamentalsKnowledgeCheck,
   PerformanceFundamentalsQuiz,
 } from "@/components/learn/performance-fundamentals-quiz";
+import { CpuMonitoringAssessment } from "@/components/learn/cpu-monitoring-assessment";
+import { CpuMonitoringDashboard } from "@/components/learn/cpu-monitoring-dashboard";
+import { CpuMonitoringPractice } from "@/components/learn/cpu-monitoring-practice";
+import { CpuMonitoringProcessLab } from "@/components/learn/cpu-monitoring-process-lab";
+import {
+  CpuMonitoringKnowledgeCheck,
+  CpuMonitoringQuiz,
+} from "@/components/learn/cpu-monitoring-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -207,7 +215,8 @@ function resolveTerminalFilesystem(
     preset === "security-authentication-pam" ||
     preset === "security-mandatory-access-control" ||
     preset === "security-incident-response" ||
-    preset === "performance-fundamentals"
+    preset === "performance-fundamentals" ||
+    preset === "cpu-monitoring"
   ) {
     return undefined;
   }
@@ -374,6 +383,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
             block.preset === "security-incident-response"
           }
           performanceFundamentals={block.preset === "performance-fundamentals"}
+          cpuMonitoring={block.preset === "cpu-monitoring"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -649,6 +659,24 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "performance-fundamentals-quiz") {
         return <PerformanceFundamentalsQuiz />;
+      }
+      if (block.id === "cpu-monitoring-dashboard") {
+        return <CpuMonitoringDashboard />;
+      }
+      if (block.id === "cpu-monitoring-practice") {
+        return <CpuMonitoringPractice />;
+      }
+      if (block.id === "cpu-monitoring-process-lab") {
+        return <CpuMonitoringProcessLab />;
+      }
+      if (block.id === "cpu-monitoring-assessment") {
+        return <CpuMonitoringAssessment />;
+      }
+      if (block.id === "cpu-monitoring-knowledge-check") {
+        return <CpuMonitoringKnowledgeCheck />;
+      }
+      if (block.id === "cpu-monitoring-quiz") {
+        return <CpuMonitoringQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

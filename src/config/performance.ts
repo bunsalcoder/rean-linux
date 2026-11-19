@@ -86,7 +86,7 @@ export const performanceLessons: readonly PerformanceLesson[] = [
       "Interpret CPU utilization and load, including user, system, idle, and I/O wait time.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
     href: "/learn/performance/cpu-monitoring",
     topics: [
       "CPU utilization",
