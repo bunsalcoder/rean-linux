@@ -28,7 +28,6 @@ export const performanceFundamentalsLesson = {
     next: {
       label: "CPU Monitoring and Analysis",
       href: "/learn/performance/cpu-monitoring",
-      unavailable: true,
     },
   },
   intro: [
@@ -471,7 +470,7 @@ export const performanceFundamentalsLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: **CPU Monitoring and Analysis** — deeper practice with utilization breakdowns, load, and CPU-focused tools (coming soon).",
+          text: "Next: **[CPU Monitoring and Analysis](/learn/performance/cpu-monitoring)** — deeper practice with utilization breakdowns, load, and CPU-focused tools.",
         },
       ],
     },
