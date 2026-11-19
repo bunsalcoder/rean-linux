@@ -28,7 +28,6 @@ export const cpuMonitoringLesson = {
     next: {
       label: "Memory and Swap Management",
       href: "/learn/performance/memory-and-swap",
-      unavailable: true,
     },
   },
   intro: [
@@ -431,7 +430,7 @@ export const cpuMonitoringLesson = {
         {
           type: "callout",
           title: "Next up",
-          text: "Next: **Memory and Swap Management** — available memory, cache, swap pressure, and memory-focused tools (coming soon).",
+          text: "Next: [**Memory and Swap Management**](/learn/performance/memory-and-swap) — available memory, page cache, swap pressure, major faults, and memory-focused tools.",
         },
       ],
     },

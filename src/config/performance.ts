@@ -114,7 +114,7 @@ export const performanceLessons: readonly PerformanceLesson[] = [
       "Understand RAM, buffers, cache, available memory, swap usage, and memory pressure.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
     href: "/learn/performance/memory-and-swap",
     topics: [
       "RAM",
