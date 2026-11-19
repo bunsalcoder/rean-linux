@@ -75,7 +75,8 @@ export type LessonTerminalPreset =
   | "security-auditing"
   | "security-authentication-pam"
   | "security-mandatory-access-control"
-  | "security-incident-response";
+  | "security-incident-response"
+  | "performance-fundamentals";
 
 export type LessonBlock =
   | {
@@ -239,7 +240,12 @@ export type LessonBlock =
         | "security-incident-response-practice"
         | "security-incident-response-knowledge-check"
         | "security-incident-response-quiz"
-        | "linux-security-challenge-practice";
+        | "linux-security-challenge-practice"
+        | "performance-fundamentals-dashboard"
+        | "performance-fundamentals-practice"
+        | "performance-fundamentals-assessment"
+        | "performance-fundamentals-knowledge-check"
+        | "performance-fundamentals-quiz";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.
@@ -316,7 +322,7 @@ export type LessonContentSection = {
 };
 
 export type LessonLevel =
-  "beginner" | "essentials" | "administration" | "security";
+  "beginner" | "essentials" | "administration" | "security" | "performance";
 
 /** Curriculum availability — no persisted learner progress. */
 export type LessonStatus = "available" | "completed" | "coming-soon";

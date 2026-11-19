@@ -141,6 +141,13 @@ import {
   SecurityIncidentResponseQuiz,
 } from "@/components/learn/security-incident-response-quiz";
 import { SecurityIncidentResponseWorkspace } from "@/components/learn/security-incident-response-workspace";
+import { PerformanceFundamentalsAssessment } from "@/components/learn/performance-fundamentals-assessment";
+import { PerformanceFundamentalsDashboard } from "@/components/learn/performance-fundamentals-dashboard";
+import { PerformanceFundamentalsPractice } from "@/components/learn/performance-fundamentals-practice";
+import {
+  PerformanceFundamentalsKnowledgeCheck,
+  PerformanceFundamentalsQuiz,
+} from "@/components/learn/performance-fundamentals-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -199,7 +206,8 @@ function resolveTerminalFilesystem(
     preset === "security-auditing" ||
     preset === "security-authentication-pam" ||
     preset === "security-mandatory-access-control" ||
-    preset === "security-incident-response"
+    preset === "security-incident-response" ||
+    preset === "performance-fundamentals"
   ) {
     return undefined;
   }
@@ -365,6 +373,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           securityIncidentResponse={
             block.preset === "security-incident-response"
           }
+          performanceFundamentals={block.preset === "performance-fundamentals"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -625,6 +634,21 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "security-incident-response-quiz") {
         return <SecurityIncidentResponseQuiz />;
+      }
+      if (block.id === "performance-fundamentals-dashboard") {
+        return <PerformanceFundamentalsDashboard />;
+      }
+      if (block.id === "performance-fundamentals-practice") {
+        return <PerformanceFundamentalsPractice />;
+      }
+      if (block.id === "performance-fundamentals-assessment") {
+        return <PerformanceFundamentalsAssessment />;
+      }
+      if (block.id === "performance-fundamentals-knowledge-check") {
+        return <PerformanceFundamentalsKnowledgeCheck />;
+      }
+      if (block.id === "performance-fundamentals-quiz") {
+        return <PerformanceFundamentalsQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

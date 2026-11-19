@@ -58,7 +58,7 @@ export const performanceLessons: readonly PerformanceLesson[] = [
       "Learn performance metrics and system bottlenecks across CPU, memory, disk, and network.",
     duration: "25–30 min",
     difficulty: "Advanced",
-    status: "coming-soon",
+    status: "available",
     href: "/learn/performance/fundamentals",
     topics: [
       "Performance metrics",
@@ -75,6 +75,7 @@ export const performanceLessons: readonly PerformanceLesson[] = [
       "Identify the four common resource dimensions that drive Linux performance",
       "Distinguish latency, throughput, and utilization in practical terms",
       "Recognize what a bottleneck means for end-user and system behavior",
+      "Follow a systematic investigate-before-optimize troubleshooting workflow",
     ],
   },
   {
