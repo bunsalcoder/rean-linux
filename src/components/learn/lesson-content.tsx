@@ -156,6 +156,14 @@ import {
   CpuMonitoringKnowledgeCheck,
   CpuMonitoringQuiz,
 } from "@/components/learn/cpu-monitoring-quiz";
+import { MemoryAndSwapAllocationLab } from "@/components/learn/memory-and-swap-allocation-lab";
+import { MemoryAndSwapAssessment } from "@/components/learn/memory-and-swap-assessment";
+import { MemoryAndSwapDashboard } from "@/components/learn/memory-and-swap-dashboard";
+import { MemoryAndSwapPractice } from "@/components/learn/memory-and-swap-practice";
+import {
+  MemoryAndSwapKnowledgeCheck,
+  MemoryAndSwapQuiz,
+} from "@/components/learn/memory-and-swap-quiz";
 import { TerminalSimulator } from "@/components/learn/terminal-simulator";
 import { UsersAndGroupsPractice } from "@/components/learn/users-and-groups-practice";
 import { CodeBlock } from "@/components/ui/code-block";
@@ -216,7 +224,8 @@ function resolveTerminalFilesystem(
     preset === "security-mandatory-access-control" ||
     preset === "security-incident-response" ||
     preset === "performance-fundamentals" ||
-    preset === "cpu-monitoring"
+    preset === "cpu-monitoring" ||
+    preset === "memory-and-swap"
   ) {
     return undefined;
   }
@@ -384,6 +393,7 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
           }
           performanceFundamentals={block.preset === "performance-fundamentals"}
           cpuMonitoring={block.preset === "cpu-monitoring"}
+          memoryAndSwap={block.preset === "memory-and-swap"}
           filesystem={resolveTerminalFilesystem(
             block.preset,
             block.includeNotes,
@@ -677,6 +687,24 @@ function LessonBlockView({ block }: { block: LessonBlock }) {
       }
       if (block.id === "cpu-monitoring-quiz") {
         return <CpuMonitoringQuiz />;
+      }
+      if (block.id === "memory-and-swap-dashboard") {
+        return <MemoryAndSwapDashboard />;
+      }
+      if (block.id === "memory-and-swap-practice") {
+        return <MemoryAndSwapPractice />;
+      }
+      if (block.id === "memory-and-swap-allocation-lab") {
+        return <MemoryAndSwapAllocationLab />;
+      }
+      if (block.id === "memory-and-swap-assessment") {
+        return <MemoryAndSwapAssessment />;
+      }
+      if (block.id === "memory-and-swap-knowledge-check") {
+        return <MemoryAndSwapKnowledgeCheck />;
+      }
+      if (block.id === "memory-and-swap-quiz") {
+        return <MemoryAndSwapQuiz />;
       }
       if (block.id === "linux-essentials-challenge-practice") {
         const category = block.challengeCategory;

@@ -41,6 +41,7 @@ import { securityIncidentResponseLesson } from "@/content/lessons/security/incid
 import { securityChallengeLesson } from "@/content/lessons/security/challenge";
 import { performanceFundamentalsLesson } from "@/content/lessons/performance/fundamentals";
 import { cpuMonitoringLesson } from "@/content/lessons/performance/cpu-monitoring";
+import { memoryAndSwapLesson } from "@/content/lessons/performance/memory-and-swap";
 import type { Lesson, LessonLevel } from "@/types/lesson";
 
 export const lessons = [
@@ -87,6 +88,7 @@ export const lessons = [
   securityChallengeLesson,
   performanceFundamentalsLesson,
   cpuMonitoringLesson,
+  memoryAndSwapLesson,
 ] as const satisfies readonly Lesson[];
 
 export type LessonSlug = (typeof lessons)[number]["slug"];

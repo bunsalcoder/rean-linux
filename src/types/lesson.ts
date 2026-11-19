@@ -77,7 +77,8 @@ export type LessonTerminalPreset =
   | "security-mandatory-access-control"
   | "security-incident-response"
   | "performance-fundamentals"
-  | "cpu-monitoring";
+  | "cpu-monitoring"
+  | "memory-and-swap";
 
 export type LessonBlock =
   | {
@@ -252,7 +253,13 @@ export type LessonBlock =
         | "cpu-monitoring-process-lab"
         | "cpu-monitoring-assessment"
         | "cpu-monitoring-knowledge-check"
-        | "cpu-monitoring-quiz";
+        | "cpu-monitoring-quiz"
+        | "memory-and-swap-dashboard"
+        | "memory-and-swap-practice"
+        | "memory-and-swap-allocation-lab"
+        | "memory-and-swap-assessment"
+        | "memory-and-swap-knowledge-check"
+        | "memory-and-swap-quiz";
       /**
        * Which panel to render for the Linux Essentials Challenge exercise.
        * Required when `id` is `linux-essentials-challenge-practice`.
