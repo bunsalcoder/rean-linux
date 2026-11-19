@@ -1,10 +1,10 @@
 import {
+  Activity,
   BookOpen,
   Boxes,
   FolderTree,
   Server,
   Shield,
-  Terminal,
   type LucideIcon,
 } from "lucide-react";
 
@@ -15,7 +15,7 @@ export const LEARNING_LEVEL_SLUGS = [
   "essentials",
   "administration",
   "security",
-  "power-user",
+  "performance",
   "devops",
 ] as const;
 
@@ -108,16 +108,23 @@ export const learningLevels: readonly LearningLevel[] = [
     lessonCount: 12,
   },
   {
-    slug: "power-user",
+    slug: "performance",
     indicator: "05",
-    title: "Linux Power User",
-    label: "Coming soon",
+    title: "Linux Performance and Troubleshooting",
+    label: "Up next",
     description:
-      "Go deeper on productivity, automation habits, and advanced command-line workflows.",
-    topics: ["Advanced Bash", "Jobs", "Automation habits", "Tooling"],
-    icon: Terminal,
-    status: "coming-soon",
+      "Learn how to monitor Linux system resources, diagnose performance bottlenecks, troubleshoot common system problems, and improve overall system performance through practical exercises and safe simulations.",
+    topics: [
+      "CPU & memory",
+      "Disk I/O",
+      "Load & bottlenecks",
+      "Network performance",
+      "Optimization",
+    ],
+    icon: Activity,
+    status: "available",
     difficulty: "Advanced",
+    lessonCount: 12,
   },
   {
     slug: "devops",
